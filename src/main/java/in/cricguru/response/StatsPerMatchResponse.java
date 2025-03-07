@@ -13,8 +13,8 @@ public class StatsPerMatchResponse {
     private String team1;
     private String team2;
     private String matchDate;
-    private String player;
-
+    private String playerImage;
+    private String playerName;
     private Integer runsScored;
     private Integer ballFaced;
     private Integer fours;

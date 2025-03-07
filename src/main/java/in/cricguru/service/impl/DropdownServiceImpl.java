@@ -3,6 +3,7 @@ package in.cricguru.service.impl;
 import in.cricguru.dto.Dropdown;
 import in.cricguru.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ public class DropdownServiceImpl {
     @Autowired
     private MatchRepository matchRepository;
 
+    @Cacheable("seasons")
     public List<Dropdown> getSeasons() {
         List<Dropdown> seasons = new ArrayList<>();
         seasonRepository.findAll().forEach(season -> {
@@ -34,6 +36,7 @@ public class DropdownServiceImpl {
         return seasons;
     }
 
+    @Cacheable("teams")
     public List<Dropdown> getTeams() {
         List<Dropdown> teams = new ArrayList<>();
         teamRepository.findAll().forEach(team -> {
@@ -42,6 +45,7 @@ public class DropdownServiceImpl {
         return teams;
     }
 
+    @Cacheable("venues")
     public List<Dropdown> getVenues() {
         List<Dropdown> venues = new ArrayList<>();
         venueRepository.findAll().forEach(venue -> {
@@ -50,6 +54,7 @@ public class DropdownServiceImpl {
         return venues;
     }
 
+    @Cacheable("players")
     public List<Dropdown> getPlayers() {
         List<Dropdown> players = new ArrayList<>();
         playerRepository.findAll().forEach(player -> {
@@ -58,6 +63,7 @@ public class DropdownServiceImpl {
         return players;
     }
 
+    @Cacheable(cacheNames="matches", key = "#seasonId")
     public List<Dropdown> getMatches(Integer seasonId) {
         List<Dropdown> matches = new ArrayList<>();
         matchRepository.findAllBySeasonId(Long.valueOf(seasonId)).forEach(match -> {
@@ -66,6 +72,7 @@ public class DropdownServiceImpl {
         return matches;
     }
 
+    @Cacheable("allMatches")
     public List<Dropdown> getAllMatches() {
         List<Dropdown> matches = new ArrayList<>();
         matchRepository.findAll().forEach(match -> {

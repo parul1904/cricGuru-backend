@@ -38,10 +38,11 @@ public class StatsMapper {
     private TeamRepository teamRepository;
 
     public StatsDto mapToStatsDto(Stats stats) {
+        Match match = stats.getMatchNo();
         return new StatsDto(
                 stats.getMatchStatsId(),
                 stats.getSeason().getSeasonId(),
-                stats.getMatchNo().getMatchNo(),
+                stats.getMatchNo().getMatchId(),
                 stats.getPlayerId().getPlayerId(),
                 stats.getRunsScored(),
                 stats.getBallFaced(),
@@ -100,20 +101,17 @@ public class StatsMapper {
         return stats;
     }
 
-    public List<ListStatsResponse> mapToStatsResponseList(List<StatsDto> statsList) {
+    public List<ListStatsResponse> mapToStatsResponseList(List<Object[]> statsList) {
         List<ListStatsResponse> statsResponseList = new ArrayList<>();
-        for (StatsDto stats : statsList) {
+        for (Object[] row : statsList) {
             ListStatsResponse statsResponse = new ListStatsResponse();
-            statsResponse.setId(stats.getMatchStatsId());
-            Season season = seasonRepository.findById(Long.valueOf(stats.getSeasonId())).orElseThrow();
-            statsResponse.setSeasonYear(String.valueOf(season.getYear()));
-            Match match = matchRepository.findById(Math.toIntExact(Long.valueOf(stats.getMatchId()))).orElseThrow();
-            statsResponse.setTeam1(match.getTeam1().getTeamLogoUrl());
-            statsResponse.setTeam2(match.getTeam2().getTeamLogoUrl());
-            statsResponse.setMatchDate(String.valueOf(match.getMatchDate()));
-            Player player = playerRepository.findById(Long.valueOf(stats.getPlayerId())).orElseThrow();
-            statsResponse.setPlayerName(player.getPlayerName());
-            statsResponse.setDream11Points(stats.getTotalPointDream11OldSystem());
+            statsResponse.setId((Integer) row[0]);
+            statsResponse.setSeasonYear(String.valueOf((Integer) row[1]));
+            statsResponse.setTeam1((String) row[2]);
+            statsResponse.setTeam2((String) row[3]);
+            statsResponse.setMatchDate(((java.sql.Date) row[4]).toLocalDate());
+            statsResponse.setPlayerName((String) row[5]);
+            statsResponse.setDream11Points((Integer) row[6]);
             statsResponseList.add(statsResponse);
         }
         return statsResponseList;
@@ -131,7 +129,8 @@ public class StatsMapper {
             response.setTeam2(match.getTeam2().getTeamLogoUrl());
             response.setMatchDate(match.getMatchDate().toString());
             Player player = playerRepository.findById(Long.valueOf((Integer) row[3])).orElseThrow();
-            response.setPlayer(player.getPlayerImgUrl());
+            response.setPlayerImage(player.getPlayerImgUrl());
+            response.setPlayerName(player.getPlayerName());
             response.setRunsScored((Integer) row[4]);
             response.setBallFaced((Integer) row[5]);
             response.setFours((Integer) row[6]);
@@ -242,10 +241,14 @@ public class StatsMapper {
             }
         }
 
-        // Set aggregated values
-        aggregatedResponse.setMatchesPlayed(!statsList.isEmpty() ? statsList.size() : 0);
+        if(!statsList.isEmpty() && null!=statsList.get(0).getMatchesPlayed()
+                && statsList.get(0).getMatchesPlayed() > 0){
+            aggregatedResponse.setMatchesPlayed(statsList.get(0).getMatchesPlayed());
+        } else  {
+            aggregatedResponse.setMatchesPlayed(0);
+        }
         aggregatedResponse.setBattingInnsPlayed(battingInnCounter);
-        aggregatedResponse.setSeasonYear(!statsList.isEmpty() ? statsList.get(0).getSeasonYear() : 0);
+        aggregatedResponse.setSeasonYear(!statsList.isEmpty() ? statsList.get(0).getSeasonYear() : null);
         aggregatedResponse.setPlayer(!statsList.isEmpty() ? statsList.get(0).getPlayer() : null);
         aggregatedResponse.setPlayerImgUrl(!statsList.isEmpty() ? statsList.get(0).getPlayerImgUrl() : null);
         aggregatedResponse.setPlayerRole(!statsList.isEmpty() ? statsList.get(0).getPlayerRole() : null);

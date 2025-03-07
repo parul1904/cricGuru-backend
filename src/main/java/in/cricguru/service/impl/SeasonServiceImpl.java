@@ -7,6 +7,7 @@ import in.cricguru.mapper.SeasonMapper;
 import in.cricguru.repository.SeasonRepository;
 import in.cricguru.service.SeasonService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class SeasonServiceImpl implements SeasonService {
 
     private SeasonRepository seasonRepository;
 
+    @Cacheable(cacheNames="allSeasons", key = "#seasonId")
     @Override
     public List<SeasonDto> getAllSeasons() {
         List<Season> seasons = seasonRepository.findAll();

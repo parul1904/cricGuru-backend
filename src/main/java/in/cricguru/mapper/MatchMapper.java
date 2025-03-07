@@ -11,6 +11,7 @@ import in.cricguru.repository.VenueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,58 +92,39 @@ public class MatchMapper {
         return match;
     }
 
-    public List<MatchResponse> mapToMatchResponse(List<MatchDto> matchDtos) {
+    public List<MatchResponse> mapToMatchResponse(List<Object[]> matchDtos) {
         List<MatchResponse> matchResponses = new ArrayList<>();
-        for (MatchDto match : matchDtos) {
+        List<MatchBetweenResponse> matchBetweenResponses = new ArrayList<>();
+
+        for (Object[] row : matchDtos) {
             MatchResponse response = new MatchResponse();
-            Season season = seasonRepository.findById(Long.valueOf(match.getSeasonId())).orElseThrow();
-            response.setMatchId(match.getMatchId());
-            response.setSeasonYear(season.getYear());
-            response.setMatchNo(match.getMatchNo());
-            Team team1 = teamRepository.findById(Long.valueOf(match.getTeam1Id())).orElseThrow();
-            response.setTeam1(team1.getTeamLogoUrl());
-            Team team2 = teamRepository.findById(Long.valueOf(match.getTeam2Id())).orElseThrow();
-            response.setTeam2(team2.getTeamLogoUrl());
-            Venue venue = venueRepository.findById(Long.valueOf(match.getVenueId())).orElseThrow();
-            response.setVenueName(venue.getVenueName());
-            match.setMatchDate(match.getMatchDate());
-            match.setMatchTime(match.getMatchTime());
-            match.setTossWonBy(match.getTossWonBy());
-            match.setTossDecision(match.getTossDecision());
-            match.setFirstInnRuns(match.getFirstInnRuns());
-            match.setFirstInnWickets(match.getFirstInnWickets());
-            match.setSecondInnRuns(match.getSecondInnRuns());
-            match.setSecondInnWickets(match.getSecondInnWickets());
-            match.setWicketTakenByPacer(match.getWicketTakenByPacer());
-            match.setWicketTakenBySpinner(match.getWicketTakenBySpinner());
-            if (null != match.getWinnerTeamId()) {
-                Team winnerTeam = teamRepository.findById(Long.valueOf(match.getWinnerTeamId())).orElseThrow();
-                response.setWinnerTeam(winnerTeam.getTeamLogoUrl());
-            }
-            response.setWinningMargin(match.getWinningMargin());
-            if (null != match.getPlayerOfTheMatch()) {
-                Player playerOfTheMatch = playerRepository.findById(Long.valueOf(match.getPlayerOfTheMatch())).orElseThrow();
-                response.setPlayerOfTheMatch(playerOfTheMatch.getNickName());
-            }
-            if (null != match.getMvp()) {
-                Player mvp = playerRepository.findById(Long.valueOf(match.getMvp())).orElseThrow();
-                response.setMvp(mvp.getNickName());
-            }
+            response.setMatchId((Integer) row[0]);
+            response.setSeasonYear((Integer) row[1]);
+            response.setMatchNo((Integer) row[2]);
+            response.setTeam1((String) row[3]);
+            response.setTeam2((String) row[4]);
+            response.setVenueName((String) row[5]);
+            response.setMatchDate(((java.sql.Date) row[6]).toLocalDate());
+            response.setMatchTime((String) row[7]);
+            response.setWinnerTeam((String) row[8]);
+            response.setWinningMargin((String) row[9]);
+            response.setPlayerOfTheMatch((String) row[10]);
+            response.setMvp((String) row[11]);
             matchResponses.add(response);
         }
         return matchResponses;
     }
 
 
-    public List<MatchBetweenResponse> mapToMatchBetweenResponse(List<Object[]> result) {
-        List<MatchBetweenResponse> matchBetweenResponses = new ArrayList<>();
-        for (Object[] row : result) {
-            MatchBetweenResponse response = new MatchBetweenResponse();
-            response.setTeam1Name((String) row[0]);
-            response.setTeam2Name((String) row[1]);
-            response.setMatchDate(row[2].toString());
-            matchBetweenResponses.add(response);
-        }
-        return matchBetweenResponses;
+public List<MatchBetweenResponse> mapToMatchBetweenResponse(List<Object[]> result) {
+    List<MatchBetweenResponse> matchBetweenResponses = new ArrayList<>();
+    for (Object[] row : result) {
+        MatchBetweenResponse response = new MatchBetweenResponse();
+        response.setTeam1Name((String) row[0]);
+        response.setTeam2Name((String) row[1]);
+        response.setMatchDate(row[2].toString());
+        matchBetweenResponses.add(response);
     }
+    return matchBetweenResponses;
+}
 }

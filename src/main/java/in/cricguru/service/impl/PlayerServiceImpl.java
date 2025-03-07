@@ -7,6 +7,7 @@ import in.cricguru.mapper.PlayerMapper;
 import in.cricguru.repository.PlayerRepository;
 import in.cricguru.service.PlayerService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class PlayerServiceImpl implements PlayerService {
 
     private PlayerRepository playerRepository;
 
+    @Cacheable(cacheNames="allPlayer")
     @Override
     public List<PlayerDto> getAllPlayers() {
         List<Player> players = playerRepository.findAll();

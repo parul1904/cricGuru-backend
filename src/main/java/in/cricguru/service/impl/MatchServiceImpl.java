@@ -36,10 +36,10 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public List<MatchResponse> getAllMatches() {
-        List<MatchDto> matchDto = matchRepository.findAll().stream()
-                .map(matchMapper::mapToMatchDto)
+        List<Object[]> result = matchRepository.getAllMatchDetails().stream()
                 .collect(Collectors.toList());
-        return matchMapper.mapToMatchResponse(matchDto);
+        List<MatchResponse> matchDto = matchMapper.mapToMatchResponse(result);
+        return matchDto;
     }
 
     @Override

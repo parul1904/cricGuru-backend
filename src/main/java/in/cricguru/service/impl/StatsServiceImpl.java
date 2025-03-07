@@ -37,8 +37,7 @@ public class StatsServiceImpl implements StatsService {
 
     @Override
     public List<ListStatsResponse> getAllStats() {
-        List<StatsDto> statsDtos = statsRepository.findAll().stream()
-                .map(statsMapper::mapToStatsDto)
+        List<Object[]> statsDtos = statsRepository.getAllStats().stream()
                 .collect(Collectors.toList());
         return statsMapper.mapToStatsResponseList(statsDtos);
     }

@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,7 +14,7 @@ public class ListStatsResponse {
     private String seasonYear;
     private String team1;
     private String team2;
-    private String matchDate;
+    private LocalDate matchDate;
     private String playerName;
     private Integer dream11Points;
 }

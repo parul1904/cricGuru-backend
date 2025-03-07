@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/v1/teams")
-@CrossOrigin(origins = "http://192.168.1.114:3000")
+@CrossOrigin(origins = "http://43.204.102.164:3000")
 public class TeamController {
 
     private TeamService teamService;

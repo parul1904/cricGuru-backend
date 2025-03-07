@@ -7,6 +7,7 @@ import in.cricguru.mapper.TeamMapper;
 import in.cricguru.repository.TeamRepository;
 import in.cricguru.service.TeamService;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,7 @@ public class TeamServiceImpl implements TeamService {
 
     private TeamRepository teamRepository;
 
+    @Cacheable(cacheNames="allTeams")
     @Override
     public List<TeamDto> getAllTeams() {
         List<Team> teams = teamRepository.findAll();

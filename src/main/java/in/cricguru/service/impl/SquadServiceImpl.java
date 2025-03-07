@@ -10,6 +10,7 @@ import in.cricguru.repository.SquadRepository;
 import in.cricguru.service.SquadService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,6 +26,7 @@ public class SquadServiceImpl implements SquadService {
     @Autowired
     private SquadMapper squadMapper;
 
+    @Cacheable(cacheNames="allSquads")
     @Override
     public List<SquadResponse> getAllSquads() {
         List<Squad> squads = squadRepository.findAll();
