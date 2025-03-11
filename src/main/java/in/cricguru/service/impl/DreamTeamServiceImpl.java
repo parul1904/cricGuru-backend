@@ -22,8 +22,20 @@ public class DreamTeamServiceImpl implements DreamTeamService {
     }
 
 
-    public List<DreamTeamResponse> getDreamTeamByMatchNo(Integer matchNo) {
-        List<Object[]> dbResults = statsRepository.getDreamTeamByMatchNo(Long.valueOf(matchNo)).stream()
+    public List<DreamTeamResponse> getOldDreamTeamByMatchNo(Integer matchNo) {
+        List<Object[]> dbResults = statsRepository.getOldDreamTeamByMatchNo(Long.valueOf(matchNo)).stream()
+                .collect(Collectors.toList());
+        return dreamTeamMapper.mapToDreamTeamResponse(dbResults);
+    }
+
+    public List<DreamTeamResponse> getNewDreamTeamByMatchNo(Integer matchNo) {
+        List<Object[]> dbResults = statsRepository.getNewDreamTeamByMatchNo(Long.valueOf(matchNo)).stream()
+                .collect(Collectors.toList());
+        return dreamTeamMapper.mapToDreamTeamResponse(dbResults);
+    }
+
+    public List<DreamTeamResponse> getMy11CircleDreamTeamByMatchNo(Integer matchNo) {
+        List<Object[]> dbResults = statsRepository.getMy11CircleDreamTeamByMatchNo(Long.valueOf(matchNo)).stream()
                 .collect(Collectors.toList());
         return dreamTeamMapper.mapToDreamTeamResponse(dbResults);
     }

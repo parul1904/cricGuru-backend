@@ -73,6 +73,7 @@ public class SquadServiceImpl implements SquadService {
         squadRepository.deleteById(squadId);
     }
 
+    @Cacheable(cacheNames="squadDetailsByTeam", key = "#teamId")
     @Override
     public SquadTeamResponse getSquadDetailsByTeam(Long teamId) {
         List<Object[]> squadDetails = squadRepository.findSquadDetailsByTeam(Math.toIntExact(teamId));

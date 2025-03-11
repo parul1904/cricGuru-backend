@@ -4,6 +4,7 @@ import in.cricguru.dto.StatsDto;
 import in.cricguru.response.ListStatsResponse;
 import in.cricguru.response.StatsPerMatchResponse;
 import in.cricguru.response.StatsPerPlayerResponse;
+import in.cricguru.response.VenueStatsResponse;
 
 import java.util.List;
 
@@ -18,4 +19,8 @@ public interface StatsService {
     void deleteStats(Integer id);
 
     StatsPerPlayerResponse getPlayerStatsByPlayerId(Integer playerId);
+
+    StatsPerPlayerResponse getAllStatsByTeamId(Integer teamId);
+
+    VenueStatsResponse getVenueStats(Integer venueId);
 } 

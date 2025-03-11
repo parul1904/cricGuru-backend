@@ -12,6 +12,7 @@ import in.cricguru.repository.MatchRepository;
 import in.cricguru.repository.PlayerRepository;
 import in.cricguru.repository.SeasonRepository;
 import in.cricguru.repository.TeamRepository;
+import in.cricguru.response.VenueStatsResponse;
 import in.cricguru.util.Dream11NewPointCalculator;
 import in.cricguru.util.Dream11OldPointCalculator;
 import in.cricguru.util.My11CirclePointCalculator;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.math.BigDecimal;
 
 @Component
 public class StatsMapper {
@@ -121,69 +123,105 @@ public class StatsMapper {
         List<StatsPerMatchResponse> statsResponseList = new ArrayList<>();
         for (Object[] row : result) {
             StatsPerMatchResponse response = new StatsPerMatchResponse();
-            response.setMatchId((Integer) row[2]);
-            Season season = seasonRepository.findById(Long.valueOf((Integer) row[1])).orElseThrow();
-            response.setSeasonYear(String.valueOf(season.getYear()));
-            Match match = matchRepository.findById(Math.toIntExact(Long.valueOf((Integer) row[2]))).orElseThrow();
-            response.setTeam1(match.getTeam1().getTeamLogoUrl());
-            response.setTeam2(match.getTeam2().getTeamLogoUrl());
-            response.setMatchDate(match.getMatchDate().toString());
-            Player player = playerRepository.findById(Long.valueOf((Integer) row[3])).orElseThrow();
-            response.setPlayerImage(player.getPlayerImgUrl());
-            response.setPlayerName(player.getPlayerName());
-            response.setRunsScored((Integer) row[4]);
-            response.setBallFaced((Integer) row[5]);
-            response.setFours((Integer) row[6]);
-            response.setSixes((Integer) row[7]);
-            response.setStrikeRate((Double) row[8]);
-            response.setOvers((Double) row[9]);
-            response.setTotalWickets((Integer) row[10]);
-            response.setBowledLbw((Integer) row[11]);
-            response.setOtherDismissal((Integer) row[12]);
-            response.setRunsConceded((Integer) row[13]);
-            response.setDots((Integer) row[14]);
-            response.setMaiden((Integer) row[15]);
-            response.setEconomyRate((Double) row[16]);
-            response.setCatchTaken((Integer) row[17]);
-            response.setStumping((Integer) row[18]);
-            response.setDirectRunout((Integer) row[19]);
-            response.setInDirectRunout((Integer) row[20]);
-            response.setIsImpactPlayer((Boolean) row[21]);
-            response.setTotalPointDream11NewSystem((Integer) row[22]);
-            response.setTotalPointDream11OldSystem((Integer) row[23]);
-            response.setTotalPointMy11CircleSystem((Integer) row[24]);
+            response.setPlayerName(row[0] != null ? ((String) row[0]) : null);
+            response.setPlayerImage(row[1] != null ? ((String) row[1]) : null);
+            response.setRunsScored(row[2] != null ? ((Integer) row[2]) : 0);
+            response.setFours(row[3] != null ? ((Integer) row[3]) : 0);
+            response.setSixes(row[4] != null ? ((Integer) row[4]) : 0);
+            response.setStrikeRate(row[5] != null ? (Double) row[5] : 0.0);
+            response.setCatchTaken(row[6] != null ? ((Integer) row[6]) : 0);
+            response.setOvers(row[7] != null ? ((Double) row[7]) : 0.0);
+            response.setTotalWickets(row[8] != null ? ((Integer) row[8]) : 0);
+            response.setRunsConceded(row[9] != null ? ((Integer) row[9]) : 0);
+            response.setDots(row[10] != null ? ((Integer) row[10]) : 0);
+            response.setEconomyRate(row[11] != null ? (Double) row[11] : 0.0);
+            response.setTotalPointDream11OldSystem(row[12] != null ? ((Integer) row[12]) : 0);
+            response.setTotalPointDream11NewSystem(row[13] != null ? ((Integer) row[13]) : 0);
+            response.setTotalPointMy11CircleSystem(row[14] != null ? ((Integer) row[14]) : 0);
             statsResponseList.add(response);
         }
         return statsResponseList;
     }
 
     public StatsPerPlayerResponse mapToStatsPerPlayerResponseList(List<Object[]> result) {
-        List<StatsPerPlayerResponse> statsResponseList = new ArrayList<>();
+        StatsPerPlayerResponse response = new StatsPerPlayerResponse();
         for (Object[] row : result) {
-            StatsPerPlayerResponse response = new StatsPerPlayerResponse();
-            response.setSeasonYear((Integer) row[1]);
-            response.setMatchNo((Integer) row[2]);
-            response.setPlayer((String) row[3]);
-            response.setPlayerImgUrl((String) row[4]);
-            response.setPlayerRole((String) row[5]);
-            response.setPlayerCountry((String) row[6]);
-            response.setRunsScored((Integer) row[7]);
-            response.setBallFaced((Integer) row[8]);
-            response.setFours((Integer) row[9]);
-            response.setSixes((Integer) row[10]);
-            response.setStrikeRate((Double) row[11]);
-            response.setOvers((Double) row[12]);
-            response.setTotalWickets((Integer) row[13]);
-            response.setRunsConceded((Integer) row[14]);
-            response.setEconomyRate((Double) row[15]);
-            response.setCatchTaken((Integer) row[16]);
-            response.setStumping((Integer) row[17]);
-            response.setIsImpactPlayer((Boolean) row[18]);
-            statsResponseList.add(response);
+            response.setBattingInnsPlayed(row[0] != null ? ((BigDecimal) row[0]).intValue() : 0);
+            response.setRunsScored(row[1] != null ? ((BigDecimal) row[1]).intValue() : 0);
+            response.setBallFaced(row[2] != null ? ((BigDecimal) row[2]).intValue() : 0);
+            response.setFours(row[3] != null ? ((BigDecimal) row[3]).intValue() : 0);
+            response.setSixes(row[4] != null ? ((BigDecimal) row[4]).intValue() : 0);
+            response.setStrikeRate(row[5] != null ? (Double) row[5] : 0.0);
+            response.setHalfCentury(row[6] != null ? ((BigDecimal) row[6]).intValue() : 0);
+            response.setCentury(row[7] != null ? ((BigDecimal) row[7]).intValue() : 0);
+            response.setCatchTaken(row[8] != null ? ((BigDecimal) row[8]).intValue() : 0);
+            response.setStumping(row[9] != null ? ((BigDecimal) row[9]).intValue() : 0);
+            response.setBowlingInnsPlayed(row[10] != null ? ((BigDecimal) row[10]).intValue() : 0);
+            response.setOvers(row[11] != null ? (Double) row[11] : 0.0);
+            response.setTotalWickets(row[12] != null ? ((BigDecimal) row[12]).intValue() : 0);
+            response.setRunsConceded(row[13] != null ? ((BigDecimal) row[13]).intValue() : 0);
+            response.setDots(row[14] != null ? ((BigDecimal) row[14]).intValue() : 0);
+            response.setMaidens(row[15] != null ? ((BigDecimal) row[15]).intValue() : 0);
+            response.setBowlingAverage(row[16] != null ? ((BigDecimal) row[16]).doubleValue() : 0.0);
+            response.setEconomyRate(row[17] != null ? (Double) row[17] : 0.0);
+            response.setMatchesPlayed(row[18] != null ? ((Long) row[18]).intValue() : 0);
         }
-        return aggregateStats(statsResponseList);
+        return response;
     }
 
+
+    public StatsPerPlayerResponse mapToStatsPerTeamResponseList(List<Object[]> result) {
+        StatsPerPlayerResponse response = new StatsPerPlayerResponse();
+        for (Object[] row : result) {
+            response.setTeamName(row[0] != null ? ((String) row[0]) : null);
+            response.setRunsScored(row[1] != null ? ((BigDecimal) row[1]).intValue() : 0);
+            response.setBallFaced(row[2] != null ? ((BigDecimal) row[2]).intValue() : 0);
+            response.setFours(row[3] != null ? ((BigDecimal) row[3]).intValue() : 0);
+            response.setSixes(row[4] != null ? ((BigDecimal) row[4]).intValue() : 0);
+            response.setStrikeRate(row[5] != null ? (Double) row[5] : 0.0);
+            response.setHalfCentury(row[6] != null ? ((BigDecimal) row[6]).intValue() : 0);
+            response.setCentury(row[7] != null ? ((BigDecimal) row[7]).intValue() : 0);
+            response.setCatchTaken(row[8] != null ? ((BigDecimal) row[8]).intValue() : 0);
+            response.setStumping(row[9] != null ? ((BigDecimal) row[9]).intValue() : 0);
+            response.setBowlingInnsPlayed(row[10] != null ? ((BigDecimal) row[10]).intValue() : 0);
+            response.setOvers(row[11] != null ? (Double) row[11] : 0.0);
+            response.setTotalWickets(row[12] != null ? ((BigDecimal) row[12]).intValue() : 0);
+            response.setRunsConceded(row[13] != null ? ((BigDecimal) row[13]).intValue() : 0);
+            response.setDots(row[14] != null ? ((BigDecimal) row[14]).intValue() : 0);
+            response.setMaidens(row[15] != null ? ((BigDecimal) row[15]).intValue() : 0);
+            response.setBowlingAverage(row[16] != null ? ((BigDecimal) row[16]).doubleValue() : 0.0);
+            response.setEconomyRate(row[17] != null ? (Double) row[17] : 0.0);
+        }
+        return response;
+    }
+
+    public VenueStatsResponse mapToStatsPerVenue(List<Object[]> result) {
+        VenueStatsResponse response = new VenueStatsResponse();
+        for (Object[] row : result) {
+            response.setBattingInnsPlayed(row[0] != null ? ((BigDecimal) row[0]).intValue() : 0);
+            response.setRunsScored(row[1] != null ? ((BigDecimal) row[1]).intValue() : 0);
+            response.setBallFaced(row[2] != null ? ((BigDecimal) row[2]).intValue() : 0);
+            response.setFours(row[3] != null ? ((BigDecimal) row[3]).intValue() : 0);
+            response.setSixes(row[4] != null ? ((BigDecimal) row[4]).intValue() : 0);
+            response.setStrikeRate(row[5] != null ? (Double) row[5] : 0.0);
+            response.setHalfCentury(row[6] != null ? ((BigDecimal) row[6]).intValue() : 0);
+            response.setCentury(row[7] != null ? ((BigDecimal) row[7]).intValue() : 0);
+            response.setCatchTaken(row[8] != null ? ((BigDecimal) row[8]).intValue() : 0);
+            response.setStumping(row[9] != null ? ((BigDecimal) row[9]).intValue() : 0);
+            response.setBowlingInnsPlayed(row[10] != null ? ((BigDecimal) row[10]).intValue() : 0);
+            response.setOvers(row[11] != null ? (Double) row[11] : 0.0);
+            response.setTotalWickets(row[12] != null ? ((BigDecimal) row[12]).intValue() : 0);
+            response.setRunsConceded(row[13] != null ? ((BigDecimal) row[13]).intValue() : 0);
+            response.setDots(row[14] != null ? ((BigDecimal) row[14]).intValue() : 0);
+            response.setMaidens(row[15] != null ? ((BigDecimal) row[15]).intValue() : 0);
+            response.setBowlingAverage(row[16] != null ? ((BigDecimal) row[16]).doubleValue() : 0.0);
+            response.setEconomyRate(row[17] != null ? (Double) row[17] : 0.0);
+            response.setMatchesPlayed(row[18] != null ? ((Long) row[18]).intValue() : 0);
+        }
+        return response;
+    }
+
+    /*
     public StatsPerPlayerResponse aggregateStats(List<StatsPerPlayerResponse> statsList) {
         StatsPerPlayerResponse aggregatedResponse = new StatsPerPlayerResponse();
         int totalRunsScored = 0;
@@ -296,6 +334,7 @@ public class StatsMapper {
         aggregatedResponse.setThreeWicketHauls(threeWicketHaulsCounter);
         return aggregatedResponse;
     }
+     */
 
     public static int oversToBalls(double overs) {
         if (overs < 0) {

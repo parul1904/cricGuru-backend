@@ -1,5 +1,6 @@
 package in.cricguru.controller;
 
+import in.cricguru.entity.Match;
 import in.cricguru.response.MatchBetweenResponse;
 import in.cricguru.dto.MatchDto;
 import in.cricguru.response.MatchResponse;
@@ -7,7 +8,9 @@ import in.cricguru.service.MatchService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -49,5 +52,34 @@ public class MatchController {
     @GetMapping("/matchId/{matchId}")
     public ResponseEntity<List<MatchBetweenResponse>> getMatchDetailsByMatchId(@PathVariable Integer matchId) {
         return ResponseEntity.ok(matchService.getMatchDetailsByMatchId(matchId));
+    }
+
+    @GetMapping("/fixture")
+    public ModelAndView getMatches() {
+        ModelAndView modelAndView = new ModelAndView("user/fixture");
+        List<MatchResponse> matches = matchService.getAllMatches();
+        modelAndView.addObject("matches", matches);
+        return modelAndView;
+    }
+
+    @GetMapping("/matches")
+    @ResponseBody
+    public ResponseEntity<List<MatchResponse>> getAllMatchDetailsBySeason(@RequestParam Integer seasonYear) {
+        try {
+            List<MatchResponse> matches = matchService.getAllMatchDetailsBySeasonId(seasonYear);
+            return ResponseEntity.ok(matches);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
+
+    @GetMapping("/matchcentre")
+    public ModelAndView getMatchCentre(@RequestParam Integer matchId, Model model) {
+        ModelAndView modelAndView = new ModelAndView("user/matchcentre");
+        MatchDto match = matchService.getMatchById(matchId);
+        model.addAttribute("match", match);
+        return modelAndView;
     }
 } 

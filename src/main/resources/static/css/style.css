@@ -1,0 +1,31 @@
+body, navbar {
+    background-image: url('../images/back.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Semi-transparent overlay */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);  /* Changed opacity to 0.9 (90% opaque) */
+    z-index: -1;
+    backdrop-filter: blur(5px);  /* Added subtle blur effect */
+}
+
+
+/* Ensure content remains readable on all pages */
+.main-content {
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}

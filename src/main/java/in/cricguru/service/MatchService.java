@@ -14,4 +14,6 @@ public interface MatchService {
     void deleteMatch(Integer id);
 
     List<MatchBetweenResponse> getMatchDetailsByMatchId(Integer seasonId);
+
+    List<MatchResponse> getAllMatchDetailsBySeasonId(Integer seasonId);
 } 

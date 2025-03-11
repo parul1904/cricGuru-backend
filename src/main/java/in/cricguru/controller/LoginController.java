@@ -6,13 +6,13 @@ import in.cricguru.service.UserService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import static in.cricguru.shared.CricGuruConstant.BASE_URL;
 
-@RestController
-@RequestMapping("/api/v1/auth")
-@CrossOrigin(origins = BASE_URL)
+@Controller
 public class LoginController {
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(LoginController.class);
     @Autowired

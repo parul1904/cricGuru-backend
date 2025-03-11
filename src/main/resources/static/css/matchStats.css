@@ -1,0 +1,389 @@
+.cricket-field {
+    background: radial-gradient(
+        circle at center,
+        #4CAF50 0%,    /* Bright green for pitch area */
+        #4CAF50 30%,   /* Maintain bright green */
+        #388E3C 50%,   /* Slightly darker for inner field */
+        #2E7D32 70%,   /* Darker for outer field */
+        #1B5E20 100%   /* Darkest for boundary area */
+    ),
+    linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.1) 25%,
+        transparent 25%,
+        transparent 75%,
+        rgba(255, 255, 255, 0.1) 75%
+    );
+    background-size: 100% 100%, 20px 20px;  /* Second value creates subtle texture */
+    padding: 15px;
+    border-radius: 15px;
+    margin: 15px auto;
+    max-width: 800px;
+    width: 90%;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.2),  /* Inner shadow for depth */
+                0 4px 8px rgba(0, 0, 0, 0.1);  /* Outer shadow for elevation */
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add stadium-like lines */
+.cricket-field::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    height: 80%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.cricket-field::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60%;
+    height: 60%;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.total-points-container {
+    text-align: center;
+    margin-bottom: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 10px;
+    border-radius: 10px;
+    display: inline-block;
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.total-points {
+    font-size: 2em;
+    font-weight: bold;
+    color: #1a237e;
+}
+
+.total-points-label {
+    font-size: 1em;
+    color: #333;
+}
+
+.player-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.section {
+    position: relative;
+    padding: 15px 10px;
+    min-height: 100px;
+    background: rgba(255, 255, 255, 0.05);  /* Subtle white overlay */
+    border-radius: 10px;
+    backdrop-filter: blur(2px);
+}
+
+.section-title {
+    color: white;
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    letter-spacing: 1px;
+}
+
+.section-background {
+    position: absolute;
+    top: 50%;  /* Changed from bottom: 0 to top: 50% */
+    left: 50%;
+    transform: translate(-50%, -50%);  /* Updated transform for both X and Y centering */
+    font-size: 3.5em;  /* Increased font size */
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.1);  /* Reduced opacity further */
+    text-transform: uppercase;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    z-index: 1;
+    letter-spacing: 3px;  /* Added letter spacing for better readability */
+}
+
+.players-container {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    justify-content: center;
+    z-index: 2; /* Ensures players appear above the background text */
+}
+
+.player-card {
+    padding: 2px;
+    width: 100px; /* Further reduced width */
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.player-card:hover {
+    transform: translateY(-5px);
+}
+
+.player-image-container {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto;
+    border-radius: 50%;
+    background-color: #f5f5f5; /* Light background for images that don't fill the space */
+}
+
+.player-image-container-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player-image-container-captain {
+    border: 2px solid gold;  /* Changed from square border to circular */
+    box-shadow: 0 0 5px gold;  /* Added subtle glow effect */
+}
+
+.player-image-container-img img {
+    width: auto; /* Changed from 100% to auto */
+    height: auto; /* Changed from 100% to auto */
+    min-width: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: center top; /* Focus on the top part where faces usually are */
+    transform: scale(1.1); /* Slightly scale up to avoid white edges */
+}
+
+.player-leadership-role {
+    position: absolute;
+    left: -5px;  /* Changed from right to left */
+    top: -5px;   /* Changed from bottom to top */
+    background: #1a237e;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.7em;
+}
+
+.player-leadership-role-captain {
+    background: gold;
+    color: #1a237e;
+}
+
+.player-leadership-role-vice-captain {
+    background: silver;
+    color: #1a237e;
+}
+
+.player-info {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.player-name {
+    font-size: 0.8em;
+    line-height: 1.1;
+    display: inline;
+    color: #000;
+    font-weight: 600;
+}
+
+.player-name-captain {
+    color: #000; /* Changed from gold to black */
+    font-weight: 700; /* Make captain name slightly bolder */
+}
+
+.player-points {
+    font-size: 0.8em;
+    display: inline;
+    color: #000;
+    font-weight: 600;
+}
+
+/* Separator dash */
+.player-separator {
+    color: #000;
+    margin: 0 2px;
+    font-weight: 600;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cricket-field {
+        padding: 10px;
+        width: 95%;
+    }
+    
+    .cricket-field::before,
+    .cricket-field::after {
+        width: 90%;
+        height: 90%;
+    }
+
+    .section {
+        min-height: 100px;
+    }
+
+    .section-background {
+        font-size: 2em;
+    }
+
+    .player-card {
+        width: 80px;
+    }
+
+    .player-image-container {
+        width: 55px;
+        height: 55px;
+    }
+
+    .section-title {
+        font-size: 1em;
+    }
+
+    .player-name, 
+    .player-points {
+        font-size: 0.7em;
+    }
+
+    .player-info {
+        padding: 2px 6px;
+    }
+
+    .player-leadership-role {
+        width: 18px;
+        height: 18px;
+        font-size: 0.6em;
+        left: -3px;
+        top: -3px;
+    }
+
+    .player-info {
+        gap: 2px;
+    }
+}
+
+/* For very small screens */
+@media (max-width: 320px) {
+    .section-background {
+        font-size: 1.5em;
+    }
+
+    .player-card {
+        width: 70px;
+    }
+
+    .player-image-container {
+        width: 45px;
+        height: 45px;
+    }
+}
+
+.navigation-container {
+    text-align: center;
+    padding: 15px;
+}
+
+.btn-group {
+    margin-bottom: 10px;
+}
+
+.btn-group .btn {
+    min-width: 120px;
+    font-weight: 500;
+}
+
+#dreamTeamDropdown {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+#pointSystemSelect {
+    width: 100%;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+#playerStatsSection {
+    margin-top: 20px;
+}
+
+#playerStatsSection .table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    border-collapse: collapse;
+}
+
+#playerStatsSection .table th,
+#playerStatsSection .table td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-top: 1px solid #dee2e6;
+    text-align: center;
+}
+
+#playerStatsSection .table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #343a40;
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+#playerStatsSection .table tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+#playerStatsSection .table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.075);
+}
+
+@media screen and (max-width: 768px) {
+    #playerStatsSection .table {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    #playerStatsSection .table th,
+    #playerStatsSection .table td {
+        white-space: nowrap;
+        min-width: 100px;
+    }
+}

@@ -2,7 +2,9 @@ package in.cricguru.mapper;
 
 import in.cricguru.dto.VenueDto;
 import in.cricguru.entity.Venue;
+import org.springframework.stereotype.Component;
 
+@Component
 public class VenueMapper {
 
     public static VenueDto mapToVenueDto(Venue venue) {

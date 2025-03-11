@@ -43,6 +43,14 @@ public class MatchServiceImpl implements MatchService {
     }
 
     @Override
+    public List<MatchResponse> getAllMatchDetailsBySeasonId(Integer seasonId) {
+        List<Object[]> result = matchRepository.getAllMatchDetailsBySeason(seasonId).stream()
+                .collect(Collectors.toList());
+        List<MatchResponse> matchDto = matchMapper.mapToMatchResponse(result);
+        return matchDto;
+    }
+
+    @Override
     public MatchDto updateMatch(Integer id, MatchDto matchDto) {
         if (!matchRepository.existsById(id)) {
             throw new RuntimeException("Match not found with id: " + id);

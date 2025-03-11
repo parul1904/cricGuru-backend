@@ -1,0 +1,139 @@
+.venue-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.venue-image img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.venue-name {
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.stat-section {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.stat-section h3 {
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.stat-value {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.table {
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+    white-space: nowrap;
+}
+
+.table td, .table th {
+    vertical-align: middle;
+    text-align: center;
+    padding: 12px 8px;
+}
+
+/* Responsive table styles */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+}
+
+/* Mobile-specific styles */
+@media screen and (max-width: 767px) {
+    .table-responsive {
+        margin-bottom: 0;
+    }
+
+    .table {
+        font-size: 14px;
+    }
+
+    .table th, 
+    .table td {
+        padding: 8px 4px;
+    }
+
+    /* Optional: Stack the table on mobile */
+    .table thead {
+        display: none;
+    }
+
+    .table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #dee2e6;
+    }
+
+    .table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: none;
+        border-bottom: 1px solid #dee2e6;
+        padding: 8px 12px;
+    }
+
+    .table td:last-child {
+        border-bottom: none;
+    }
+
+    .table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        margin-right: 8px;
+    }
+
+    .stat-section {
+        padding: 15px;
+    }
+
+    .stat-section h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+}
+
+/* Ensure horizontal scrolling works smoothly */
+.table-responsive::-webkit-scrollbar {
+    height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}

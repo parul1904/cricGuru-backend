@@ -3,6 +3,7 @@ spring:
     url: jdbc:mysql://cricguru.cjiiekoqyb0b.ap-south-1.rds.amazonaws.com:3306/cricguru_db?useSSL=false
     username: cricguru_admin
     password: psv0oqacCJZ49lvmzamA
+    driver-class-name: com.mysql.jdbc.Driver
   jpa:
     properties:
       hibernate:
@@ -10,10 +11,10 @@ spring:
     hibernate:
       ddl-auto: none
 
+  mvc:
+    view:
+      prefix: /WEB-INF/jsp/
+      suffix: .jsp
+
 server:
-  port: 8080
-  ssl:
-    key-store: classpath:keyStore.jks
-    key-password: ipl2025
-    key-store-type: JKS
-    key-alias: keystore
+  port: 8081

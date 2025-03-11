@@ -1,12 +1,15 @@
 package in.cricguru.controller;
 import in.cricguru.dto.SquadDto;
+import in.cricguru.dto.TeamDto;
 import in.cricguru.response.SquadResponse;
 import in.cricguru.response.SquadTeamResponse;
 import in.cricguru.service.SquadService;
+import in.cricguru.service.TeamService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -14,16 +17,27 @@ import static in.cricguru.shared.CricGuruConstant.BASE_URL;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/squads")
-@CrossOrigin(origins = BASE_URL)
 public class SquadController {
 
     private SquadService squadService;
 
-    @GetMapping
-    public ResponseEntity<List<SquadResponse>> getAllSquads(){
-        List<SquadResponse> players = squadService.getAllSquads();
-        return ResponseEntity.ok(players);
+    private TeamService teamService;
+
+    @GetMapping("/squads")
+    public ModelAndView getAllSquads() {
+        List<TeamDto> teams = teamService.getAllTeams();
+        List<SquadResponse> squads = squadService.getAllSquads();
+        ModelAndView modelAndView = new ModelAndView("user/squad");
+        modelAndView.addObject("teams", teams);
+        modelAndView.addObject("squads", squads);
+        modelAndView.addObject("pageName", "Squad");
+        return modelAndView;
+    }
+
+    @GetMapping("/team/{teamId}/squads")
+    public ResponseEntity<SquadTeamResponse> getSquadsByTeam(@PathVariable("teamId") Long teamId) {
+        SquadTeamResponse squads = squadService.getSquadDetailsByTeam(teamId);
+        return ResponseEntity.ok(squads);
     }
 
     // build create Player REST API

@@ -3,6 +3,7 @@ package in.cricguru.response;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.validation.constraints.Digits;
 
 @Data
 @NoArgsConstructor
@@ -11,6 +12,7 @@ public class StatsPerPlayerResponse {
     private Integer matchId;
     private Integer seasonYear;
     private Integer matchNo;
+    private String teamName;
     private String player;
     private String playerImgUrl;
     private String playerRole;
@@ -32,9 +34,10 @@ public class StatsPerPlayerResponse {
     private Double overs;
     private Integer runsConceded;
     private Integer totalWickets;
+    private Integer dots;
+    private Integer maidens;
     private Double bowlingAverage;
     private Double economyRate;
-    private Double bowlingStrikeRate;
     private Integer threeWicketHauls;
     private Boolean isImpactPlayer;
 }

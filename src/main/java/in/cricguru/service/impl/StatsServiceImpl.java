@@ -7,8 +7,10 @@ import in.cricguru.response.StatsPerPlayerResponse;
 import in.cricguru.entity.Stats;
 import in.cricguru.mapper.StatsMapper;
 import in.cricguru.repository.StatsRepository;
+import in.cricguru.response.VenueStatsResponse;
 import in.cricguru.service.StatsService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class StatsServiceImpl implements StatsService {
         return statsMapper.mapToStatsDto(savedStats);
     }
 
+
     @Override
     public StatsDto getStatsById(Integer id) {
         Stats stats = statsRepository.findById(Long.valueOf(id))
@@ -35,6 +38,8 @@ public class StatsServiceImpl implements StatsService {
         return statsMapper.mapToStatsDto(stats);
     }
 
+
+    @Cacheable(cacheNames="allStats")
     @Override
     public List<ListStatsResponse> getAllStats() {
         List<Object[]> statsDtos = statsRepository.getAllStats().stream()
@@ -74,5 +79,19 @@ public class StatsServiceImpl implements StatsService {
         List<Object[]> statsDtos = statsRepository.getPlayerStatsByPlayerId(Long.valueOf(playerId)).stream()
                 .collect(Collectors.toList());
             return statsMapper.mapToStatsPerPlayerResponseList(statsDtos);
+    }
+
+    @Override
+    public StatsPerPlayerResponse getAllStatsByTeamId(Integer teamId) {
+        List<Object[]> statsDtos = statsRepository.getAllStatsByTeamId(Long.valueOf(teamId)).stream()
+                .collect(Collectors.toList());
+        return statsMapper.mapToStatsPerTeamResponseList(statsDtos);
+    }
+
+    @Override
+    public VenueStatsResponse getVenueStats(Integer venueId) {
+        List<Object[]> statsDtos = statsRepository.getAllStatsByVenue(Long.valueOf(venueId)).stream()
+                .collect(Collectors.toList());
+        return statsMapper.mapToStatsPerVenue(statsDtos);
     }
 } 
