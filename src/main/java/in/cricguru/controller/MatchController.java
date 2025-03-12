@@ -1,6 +1,5 @@
 package in.cricguru.controller;
 
-import in.cricguru.entity.Match;
 import in.cricguru.response.MatchBetweenResponse;
 import in.cricguru.dto.MatchDto;
 import in.cricguru.response.MatchResponse;
@@ -17,7 +16,7 @@ import java.util.List;
 @CrossOrigin("*")
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/matches")
+@RequestMapping("/matches")
 public class MatchController {
 
     private final MatchService matchService;
@@ -57,8 +56,12 @@ public class MatchController {
     @GetMapping("/fixture")
     public ModelAndView getMatches() {
         ModelAndView modelAndView = new ModelAndView("user/fixture");
-        List<MatchResponse> matches = matchService.getAllMatches();
-        modelAndView.addObject("matches", matches);
+        // Get matches for 2024 by default
+        List<MatchResponse> matches2024 = matchService.getAllMatchDetailsBySeasonId(2024);
+        List<MatchResponse> matches2025 = matchService.getAllMatchDetailsBySeasonId(2025);
+        modelAndView.addObject("matches2024", matches2024);
+        modelAndView.addObject("matches2025", matches2025);
+        modelAndView.addObject("defaultSeason", "2024"); // Add this to help JavaScript know the default season
         return modelAndView;
     }
 

@@ -12,7 +12,7 @@ import static in.cricguru.shared.CricGuruConstant.BASE_URL;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/seasons")
+@RequestMapping("/seasons")
 @CrossOrigin(origins = BASE_URL)
 public class SeasonController {
 

@@ -24,7 +24,6 @@
                     <!-- Bootstrap CSS -->
                     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
                     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LineIcons.2.0.css" />
-                    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animate.css" />
                     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/tiny-slider.css" />
                     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/glightbox.min.css" />
                     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css" />
@@ -56,15 +55,66 @@
 
     <!-- Season Tabs -->
     <div class="season-tabs">
-        <button class="season-tab" data-season="2024">IPL 2024</button>
-        <button class="season-tab" data-season="2025">IPL 2025</button>
+        <button class="season-tab btn btn-secondary" data-season="2024">IPL 2024</button>
+        <button class="season-tab btn btn-secondary" data-season="2025">IPL 2025</button>
     </div>
 
     <!-- Matches Section -->
     <section class="matches-section">
         <div class="container">
-            <c:forEach items="${matches}" var="match">
-                <div class="match-card" data-season="${match.seasonYear}">
+            <c:forEach items="${matches2024}" var="match">
+                <div class="match-card" data-season="2024">
+                    <div class="match-header">
+                        <div>
+                            <span class="match-number">MATCH ${match.matchNo}</span>
+                            <span class="match-date">${match.matchDate}</span>
+                        </div>
+                        <div class="match-info">
+                            <span>🕒 ${match.matchTime} | 📍 ${match.venueName}</span>
+                        </div>
+                    </div>
+
+                    <div class="teams-container">
+                        <div class="team">
+                            <img src="${match.team1}" />
+                        </div>
+                        <span class="vs-text">VS</span>
+                        <div class="team">
+                            <img src="${match.team2}" />
+                        </div>
+                    </div>
+
+                    <c:if test="${not empty match.winnerTeam}">
+                        <div class="stats-analysis-btn" data-match-id="${match.matchId}">
+                            Stats Analysis
+                        </div>
+                    </c:if>
+
+                    <div class="matches-footer">
+                        <c:choose>
+                            <c:when test="${not empty match.winnerTeam}">
+                                <div class="match-result">
+                                    <p>${match.winningMargin}</p>
+                                    <c:if test="${not empty match.playerOfTheMatch}">
+                                        <div class="match-player">
+                                            <p>Player of the Match</p>
+                                            <p>${match.playerOfTheMatch}</p>
+                                        </div>
+                                    </c:if>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="match-centre-btn" data-match-id="${match.matchId}">
+                                    Match Centre
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </div>
+            </c:forEach>
+
+            <c:forEach items="${matches2025}" var="match">
+                <div class="match-card" data-season="2025">
                     <div class="match-header">
                         <div>
                             <span class="match-number">MATCH ${match.matchNo}</span>

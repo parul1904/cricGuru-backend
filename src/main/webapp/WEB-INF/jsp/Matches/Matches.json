@@ -1,0 +1,45 @@
+[
+  {
+    "id": 1,
+    "date": "MAR, SAT 22",
+    "time": "7:30 pm IST",
+    "stadium": "Eden Gardens, Kolkata",
+    "team1": {
+      "name": "Kolkata Knight Riders",
+      "logo": "KKR.png"
+    },
+    "team2": {
+      "name": "Royal Challengers Bengaluru",
+      "logo": "RCB.png"
+    },
+    "result": "Kolkata Knight Riders 4 wickets"
+  },
+  {
+    "id": 2,
+    "date": "MAR, SUN 23",
+    "time": "3:30 pm IST",
+    "stadium": "Rajiv Gandhi International Stadium, Hyderabad",
+    "team1": {
+      "name": "Sunrisers Hyderabad",
+      "logo": "SRH.png"
+    },
+    "team2": {
+      "name": "Rajasthan Royals",
+      "logo": "RR.png"
+    }
+  },
+  {
+    "id": 3,
+    "date": "MAR, SUN 23",
+    "time": "7:30 pm IST",
+    "stadium": "MA Chidambaram Stadium, Chennai",
+    "team1": {
+      "name": "Chennai Super Kings",
+      "logo": "CSK.png"
+    },
+    "team2": {
+      "name": "Mumbai Indians",
+      "logo": "MI.png"
+    }
+  }
+]

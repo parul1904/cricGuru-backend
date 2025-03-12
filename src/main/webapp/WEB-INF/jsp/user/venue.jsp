@@ -56,7 +56,7 @@
         <div class="row">
             <c:forEach items="${venues}" var="venue">
                 <div class="col-lg-4 col-md-6 col-12 mb-4">
-                    <a href="${pageContext.request.contextPath}/api/v1/venues/details/${venue.venueId}" class="text-decoration-none">
+                    <a href="${pageContext.request.contextPath}/venues/details/${venue.venueId}" class="text-decoration-none">
                         <div class="venue-card" data-venue-id="${venue.venueId}">
                             <div class="venue-image">
                                 <img src="${venue.venueImageUrl}" alt="${venue.venueName}" class="img-fluid">

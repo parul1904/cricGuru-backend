@@ -1,25 +1,32 @@
 document.addEventListener('DOMContentLoaded', function() {
     const tabs = document.querySelectorAll('.season-tab');
     const matchCards = document.querySelectorAll('.match-card');
+    const defaultSeason = document.getElementById('defaultSeason')?.value || '2024';
+
+    // Function to activate a season tab and show its matches
+    function activateSeasonTab(seasonYear) {
+        // Update active tab
+        tabs.forEach(tab => {
+            const isSelected = tab.getAttribute('data-season') === seasonYear;
+            tab.classList.toggle('active', isSelected);
+            tab.classList.toggle('btn-primary', isSelected);
+            tab.classList.toggle('btn-secondary', !isSelected);
+        });
+
+        // Show/hide match cards based on season
+        matchCards.forEach(card => {
+            card.style.display = card.getAttribute('data-season') === seasonYear ? 'block' : 'none';
+        });
+    }
+
+    // Show default season matches
+    activateSeasonTab(defaultSeason);
 
     // Handle tab clicks
     tabs.forEach(tab => {
         tab.addEventListener('click', function() {
-            // Update active tab
-            tabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-
-            // Get selected season
             const selectedSeason = this.getAttribute('data-season');
-
-            // Show/hide match cards based on season
-            matchCards.forEach(card => {
-                if(card.getAttribute('data-season') === selectedSeason) {
-                    card.classList.add('visible');
-                } else {
-                    card.classList.remove('visible');
-                }
-            });
+            activateSeasonTab(selectedSeason);
         });
     });
 
@@ -27,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.match-centre-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const matchId = this.getAttribute('data-match-id');
-            window.location.href = `/matchcentre?matchId=${matchId}`;
+            window.location.href = `/matchcentre/${matchId}`;
         });
     });
 
@@ -35,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.stats-analysis-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const matchId = this.getAttribute('data-match-id');
-            window.location.href = `/api/v1/dreamTeam?matchNo=${matchId}`;
+            window.location.href = `/dreamTeam/${matchId}`;
         });
     });
 });

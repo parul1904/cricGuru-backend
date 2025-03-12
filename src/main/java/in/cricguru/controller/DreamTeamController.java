@@ -17,7 +17,7 @@ import java.util.List;
 @CrossOrigin("*")
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/dreamTeam")
+@RequestMapping("/dreamTeam")
 public class DreamTeamController {
 
     @Autowired

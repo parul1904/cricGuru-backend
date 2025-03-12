@@ -52,8 +52,8 @@ $(document).ready(function () {
     function loadOptions(type) {
       const url =
         type === "players"
-          ? "http://localhost:8080/api/v1/players/all"
-          : "http://localhost:8080/api/v1/teams/all";
+          ? "http://localhost:8081/players/all"
+          : "http://localhost:8081/teams/all";
   
       $.ajax({
         url: url,
@@ -140,8 +140,8 @@ $(document).ready(function () {
       if (player1Id && player2Id) {
         const url =
           compareType === "player"
-            ? "/api/v1/players/comparePlayers"
-            : "/api/v1/teams/compareTeams";
+            ? "players/comparePlayers"
+            : "/teams/compareTeams";
   
         const params =
           compareType === "player"

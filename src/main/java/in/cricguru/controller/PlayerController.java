@@ -21,7 +21,7 @@ import static in.cricguru.shared.CricGuruConstant.BASE_URL;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/players")
+@RequestMapping("/players")
 public class PlayerController {
 
     private PlayerService playerService;
@@ -54,15 +54,7 @@ public class PlayerController {
         return modelAndView;
     }
 
-    @GetMapping("/compare")
-    public ModelAndView comparePlayer(){
-        ModelAndView modelAndView = new ModelAndView("user/compare");
-        List<PlayerDto> players = playerService.getAllPlayers();
-        modelAndView.addObject("players", players);
-        List<TeamDto> teams = teamService.getAllTeams().stream().limit(10).collect(Collectors.toUnmodifiableList());
-        modelAndView.addObject("teams", teams);
-        return modelAndView;
-    }
+
 
     @GetMapping("/comparePlayers")
     public Map<String, Object> comparePlayers(@RequestParam("player1") Long player1, @RequestParam("player2") Long player2){

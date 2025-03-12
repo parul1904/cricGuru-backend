@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    $(document).on('click', '.team-logo img', function() {
-        var teamId = $(this).data('team-id');
+    // Function to load team details
+    function loadTeamDetails(teamId) {
         $.ajax({
             url: '/team/' + teamId + '/squads',
             method: 'GET',
@@ -63,8 +63,8 @@ $(document).ready(function() {
                             '<div class="">' +
                             '<h4>' + player.playerName + '</h4>' +
                             '<p>' +
-                            '<img src="https://fantasyteams.s3.ap-south-1.amazonaws.com/others/' + player.playerRole + '.png" style="width:75px; height:50px; padding:5px; float:left;" alt="' + player.playerRole + '">' +
-                            '<img src="https://fantasyteams.s3.ap-south-1.amazonaws.com/others/' + player.playerCountry + '.png" style="width:75px; height:50px; padding:5px; float:right;" alt="' + player.playerCountry + '">' +
+                            '<img src="../images/others/' + player.playerRole + '.png" style="width:50px; height:40px; padding:5px; float:left;" alt="' + player.playerRole + '">' +
+                            '<img src="../images/others/' + player.playerCountry + '.png" style="width:50px; height:40px; padding:5px; float:right;" alt="' + player.playerCountry + '">' +
                             '</p>' +
                             '</div></div></div>';
                         $('#squadContainer').append(squadMember);
@@ -82,12 +82,37 @@ $(document).ready(function() {
                     var category = $(this).data('category');
                     displayPlayers(category);
                 });
+
+                // Activate the "All" category button by default
+                $('.category-button[data-category="All"]').addClass('active');
             }
         });
+    }
+
+    // Handle team logo clicks
+    $(document).on('click', '.team-logo img', function() {
+        $('.team-logo').removeClass('active');
+        $(this).parent().addClass('active');
+        var teamId = $(this).data('team-id');
+        loadTeamDetails(teamId);
     });
 
+    // Automatically select and load the first team when the page loads
+    function selectFirstTeam() {
+        const firstTeamLogo = $('.team-logo:first');
+        firstTeamLogo.addClass('active');
+        const firstTeamId = firstTeamLogo.find('img').data('team-id');
+        if (firstTeamId) {
+            loadTeamDetails(firstTeamId);
+        }
+    }
+
+    // Call selectFirstTeam when the page loads
+    selectFirstTeam();
+
+    // Handle player card clicks
     $(document).on('click', '.squad-member img', function() {
         var playerId = $(this).data('player-id');
-        window.location.href = '/api/v1/players?playerId=' + playerId;
+        window.location.href = '/players?playerId=' + playerId;
     });
 });

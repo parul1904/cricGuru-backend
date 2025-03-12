@@ -11,7 +11,7 @@ import java.util.List;
 @CrossOrigin("*")
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/dropdown")
+@RequestMapping("/dropdown")
 public class DropdownController {
 
     @Autowired

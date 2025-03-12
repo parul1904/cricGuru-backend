@@ -28,16 +28,16 @@
                                <a class="page-scroll ${pageName == 'squads' ? 'active' : ''}" href="${pageContext.request.contextPath}/squads">Squad</a>
                            </li>
                            <li class="nav-item">
-                              <a class="page-scroll ${pageName == 'performance' ? 'active' : ''}" href="${pageContext.request.contextPath}/performance">Performance</a>
+                              <a class="page-scroll ${pageName == 'performance' ? 'active' : ''}" href="${pageContext.request.contextPath}/compare">Performance Check</a>
                           </li>
                           <li class="nav-item">
-                            <a class="page-scroll ${pageName == 'venue' ? 'active' : ''}" href="${pageContext.request.contextPath}/venue">Venue Stats</a>
+                            <a class="page-scroll ${pageName == 'venue' ? 'active' : ''}" href="${pageContext.request.contextPath}/venues">Venue Stats</a>
                           </li>
                            <li class="nav-item">
-                               <a class="page-scroll ${pageName == 'todaysAnalysis' ? 'active' : ''}" href="javascript:void(0)">Todays' Analysis</a>
+                               <a class="page-scroll ${pageName == 'todaysAnalysis' ? 'active' : ''}" href="#">Today's Analysis</a>
                            </li>
                            <li class="nav-item">
-                               <a class="page-scroll ${pageName == 'pastAnalysis' ? 'active' : ''}" href="javascript:void(0)">Past Analysis</a>
+                               <a class="page-scroll ${pageName == 'pastAnalysis' ? 'active' : ''}" href="#">Past Analysis</a>
                            </li>
                            <li class="nav-item">
                               <a class="page-scroll ${pageName == 'contact' ? 'active' : ''}" href="${pageContext.request.contextPath}/contact">Contact Us</a>

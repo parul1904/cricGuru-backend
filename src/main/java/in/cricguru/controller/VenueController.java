@@ -24,7 +24,7 @@ import java.util.Map;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/api/v1/venues")
+@RequestMapping("/venues")
 public class VenueController {
 
     @Autowired

@@ -331,7 +331,7 @@ function handleMatchSelection(matchId) {
   }
 
   showLoading(true);
-  fetch(`/api/v1/dreamTeam/${matchId}`)
+  fetch(`/dreamTeam/${matchId}`)
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
