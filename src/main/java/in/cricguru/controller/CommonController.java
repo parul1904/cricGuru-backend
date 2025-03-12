@@ -4,6 +4,8 @@ import in.cricguru.dto.PlayerDto;
 import in.cricguru.dto.TeamDto;
 import in.cricguru.service.PlayerService;
 import in.cricguru.service.TeamService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.ui.Model;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 @RestController
 public class CommonController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
+
     @Autowired
     private PlayerService playerService;
 
@@ -25,13 +29,21 @@ public class CommonController {
 
     @GetMapping("/")
     public ModelAndView home() {
+        logger.info("*** Home page requested ****");
         return new ModelAndView("redirect:/matches/fixture");
     }
 
-    @GetMapping("/about")
+/*    @GetMapping("/about")
     public ModelAndView about() {
         ModelAndView modelAndView = new ModelAndView("user/about");
         return modelAndView;
+    }*/
+
+    @GetMapping("/about")
+    public String about() {
+        logger.info("*** about Us page requested ****");
+        //ModelAndView modelAndView = new ModelAndView("user/about");
+        return "About US Page";
     }
 
     @GetMapping("/team")
