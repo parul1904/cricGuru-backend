@@ -48,7 +48,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Season</label>
-                                <select name="seasonId" class="form-control select2" id="seasonSelect"></select>
+                                <select name="seasonId" class="form-control" id="seasonSelect"></select>
                             </div>
                         </div>
                         <div class="col-md-4">
