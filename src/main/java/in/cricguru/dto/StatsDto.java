@@ -19,6 +19,8 @@ public class StatsDto {
     private Integer fours;
     private Integer sixes;
     private Double strikeRate;
+    private Boolean isDismissed;
+    private Boolean inningPlayed;
     private Double overs;
     private Integer totalWickets;
     private Integer bowledLbw;

@@ -41,6 +41,12 @@ public class Stats {
     @Column(name = "strike_rate")
     private Double strikeRate;
 
+    @Column(name = "is_dismissed")
+    private Boolean isDismissed;
+
+    @Column(name = "inning_played")
+    private Boolean inningPlayed;
+
     private Double overs;
 
     @Column(name = "total_wickets")
@@ -81,10 +87,5 @@ public class Stats {
 
     @Column(name = "total_point_my11_circle_system")
     private Integer totalPointMy11CircleSystem;
-
-
-
-
-
 
 } 

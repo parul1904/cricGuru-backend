@@ -39,7 +39,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
 
-    @Cacheable(cacheNames="allStats")
+   // @Cacheable(cacheNames="allStats")
     @Override
     public List<ListStatsResponse> getAllStats() {
         List<Object[]> statsDtos = statsRepository.getAllStats().stream()

@@ -51,6 +51,8 @@ public class StatsMapper {
                 stats.getFours(),
                 stats.getSixes(),
                 stats.getStrikeRate(),
+                stats.getIsDismissed(),
+                stats.getInningPlayed(),
                 stats.getOvers(),
                 stats.getTotalWickets(),
                 stats.getBowledLbw(),
@@ -94,6 +96,8 @@ public class StatsMapper {
         stats.setDirectRunout(statsDto.getDirectRunout());
         stats.setInDirectRunout(statsDto.getInDirectRunout());
         stats.setIsImpactPlayer(statsDto.getIsImpactPlayer());
+        stats.setIsDismissed(statsDto.getIsDismissed());
+        stats.setInningPlayed(statsDto.getInningPlayed());
         int totalPointsFoDream11NewSystem = Dream11NewPointCalculator.calculatePoints(statsDto, playerDetails.get().getRole());
         stats.setTotalPointDream11NewSystem(totalPointsFoDream11NewSystem);
         int totalPointsForDream11OldSystem = Dream11OldPointCalculator.calculatePoints(statsDto, playerDetails.get().getRole());
@@ -109,11 +113,12 @@ public class StatsMapper {
             ListStatsResponse statsResponse = new ListStatsResponse();
             statsResponse.setId((Integer) row[0]);
             statsResponse.setSeasonYear(String.valueOf((Integer) row[1]));
-            statsResponse.setTeam1((String) row[2]);
-            statsResponse.setTeam2((String) row[3]);
-            statsResponse.setMatchDate(((java.sql.Date) row[4]).toLocalDate());
-            statsResponse.setPlayerName((String) row[5]);
-            statsResponse.setDream11Points((Integer) row[6]);
+            statsResponse.setMatchNo((Integer) row[2]);
+            statsResponse.setTeam1((String) row[3]);
+            statsResponse.setTeam2((String) row[4]);
+            statsResponse.setMatchDate(((java.sql.Date) row[5]).toLocalDate());
+            statsResponse.setPlayerName((String) row[6]);
+            statsResponse.setDream11Points((Integer) row[7]);
             statsResponseList.add(statsResponse);
         }
         return statsResponseList;

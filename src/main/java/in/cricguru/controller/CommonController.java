@@ -33,17 +33,10 @@ public class CommonController {
         return new ModelAndView("redirect:/matches/fixture");
     }
 
-/*    @GetMapping("/about")
+    @GetMapping("/about")
     public ModelAndView about() {
         ModelAndView modelAndView = new ModelAndView("user/about");
         return modelAndView;
-    }*/
-
-    @GetMapping("/about")
-    public String about() {
-        logger.info("*** about Us page requested ****");
-        //ModelAndView modelAndView = new ModelAndView("user/about");
-        return "About US Page";
     }
 
     @GetMapping("/team")
@@ -51,9 +44,10 @@ public class CommonController {
         return "team";
     }
 
-    @GetMapping("/admin")
-    public String admin(Model model) {
-        return "admin/dashboard";
+    @GetMapping("/admin/cricguru/add-stats")
+    public ModelAndView addStats(Model model) {
+        ModelAndView modelAndView = new ModelAndView("admin/addstats");
+        return modelAndView;
     }
 
     @GetMapping("/compare")

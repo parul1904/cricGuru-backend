@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
@@ -30,10 +31,18 @@ public class StatsController {
         return ResponseEntity.ok(statsService.getStatsById(id));
     }
 
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<ListStatsResponse>> getAllStats() {
         List<ListStatsResponse> stats = statsService.getAllStats();
         return ResponseEntity.ok(stats);
+    }
+
+    @GetMapping("/admin/all")
+    public ModelAndView getAllStatsLoad() {
+        List<ListStatsResponse> stats = statsService.getAllStats();
+        ModelAndView modelAndView = new ModelAndView("admin/listStats");
+        modelAndView.addObject("allStats", stats);
+        return modelAndView;
     }
 
 
@@ -43,9 +52,18 @@ public class StatsController {
         return ResponseEntity.ok(stats);
     }
 
-    @PutMapping("/{id}")
+    @GetMapping("/admin/update/{id}")
+    public ModelAndView updateStats(@PathVariable Integer id) {
+        StatsDto stats = statsService.getStatsById(id);
+        ModelAndView modelAndView = new ModelAndView("admin/editStats");
+        modelAndView.addObject("stats", stats);
+        return modelAndView;
+    }
+
+    @PutMapping("/admin/edit/{id}")
     public ResponseEntity<StatsDto> updateStats(@PathVariable Integer id, @RequestBody StatsDto statsDto) {
-        return ResponseEntity.ok(statsService.updateStats(id, statsDto));
+        StatsDto stats = statsService.updateStats(id, statsDto);
+        return ResponseEntity.ok(stats);
     }
 
     @DeleteMapping("/{id}")

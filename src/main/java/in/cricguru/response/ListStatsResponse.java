@@ -12,6 +12,7 @@ import java.time.LocalDate;
 public class ListStatsResponse {
     private Integer id;
     private String seasonYear;
+    private Integer matchNo;
     private String team1;
     private String team2;
     private LocalDate matchDate;

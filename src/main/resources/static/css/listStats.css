@@ -1,0 +1,139 @@
+.img-thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+.action-icons i {
+    cursor: pointer;
+    margin: 0 5px;
+}
+.fa-edit {
+    color: #17a2b8;
+}
+.fa-trash-alt {
+    color: #dc3545;
+}
+.vs-text {
+    margin: 0 10px;
+    font-weight: bold;
+}
+.team-match-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#statsTable_wrapper {
+    margin-top: 20px;
+}
+
+.container {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.table-responsive {
+    margin: 30px 0;
+}
+
+.table-wrapper {
+    min-width: 1000px;
+    background: #fff;
+    padding: 20px 25px;
+    border-radius: 3px;
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+
+.table-title {
+    padding-bottom: 15px;
+    background: #435d7d;
+    color: #fff;
+    padding: 16px 30px;
+    margin: -20px -25px 10px;
+    border-radius: 3px 3px 0 0;
+}
+
+.team-match-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.team-match-cell img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.vs-text {
+    font-weight: bold;
+    color: #666;
+}
+
+.action-icons {
+    white-space: nowrap;
+}
+
+.dataTables_wrapper .dataTables_filter {
+    margin-bottom: 1rem;
+}
+
+.dataTables_wrapper .dataTables_length select {
+    min-width: 80px;
+}
+
+.table > :not(caption) > * > * {
+    padding: 0.75rem;
+}
+
+/* Fix for vertical pagination */
+.dataTables_paginate {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.dataTables_paginate .pagination {
+    display: flex !important;
+    flex-direction: row !important;
+    margin: 0;
+}
+
+.page-item {
+    display: inline-block;
+    margin: 0 2px;
+}
+
+/* Style the pagination buttons */
+.page-link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #007bff;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.page-item.active .page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+/* Fix for search and length menu alignment */
+.dataTables_wrapper .row:first-child {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.dataTables_length {
+    margin-right: 2rem;
+}
+
+.dataTables_filter {
+    margin-left: auto;
+}

@@ -86,11 +86,11 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
     List<Object[]> getMy11CircleDreamTeamByMatchNo(@Param("matchNo") Long matchNo);
 
     @Query(value = """
-            SELECT ms.match_stats_id AS id, s.year AS seasonYear, t1.team_logo_url AS team1, t2.team_logo_url AS team2,
+            SELECT ms.match_stats_id AS id, s.year AS seasonYear, m.match_no, t1.team_logo_url AS team1, t2.team_logo_url AS team2,
             m.match_date AS matchDate, p.player_name AS playerName, ms.total_point_dream11_old_system AS dream11Points
             FROM match_stats ms JOIN seasons s ON ms.season_id = s.season_id
             JOIN matches m ON ms.match_no = m.match_id JOIN players p ON ms.player_id = p.player_id
-            JOIN teams t1 ON m.team1_id = t1.team_id JOIN teams t2 ON m.team2_id = t2.team_id
+            JOIN teams t1 ON m.team1_id = t1.team_id JOIN teams t2 ON m.team2_id = t2.team_id ORDER BY m.match_no DESC
             """, nativeQuery = true)
     List<Object[]> getAllStats();
 
