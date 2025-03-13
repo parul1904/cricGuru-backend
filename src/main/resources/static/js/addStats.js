@@ -131,7 +131,7 @@ function saveStats() {
     })
     .then(data => {
         alert('Statistics saved successfully!');
-        window.location.href = '/stats/all';
+        window.location.href = '/stats';
     })
     .catch(error => {
         console.error('Error saving stats:', error);

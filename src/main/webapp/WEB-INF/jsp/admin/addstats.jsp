@@ -74,39 +74,43 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Runs Scored</label>
                                 <input type="text" name="runsScored" class="form-control" >
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Balls Faced</label>
                                 <input type="text" name="ballFaced" class="form-control" >
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Strike Rate</label>
                                 <input type="text" name="strikeRate" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
-                    <div class="row mt-3">
-                        <div class="col-md-3">
+                    <div class="row">
+                    
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Fours</label>
                                 <input type="text" name="fours" class="form-control">
+                            </div>
                         </div>
-                        <div class="col-md-3">
+                        
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Sixes</label>
                                 <input type="text" name="sixes" class="form-control">
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="row">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Dismissal Status</label>
                             <div class="form-check">
@@ -119,7 +123,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label>Innings Played</label>
                             <div class="form-check">
@@ -132,7 +136,7 @@
                             </div>
                         </div>
                     </div>
-                   
+                </div>
                 </div>
             </div>
 
@@ -143,25 +147,25 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Catches Taken</label>
                                 <input type="text" name="catchTaken" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Stumping</label>
                                 <input type="text" name="stumping" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Direct Runout</label>
                                 <input type="text" name="directRunout" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Indirect Runout</label>
                                 <input type="text" name="inDirectRunout" class="form-control">
@@ -169,7 +173,7 @@
                         </div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Impact Player</label>
                                 <div class="form-check">
@@ -193,19 +197,19 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Overs</label>
                                 <input type="text" step="0.1" name="overs" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Runs Conceded</label>
                                 <input type="text" name="runsConceded" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Economy Rate</label>
                                 <input type="text" step="0.01" name="economyRate" class="form-control" readonly>
@@ -214,13 +218,13 @@
                     </div>
                     <div class="row">
                    
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Total Wickets</label>
                                 <input type="text" name="totalWickets" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Bowled/LBW</label>
                                 <input type="text" name="bowledLbw" class="form-control">
@@ -228,13 +232,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Dot Balls</label>
                                 <input type="text" name="dots" class="form-control" />
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Maiden Overs</label>
                                 <input type="text" name="maiden" class="form-control"/>

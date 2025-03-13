@@ -6,7 +6,7 @@
            <div class="col-lg-12">
            <div class="nav-inner">
                <nav class="navbar navbar-expand-lg">
-                   <a class="navbar-brand" href="${pageContext.request.contextPath}/index.html">
+                   <a class="navbar-brand" href="${pageContext.request.contextPath}/matches/fixture">
                        <img src="${pageContext.request.contextPath}/images/logo1.png" alt="Logo">
                    </a>
                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
