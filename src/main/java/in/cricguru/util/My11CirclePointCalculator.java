@@ -44,7 +44,7 @@ public class My11CirclePointCalculator {
         if (!"Bowler".equalsIgnoreCase(role)) {
             if (null != statsDto.getRunsScored() && statsDto.getRunsScored() == 0) {
                 points -= 2;
-            } else if (null != statsDto.getRunsScored() && (statsDto.getRunsScored() >= 20 || statsDto.getBallFaced() >= 10)) {
+            } else if (null != statsDto.getRunsScored() && (statsDto.getRunsScored() >= 20 || null!=statsDto.getBallFaced() && statsDto.getBallFaced() >= 10)) {
                 if (statsDto.getStrikeRate() >= 170) points += 6;
                 else if (statsDto.getStrikeRate() >= 150 && statsDto.getStrikeRate() <= 169.99) points += 4;
                 else if (statsDto.getStrikeRate() >= 130 && statsDto.getStrikeRate() <= 149.99) points += 2;

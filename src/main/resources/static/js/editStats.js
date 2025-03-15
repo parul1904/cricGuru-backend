@@ -36,7 +36,6 @@ function loadSeasons() {
         .then(response => response.json())
         .then(data => {
             const select = $('#seasonSelect');
-            select.empty();
             select.append('<option value="">Select Season</option>');
             data.forEach(season => {
                 select.append(`<option value="${season.id}">${season.name}</option>`);
@@ -134,18 +133,10 @@ function updateStats() {
     })
     .then(data => {
         alert('Statistics updated successfully!');
-        window.location.href = '/stats/all';
+        window.location.href = '/stats/admin/all';
     })
     .catch(error => {
         console.error('Error:', error);
         alert('Error updating statistics. Please try again.');
     });
 }
-
-// Add event listener to form submission
-$(document).ready(function() {
-    $('#editStatsForm').on('submit', function(e) {
-        e.preventDefault();
-        updateStats();
-    });
-});

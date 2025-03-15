@@ -30,6 +30,7 @@
    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/responsive.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-theme@0.1.0-beta.10/dist/select2-bootstrap.min.css" rel="stylesheet" />
+   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/addStats.css" />
 </head>
 <body class="game_info" data-spy="scroll" data-target=".header">
     <!-- ========================= header start ========================= -->
@@ -262,7 +263,6 @@
 
 
     <jsp:include page="/WEB-INF/jsp/includes/footer.jsp" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
     <!-- Update the script sources at the bottom of the file -->
@@ -276,6 +276,8 @@
     <script src="${pageContext.request.contextPath}/js/imagesloaded.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/isotope.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/editStats.js"></script>
     
     </body>

@@ -38,46 +38,25 @@ $(document).ready(function() {
 });
 
 function updateStats(id) {
-    window.location.href = `/admin/cricguru/edit-stats/${id}`;
+    window.location.href = `/stats/admin/update/${id}`;
 }
 
 function removeStats(id) {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "You won't be able to revert this!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            fetch(`/stats/admin/delete/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                Swal.fire(
-                    'Deleted!',
-                    'Record has been deleted.',
-                    'success'
-                ).then(() => {
-                    location.reload();
-                });
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                Swal.fire(
-                    'Error!',
-                    'Failed to delete record.',
-                    'error'
-                );
-            });
-        }
-    });
+
+ // Make the API call
+ fetch(`/stats/${id}`, {
+    method: 'DELETE',
+    headers: {
+        'Content-Type': 'application/json',
+    }
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error('Network response was not ok');
+    } else {
+        alert('Statistics deleted successfully!');
+        window.location.href = `/stats/admin/all`;
+    }
+    return response.json();
+});
 }

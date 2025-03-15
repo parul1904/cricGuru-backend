@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Select2
-    $('.select2').select2();
+    $('.select2').select2({
+        width: '100%',
+        theme: 'bootstrap',
+        dropdownParent: $('body')
+    });
 
     // Load initial data
     loadSeasons();
@@ -131,7 +135,7 @@ function saveStats() {
     })
     .then(data => {
         alert('Statistics saved successfully!');
-        window.location.href = '/stats';
+        window.location.href = '/stats/admin/all';
     })
     .catch(error => {
         console.error('Error saving stats:', error);
