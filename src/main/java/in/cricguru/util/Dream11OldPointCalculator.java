@@ -36,9 +36,13 @@ public class Dream11OldPointCalculator {
         points += null != statsDto.getSixes() ? statsDto.getSixes() * 2 : 0;
 
         if (null != statsDto.getRunsScored() && statsDto.getRunsScored() >= 30) {
-            if (statsDto.getRunsScored() < 50) points += 4;
-            if (statsDto.getRunsScored() >= 50 && statsDto.getRunsScored() < 100) points += 8;
-            if (statsDto.getRunsScored() >= 100) points += 16;
+            if (statsDto.getRunsScored() < 50) {
+                points += 4;
+            } else if (statsDto.getRunsScored() < 100) {
+                points += 8;
+            } else {
+                points += 16;
+            }
         }
 
         if (!"Bowler".equalsIgnoreCase(role)) {
@@ -46,10 +50,10 @@ public class Dream11OldPointCalculator {
                 points -= 2;
             } else if (null != statsDto.getRunsScored() && (statsDto.getRunsScored() >= 20 || null!=statsDto.getBallFaced() && statsDto.getBallFaced() >= 10)) {
                 if (statsDto.getStrikeRate() >= 170) points += 6;
-                else if (statsDto.getStrikeRate() >= 150 && statsDto.getStrikeRate() <= 169.99) points += 4;
-                else if (statsDto.getStrikeRate() >= 130 && statsDto.getStrikeRate() <= 149.99) points += 2;
-                else if (statsDto.getStrikeRate() >= 60 && statsDto.getStrikeRate() <= 69.99) points -= 2;
-                else if (statsDto.getStrikeRate() >= 50 && statsDto.getStrikeRate() <= 59.99) points -= 4;
+                else if (statsDto.getStrikeRate() > 150) points += 4;
+                else if (statsDto.getStrikeRate() >= 130) points += 2;
+                else if (statsDto.getStrikeRate() >= 60 && statsDto.getStrikeRate() <= 70) points -= 2;
+                else if (statsDto.getStrikeRate() >= 50 && statsDto.getStrikeRate() < 60) points -= 4;
                 else if (statsDto.getStrikeRate() < 50) points -= 6;
             }
         }
@@ -77,11 +81,12 @@ public class Dream11OldPointCalculator {
         if (null != statsDto.getOvers() && statsDto.getOvers() >= 2) {
             if (statsDto.getEconomyRate() < 5) points += 6;
             else if (statsDto.getEconomyRate() >= 5 && statsDto.getEconomyRate() < 6) points += 4;
-            else if (statsDto.getEconomyRate() >= 6 && statsDto.getEconomyRate() < 7) points += 2;
-            else if (statsDto.getEconomyRate() >= 10 && statsDto.getEconomyRate() < 11) points -= 2;
-            else if (statsDto.getEconomyRate() >= 11 && statsDto.getEconomyRate() < 12) points -= 4;
-            else if (statsDto.getEconomyRate() >= 12) points -= 6;
+            else if (statsDto.getEconomyRate() >= 6 && statsDto.getEconomyRate() <= 7) points += 2;
+            else if (statsDto.getEconomyRate() >= 10 && statsDto.getEconomyRate() <= 11) points -= 2;
+            else if (statsDto.getEconomyRate() > 11 && statsDto.getEconomyRate() <= 12) points -= 4;
+            else if (statsDto.getEconomyRate() > 12) points -= 6;
         }
+
 
         return points;
     }

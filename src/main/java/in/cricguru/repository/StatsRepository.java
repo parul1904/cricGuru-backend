@@ -90,7 +90,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             m.match_date AS matchDate, p.player_name AS playerName, ms.total_point_dream11_old_system AS dream11Points
             FROM match_stats ms JOIN seasons s ON ms.season_id = s.season_id
             JOIN matches m ON ms.match_no = m.match_id JOIN players p ON ms.player_id = p.player_id
-            JOIN teams t1 ON m.team1_id = t1.team_id JOIN teams t2 ON m.team2_id = t2.team_id ORDER BY m.match_no DESC
+            JOIN teams t1 ON m.team1_id = t1.team_id JOIN teams t2 ON m.team2_id = t2.team_id ORDER BY ms.match_stats_id DESC
             """, nativeQuery = true)
     List<Object[]> getAllStats();
 

@@ -26,23 +26,30 @@ public class Dream11NewPointCalculator {
         points += null != statsDto.getSixes() ? statsDto.getSixes() * 6 : 0;
 
         if (null != statsDto.getRunsScored() && statsDto.getRunsScored() >= 25) {
-            if (statsDto.getRunsScored() < 50) points += 4;
-            if (statsDto.getRunsScored() >= 50 && statsDto.getRunsScored() < 75) points += 8;
-            if (statsDto.getRunsScored() >= 75 && statsDto.getRunsScored() < 100) points += 12;
-            if (statsDto.getRunsScored() >= 100) points += 16;
+            if (statsDto.getRunsScored() < 50) {
+                points += 4;
+            } else if (statsDto.getRunsScored() < 75) {
+                points += 8;
+            } else if (statsDto.getRunsScored() < 100) {
+                points += 12;
+            } else {
+                points += 16;
+            }
         }
 
         if (!"Bowler".equalsIgnoreCase(role)) {
             if (null != statsDto.getRunsScored() && statsDto.getRunsScored() == 0) {
                 points -= 2;
-            } else if (null != statsDto.getRunsScored() && statsDto.getRunsScored() > 0 && null!=statsDto.getBallFaced() && statsDto.getBallFaced() >= 10) {
-                if (statsDto.getStrikeRate() > 170.01) points += 6;
-                else if (statsDto.getStrikeRate() >= 150.01 && statsDto.getStrikeRate() <= 170) points += 4;
-                else if (statsDto.getStrikeRate() >= 130.01 && statsDto.getStrikeRate() <= 150) points += 2;
+            } else if (null != statsDto.getRunsScored() && statsDto.getRunsScored() > 0 && null != statsDto.getBallFaced() && statsDto.getBallFaced() >= 10) {
+                if (statsDto.getStrikeRate() > 170) points += 6;
+                else if (statsDto.getStrikeRate() > 150) points += 4;
+                else if (statsDto.getStrikeRate() >= 130) points += 2;
                 else if (statsDto.getStrikeRate() >= 60 && statsDto.getStrikeRate() <= 70) points -= 2;
-                else if (statsDto.getStrikeRate() >= 50 && statsDto.getStrikeRate() <= 59.99) points -= 4;
+                else if (statsDto.getStrikeRate() >= 50 && statsDto.getStrikeRate() < 60) points -= 4;
                 else if (statsDto.getStrikeRate() < 50) points -= 6;
             }
+
+
         }
         return points;
     }
@@ -54,7 +61,7 @@ public class Dream11NewPointCalculator {
             points += statsDto.getBowledLbw() * 8;
         }
 
-        if (null!= statsDto.getTotalWickets() && statsDto.getTotalWickets() == 3 ) {
+        if (null != statsDto.getTotalWickets() && statsDto.getTotalWickets() == 3) {
             points += 4;
         }
         if (null != statsDto.getTotalWickets() && statsDto.getTotalWickets() == 4) {
@@ -74,6 +81,15 @@ public class Dream11NewPointCalculator {
             else if (statsDto.getEconomyRate() >= 10.01 && statsDto.getEconomyRate() <= 11) points -= 2;
             else if (statsDto.getEconomyRate() >= 11.01 && statsDto.getEconomyRate() <= 12) points -= 4;
             else if (statsDto.getEconomyRate() > 12.01) points -= 6;
+        }
+
+        if (null != statsDto.getOvers() && statsDto.getOvers() >= 2) {
+            if (statsDto.getEconomyRate() < 5) points += 6;
+            else if (statsDto.getEconomyRate() >= 5 && statsDto.getEconomyRate() < 6) points += 4;
+            else if (statsDto.getEconomyRate() >= 6 && statsDto.getEconomyRate() <= 7) points += 2;
+            else if (statsDto.getEconomyRate() >= 10 && statsDto.getEconomyRate() <= 11) points -= 2;
+            else if (statsDto.getEconomyRate() > 11 && statsDto.getEconomyRate() <= 12) points -= 4;
+            else if (statsDto.getEconomyRate() > 12) points -= 6;
         }
         return points;
     }
