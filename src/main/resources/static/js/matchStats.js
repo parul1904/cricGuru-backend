@@ -428,45 +428,61 @@ function createRoleSection(role, players) {
 }
 
 function createPlayerStatsCard(player) {
-  console.log("Creating card for player:", player);
-
   const card = document.createElement('div');
   card.className = 'player-stats-card';
 
-  // Get last 5 matches
   const recentMatches = player.recentMatches || [];
   const last5Matches = recentMatches.slice(0, 5);
+  const dreamTeamCount = recentMatches.filter(match => match.isPartOfDreamTeam).length;
+  const averagePoints = recentMatches.length > 0 
+      ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)
+      : 0;
+  const highestPoints = recentMatches.length > 0 
+      ? Math.max(...recentMatches.map(match => match.points || 0))
+      : 0;
 
-  // Create match points display
   const matchPointsHtml = last5Matches.map(match => {
-    const isInDreamTeam = match.isPartOfDreamTeam;
-    const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
-    return `<div class="match-point ${pointClass}">${match.points || 0}</div>`;
+      const isInDreamTeam = match.isPartOfDreamTeam;
+      const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
+      return `<div class="match-point ${pointClass}" title="${match.team1Name} vs ${match.team2Name}">${match.points || 0}</div>`;
   }).join('');
 
   card.innerHTML = `
-    <div class="player-image">
-      <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}" 
-           onerror="this.src='../images/default-player.png'">
-    </div>
-    <div class="player-basic-info">
-      <div class="name-points-row">
-        <h4 class="player-name">${player.playerName}</h4>
-        <div class="points-container">
-          <span class="avg-points">Average Points: ${(player.averagePoints || 0).toFixed(1)}</span>
-          <span class="high-points">Highest Points: ${player.highestPoints || 0}</span>
-        </div>
+      <div class="player-header-section">
+          <div class="player-image">
+              <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}" 
+                   onerror="this.src='../images/default-player.png'">
+          </div>
+          <div class="player-info-header">
+              <h4 class="player-name">${player.playerName}</h4>
+              <div class="player-role">${player.role}</div>
+              <div class="player-style">
+                  ${player.battingStyle || ''} ${player.battingStyle && player.bowlingStyle ? '•' : ''} ${player.bowlingStyle || ''}
+              </div>
+          </div>
+      </div>
+      <div class="player-stats-summary">
+          <div class="stat-box">
+              <div class="stat-label">Average</div>
+              <div class="stat-value">${averagePoints}</div>
+          </div>
+          <div class="stat-box">
+              <div class="stat-label">Highest</div>
+              <div class="stat-value">${highestPoints}</div>
+          </div>
+          <div class="stat-box">
+              <div class="stat-label">Dream Team</div>
+              <div class="stat-value dream-team-count">${dreamTeamCount}</div>
+          </div>
       </div>
       <div class="last-matches">
-        <p>Last 5 matches</p>
-        <div class="match-points-container">
-          ${matchPointsHtml}
-        </div>
+          <p>Last 5 matches</p>
+          <div class="match-points-container">
+              ${matchPointsHtml}
+          </div>
       </div>
-    </div>
   `;
 
-  // Add click handler for detailed view
   card.addEventListener('click', () => showPlayerDetailModal(player));
   return card;
 }
@@ -474,38 +490,76 @@ function createPlayerStatsCard(player) {
 function showPlayerDetailModal(player) {
   const modal = document.createElement('div');
   modal.className = 'player-modal';
-  
-  // Store player data for resize handling
-  modal.playerData = player;
 
   const recentMatches = player.recentMatches || [];
-  const matchesHtml = recentMatches.map(match => `
-      <tr class="${match.isPartOfDreamTeam ? 'dream-team-match' : ''}">
-          <td>${new Date(match.matchDate).toLocaleDateString()}</td>
-          <td>${match.team1Name} vs ${match.team2Name}</td>
-          <td>${match.points}</td>
-          <td>${match.runsScored || 0}(${match.ballFaced || 0})</td>
-          <td>${match.wickets || 0}-${match.runsConceded || 0}</td>
-      </tr>
-  `).join('');
+  const matchesHtml = recentMatches.map(match => {
+      // Format date to be more compact
+      const matchDate = new Date(match.matchDate).toLocaleDateString(undefined, {
+          month: 'numeric',
+          day: 'numeric'
+      });
 
-  // Generate unique IDs for charts
+      // Shorten team names
+      const team1Short = match.team1Name.split(' ').pop();
+      const team2Short = match.team2Name.split(' ').pop();
+
+      // Format batting score more compactly
+      const battingScore = `${match.runsScored || 0}(${match.ballFaced || 0})`;
+
+      // Format bowling figures more compactly
+      const bowlingFigures = `${match.wickets || 0}-${match.runsConceded || 0}`;
+
+      return `
+          <tr class="${match.isPartOfDreamTeam ? 'dream-team-match' : ''}">
+              <td>${matchDate}</td>
+              <td>${team1Short} v ${team2Short}</td>
+              <td>${match.points || 0}</td>
+              <td>${battingScore}</td>
+              <td>${bowlingFigures}</td>
+              <td>${match.isPartOfDreamTeam ? '<span class="dream-team-badge">DT</span>' : ''}</td>
+          </tr>
+      `;
+  }).join('');
+
   const performanceChartId = `performanceChart_${player.playerId}_${Date.now()}`;
   const pointsDistributionId = `distributionChart_${player.playerId}_${Date.now()}`;
 
   modal.innerHTML = `
       <div class="modal-content">
-          <span class="close-modal">&times;</span>
-          <div class="player-header">
-              <img src="${player.playerImageUrl}" alt="${player.playerName}">
-              <div>
+          <button class="close-modal">&times;</button>
+          <!-- Player header section -->
+          <div class="player-basic-details">
+              <div class="player-image-container">
+                  <img src="${player.playerImageUrl || player.playerImgUrl}" 
+                       alt="${player.playerName}"
+                       onerror="this.src='../images/default-player.png'">
+              </div>
+              <div class="player-info">
                   <h3>${player.playerName}</h3>
-                  <p>${player.role}</p>
-                  <p>Batting: ${player.battingStyle}</p>
-                  <p>Bowling: ${player.bowlingStyle || 'N/A'}</p>
+                  <div class="player-role">${player.role}</div>
+                  <div class="player-style">
+                      ${player.battingStyle}${player.bowlingStyle ? ' | ' + player.bowlingStyle : ''}
+                  </div>
               </div>
           </div>
-          
+
+          <!-- Stats summary row -->
+          <div class="player-stats-summary">
+              <div class="stat-box">
+                  <span class="stat-label">Average Points</span>
+                  <span class="stat-value">${(player.averagePoints || 0).toFixed(1)}</span>
+              </div>
+              <div class="stat-box">
+                  <span class="stat-label">Highest Points</span>
+                  <span class="stat-value">${player.highestPoints || 0}</span>
+              </div>
+              <div class="stat-box">
+                  <span class="stat-label">Dream Team</span>
+                  <span class="stat-value">${recentMatches.filter(m => m.isPartOfDreamTeam).length}</span>
+              </div>
+          </div>
+
+          <!-- Charts section -->
           <div class="performance-charts">
               <div class="chart-container">
                   <h4>Performance Trend</h4>
@@ -517,61 +571,69 @@ function showPlayerDetailModal(player) {
               </div>
           </div>
 
-          <div class="performance-summary">
-              <div class="summary-box">
-                  <span class="summary-label">Average Points</span>
-                  <span class="summary-value">${(player.averagePoints || 0).toFixed(1)}</span>
-              </div>
-              <div class="summary-box">
-                  <span class="summary-label">Highest Score</span>
-                  <span class="summary-value">${player.highestPoints || 0}</span>
-              </div>
-              <div class="summary-box">
-                  <span class="summary-label">Dream Team Appearances</span>
-                  <span class="summary-value">${recentMatches.filter(m => m.isPartOfDreamTeam).length}</span>
-              </div>
-          </div>
-
+          <!-- Match history section -->
           <div class="player-performance">
-              <h4>Recent Matches</h4>
-              <table>
-                  <thead>
-                      <tr>
-                          <th>Date</th>
-                          <th>Match</th>
-                          <th>Points</th>
-                          <th>Batting</th>
-                          <th>Bowling</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      ${matchesHtml}
-                  </tbody>
-              </table>
+              <h4>Match History</h4>
+              <div class="table-container">
+                  <table>
+                      <thead>
+                          <tr>
+                              <th>Date</th>
+                              <th>Match</th>
+                              <th>Pts</th>
+                              <th>Batting</th>
+                              <th>Bowl</th>
+                              <th>DT</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          ${matchesHtml}
+                      </tbody>
+                  </table>
+              </div>
           </div>
       </div>
   `;
 
   document.body.appendChild(modal);
 
-  // Wait for DOM to be ready
-  setTimeout(() => {
-    initializePerformanceChart(performanceChartId, player);
-    initializeDistributionChart(pointsDistributionId, player);
-  }, 100);
+  // Initialize charts
+  initializePerformanceChart(performanceChartId, player);
+  initializeDistributionChart(pointsDistributionId, player);
 
   // Close modal functionality
   const closeBtn = modal.querySelector('.close-modal');
-  closeBtn.onclick = () => modal.remove();
-  modal.onclick = (e) => {
-    if (e.target === modal) modal.remove();
-  };
+  
+  // Close on button click
+  closeBtn.addEventListener('click', () => {
+    modal.remove();
+  });
+
+  // Close on clicking outside the modal
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.remove();
+    }
+  });
+
+  // Close on Escape key press
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      modal.remove();
+    }
+  });
+
+  // Store player data for potential updates
+  modal.playerData = player;
 }
 
 function initializePerformanceChart(chartId, player) {
-  const ctx = document.getElementById(chartId);
-  if (!ctx) return;
-
+  const ctx = document.getElementById(chartId).getContext('2d');
+  
+  // Remove any dynamic height/width styling from the canvas
+  ctx.canvas.style.removeProperty('height');
+  ctx.canvas.style.removeProperty('width');
+  
   const matches = player.recentMatches || [];
   const isMobile = window.innerWidth <= 768;
   
@@ -628,9 +690,12 @@ function initializePerformanceChart(chartId, player) {
 }
 
 function initializeDistributionChart(chartId, player) {
-  const ctx = document.getElementById(chartId);
-  if (!ctx) return;
-
+  const ctx = document.getElementById(chartId).getContext('2d');
+  
+  // Set a fixed size for the canvas
+  ctx.canvas.style.height = '100%';
+  ctx.canvas.style.width = '100%';
+  
   const matches = player.recentMatches || [];
   const isMobile = window.innerWidth <= 768;
   
@@ -827,15 +892,22 @@ function createPlayerStatsCard(player) {
 // Add window resize handler
 let resizeTimeout;
 window.addEventListener('resize', () => {
-  clearTimeout(resizeTimeout);
-  resizeTimeout = setTimeout(() => {
-    const modal = document.querySelector('.player-modal');
-    if (modal && modal.playerData) {
-      const performanceChartId = modal.querySelector('canvas:first-of-type').id;
-      const distributionChartId = modal.querySelector('canvas:last-of-type').id;
-      
-      initializePerformanceChart(performanceChartId, modal.playerData);
-      initializeDistributionChart(distributionChartId, modal.playerData);
-    }
-  }, 250);
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        const modal = document.querySelector('.player-modal');
+        if (modal && modal.playerData) {
+            const performanceChartId = modal.querySelector('canvas:first-of-type').id;
+            const distributionChartId = modal.querySelector('canvas:last-of-type').id;
+            
+            // Reinitialize charts
+            initializePerformanceChart(performanceChartId, modal.playerData);
+            initializeDistributionChart(distributionChartId, modal.playerData);
+
+            // Update scroll indicator visibility
+            const scrollIndicator = modal.querySelector('.scroll-indicator');
+            if (scrollIndicator) {
+                scrollIndicator.style.display = window.innerWidth <= 768 ? 'block' : 'none';
+            }
+        }
+    }, 250);
 });
