@@ -475,6 +475,9 @@ function showPlayerDetailModal(player) {
   const modal = document.createElement('div');
   modal.className = 'player-modal';
   
+  // Store player data for resize handling
+  modal.playerData = player;
+
   const recentMatches = player.recentMatches || [];
   const matchesHtml = recentMatches.map(match => `
       <tr class="${match.isPartOfDreamTeam ? 'dream-team-match' : ''}">
@@ -551,99 +554,113 @@ function showPlayerDetailModal(player) {
 
   document.body.appendChild(modal);
 
-  // Initialize charts
-  initializePerformanceChart(performanceChartId, player);
-  initializeDistributionChart(pointsDistributionId, player);
+  // Wait for DOM to be ready
+  setTimeout(() => {
+    initializePerformanceChart(performanceChartId, player);
+    initializeDistributionChart(pointsDistributionId, player);
+  }, 100);
 
   // Close modal functionality
   const closeBtn = modal.querySelector('.close-modal');
   closeBtn.onclick = () => modal.remove();
   modal.onclick = (e) => {
-      if (e.target === modal) modal.remove();
+    if (e.target === modal) modal.remove();
   };
 }
 
 function initializePerformanceChart(chartId, player) {
-  const ctx = document.getElementById(chartId).getContext('2d');
+  const ctx = document.getElementById(chartId);
+  if (!ctx) return;
+
   const matches = player.recentMatches || [];
+  const isMobile = window.innerWidth <= 768;
   
   new Chart(ctx, {
-      type: 'line',
-      data: {
-          labels: matches.map(m => new Date(m.matchDate).toLocaleDateString()),
-          datasets: [{
-              label: 'Match Points',
-              data: matches.map(m => m.points),
-              borderColor: '#1976d2',
-              backgroundColor: 'rgba(25, 118, 210, 0.1)',
-              fill: true,
-              tension: 0.4,
-              pointBackgroundColor: matches.map(m => 
-                  m.isPartOfDreamTeam ? '#1976d2' : '#64b5f6'
-              ),
-              pointRadius: 6
-          }]
+    type: 'line',
+    data: {
+      labels: matches.map(m => {
+        const date = new Date(m.matchDate);
+        return isMobile ? 
+          `${date.getDate()}/${date.getMonth() + 1}` : 
+          date.toLocaleDateString();
+      }),
+      datasets: [{
+        label: 'Match Points',
+        data: matches.map(m => m.points),
+        borderColor: '#1976d2',
+        backgroundColor: 'rgba(25, 118, 210, 0.1)',
+        fill: true,
+        tension: 0.4,
+        pointBackgroundColor: matches.map(m => 
+          m.isPartOfDreamTeam ? '#1976d2' : '#64b5f6'
+        ),
+        pointRadius: isMobile ? 3 : 5
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: false
+        }
       },
-      options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-              legend: {
-                  display: false
-              },
-              tooltip: {
-                  callbacks: {
-                      label: (context) => {
-                          const match = matches[context.dataIndex];
-                          return [
-                              `Points: ${match.points}`,
-                              `Batting: ${match.runsScored}(${match.ballFaced})`,
-                              `Bowling: ${match.wickets}-${match.runsConceded}`
-                          ];
-                      }
-                  }
-              }
-          },
-          scales: {
-              y: {
-                  beginAtZero: true,
-                  title: {
-                      display: true,
-                      text: 'Points'
-                  }
-              }
+      scales: {
+        x: {
+          ticks: {
+            maxRotation: isMobile ? 45 : 0,
+            font: {
+              size: isMobile ? 10 : 12
+            }
           }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            font: {
+              size: isMobile ? 10 : 12
+            }
+          }
+        }
       }
+    }
   });
 }
 
 function initializeDistributionChart(chartId, player) {
-  const ctx = document.getElementById(chartId).getContext('2d');
+  const ctx = document.getElementById(chartId);
+  if (!ctx) return;
+
   const matches = player.recentMatches || [];
+  const isMobile = window.innerWidth <= 768;
   
-  // Calculate average distribution
   const battingPoints = matches.reduce((sum, m) => sum + calculateBattingPoints(m), 0) / matches.length;
   const bowlingPoints = matches.reduce((sum, m) => sum + calculateBowlingPoints(m), 0) / matches.length;
   const fieldingPoints = matches.reduce((sum, m) => sum + calculateFieldingPoints(m), 0) / matches.length;
 
   new Chart(ctx, {
-      type: 'doughnut',
-      data: {
-          labels: ['Batting', 'Bowling', 'Fielding'],
-          datasets: [{
-              data: [battingPoints, bowlingPoints, fieldingPoints],
-              backgroundColor: ['#1976d2', '#64b5f6', '#bbdefb']
-          }]
-      },
-      options: {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-              legend: {
-                  position: 'bottom'
-              }
+    type: 'doughnut',
+    data: {
+      labels: ['Batting', 'Bowling', 'Fielding'],
+      datasets: [{
+        data: [battingPoints, bowlingPoints, fieldingPoints],
+        backgroundColor: ['#1976d2', '#64b5f6', '#bbdefb']
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: isMobile ? 'bottom' : 'right',
+          labels: {
+            font: {
+              size: isMobile ? 11 : 12
+            }
           }
+        }
       }
+    }
   });
 }
 
@@ -806,3 +823,19 @@ function createPlayerStatsCard(player) {
     card.addEventListener('click', () => showPlayerDetailModal(player));
     return card;
 }
+
+// Add window resize handler
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimeout);
+  resizeTimeout = setTimeout(() => {
+    const modal = document.querySelector('.player-modal');
+    if (modal && modal.playerData) {
+      const performanceChartId = modal.querySelector('canvas:first-of-type').id;
+      const distributionChartId = modal.querySelector('canvas:last-of-type').id;
+      
+      initializePerformanceChart(performanceChartId, modal.playerData);
+      initializeDistributionChart(distributionChartId, modal.playerData);
+    }
+  }, 250);
+});
