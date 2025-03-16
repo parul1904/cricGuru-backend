@@ -1,151 +1,146 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // Parse the JSON data from hidden fields
+document.addEventListener("DOMContentLoaded", function() {
   const dreamTeamData = {
-    old: JSON.parse(document.getElementById("oldDreamTeamData").value || "[]"),
-    new: JSON.parse(document.getElementById("newDreamTeamData").value || "[]"),
-    my11: JSON.parse(
-      document.getElementById("my11DreamTeamData").value || "[]"
-    ),
+    old: JSON.parse(oldDreamTeamJson || "[]"),
+    new: JSON.parse(newDreamTeamJson || "[]"),
+    my11: JSON.parse(my11CirceTeamJson || "[]")
   };
 
-  const matchStats = JSON.parse(
-    document.getElementById("matchStatsData").value || "[]"
-  );
+  const season = seasonYear;
 
-  // Check if data is available
-  if (!dreamTeamData.old.length) {
-    console.error("Required data not found");
-    showError("Failed to load team data");
-    return;
+  // Ensure the cricket field container exists
+  const cricketFieldHtml = `
+    <div id="cricketField" class="cricket-field">
+      <div id="wicketKeeperSection" class="player-section wicket-keeper-section"></div>
+      <div id="battersSection" class="player-section batters-section"></div>
+      <div id="allRoundersSection" class="player-section all-rounders-section"></div>
+      <div id="bowlersSection" class="player-section bowlers-section"></div>
+    </div>
+    <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
+    <div id="noDataMessage" class="alert alert-info" style="display: none;">No team data available</div>
+  `;
+
+  // Insert the cricket field HTML if it doesn't exist
+  const dreamTeamSection = document.getElementById("dreamTeamSection");
+  if (dreamTeamSection && !document.getElementById("cricketField")) {
+    dreamTeamSection.innerHTML = cricketFieldHtml;
   }
 
-  // Initialize with Dream Team Old Point System
-  try {
-    displayTeam(dreamTeamData.old);
-  } catch (error) {
-    console.error("Error displaying team:", error);
-    showError("Failed to display team data");
-  }
+  initializeView(season, dreamTeamData);
+});
 
-  // Button click handlers
+function initializeView(season, dreamTeamData) {
   const dreamTeamBtn = document.getElementById("dreamTeamBtn");
   const playerStatsBtn = document.getElementById("playerStatsBtn");
   const dreamTeamDropdown = document.getElementById("dreamTeamDropdown");
+  const totalPointsContainer = document.getElementById("totalPointsContainer");
+
+  if (season === "2025") {
+    // Hide points-related elements for 2025
+    if (totalPointsContainer) totalPointsContainer.style.display = "none";
+    if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
+  }
+
+  // Initialize with Dream Team view
+  displayDreamTeam(dreamTeamData.old, season);
+
+  // Event Listeners
+  if (dreamTeamBtn) {
+    dreamTeamBtn.addEventListener("click", function() {
+      toggleView("dream-team", dreamTeamData, season);
+    });
+  }
+
+  if (playerStatsBtn) {
+    playerStatsBtn.addEventListener("click", function() {
+      toggleView("player-stats", dreamTeamData, season);
+    });
+  }
+
   const pointSystemSelect = document.getElementById("pointSystemSelect");
+  if (pointSystemSelect) {
+    pointSystemSelect.addEventListener("change", function() {
+      const selectedSystem = this.value;
+      displayDreamTeam(dreamTeamData[selectedSystem], season);
+    });
+  }
+}
 
-  pointSystemSelect.addEventListener("change", function () {
-    const selectedSystem = this.value;
-    try {
-      displayTeam(dreamTeamData[selectedSystem]);
-    } catch (error) {
-      console.error("Error switching point system:", error);
-      showError("Failed to switch point system");
-    }
-  });
+function toggleView(view, data, season) {
+  const dreamTeamSection = document.getElementById("dreamTeamSection");
+  const playerStatsSection = document.getElementById("playerStatsSection");
+  const dreamTeamBtn = document.getElementById("dreamTeamBtn");
+  const playerStatsBtn = document.getElementById("playerStatsBtn");
+  const dreamTeamDropdown = document.getElementById("dreamTeamDropdown");
 
-  dreamTeamBtn.addEventListener("click", function () {
-    dreamTeamBtn.classList.add("active", "btn-primary");
-    dreamTeamBtn.classList.remove("btn-secondary");
-    playerStatsBtn.classList.remove("active", "btn-primary");
-    playerStatsBtn.classList.add("btn-secondary");
-    dreamTeamDropdown.style.display = "block";
-
-    const dreamTeamSection = document.getElementById("dreamTeamSection");
-    const playerStatsSection = document.getElementById("playerStatsSection");
-
-    if (dreamTeamSection) dreamTeamSection.style.display = "block";
-    if (playerStatsSection) playerStatsSection.style.display = "none";
-
-    const currentSystem = pointSystemSelect.value;
-    try {
-      displayTeam(dreamTeamData[currentSystem]);
-    } catch (error) {
-      console.error("Error displaying team:", error);
-      showError("Failed to display team data");
-    }
-  });
-
-  playerStatsBtn.addEventListener("click", function () {
+  if (view === "player-stats") {
+    dreamTeamSection.style.display = "none";
+    playerStatsSection.style.display = "block";
+    dreamTeamDropdown.style.display = "none";
     playerStatsBtn.classList.add("active", "btn-primary");
     playerStatsBtn.classList.remove("btn-secondary");
     dreamTeamBtn.classList.remove("active", "btn-primary");
     dreamTeamBtn.classList.add("btn-secondary");
-    dreamTeamDropdown.style.display = "none";
+    displayPlayerStats(data);
+  } else {
+    dreamTeamSection.style.display = "block";
+    playerStatsSection.style.display = "none";
+    if (season !== "2025") dreamTeamDropdown.style.display = "block";
+    dreamTeamBtn.classList.add("active", "btn-primary");
+    dreamTeamBtn.classList.remove("btn-secondary");
+    playerStatsBtn.classList.remove("active", "btn-primary");
+    playerStatsBtn.classList.add("btn-secondary");
+    const currentSystem = document.getElementById("pointSystemSelect").value;
+    displayDreamTeam(data[currentSystem], season);
+  }
+}
 
-    try {
-      displayPlayerStats(matchStats);
-    } catch (error) {
-      console.error("Error displaying player stats:", error);
-      showError("Failed to display player statistics");
-    }
-  });
-});
-
-function displayTeam(players) {
+function displayDreamTeam(players, season) {
   if (!Array.isArray(players) || players.length === 0) {
-    showNoData();
+    showError("No team data available");
     return;
   }
 
-  const pointSystem = document.getElementById("pointSystemSelect").value;
-  const captain = findCaptain(players, pointSystem);
-  if (!captain) {
-    showError("Unable to determine team captain");
-    return;
-  }
-
-  const viceCaptain = findViceCaptain(players, captain, pointSystem);
-  if (!viceCaptain) {
-    showError("Unable to determine team vice-captain");
-    return;
-  }
-
-  const totalPoints = calculateTotalPoints(
-    players,
-    captain,
-    viceCaptain,
-    pointSystem
-  );
-  console.log("Total points:", totalPoints);
-
-  document.getElementById("totalPoints").textContent = totalPoints;
-
-  // Clear existing players
-  const sections = [
-    "wicketKeeperSection",
-    "battersSection",
-    "allRoundersSection",
-    "bowlersSection",
-  ];
-  sections.forEach((section) => {
-    const sectionElement = document.getElementById(section);
-    if (sectionElement) {
-      sectionElement.innerHTML = "";
-    }
-  });
-
-  // Group and display players by role
-  players.forEach((player) => {
-    if (!player) return;
-    const playerCard = createPlayerCard(player, captain, viceCaptain);
-    const sectionId = getSectionIdByRole(player.playerRole);
-    const sectionElement = document.getElementById(sectionId);
-    if (sectionElement && playerCard) {
-      sectionElement.appendChild(playerCard);
-    }
-  });
-
+  // Show cricket field
   const cricketField = document.getElementById("cricketField");
   if (cricketField) {
     cricketField.style.display = "block";
   }
+
+  // Hide error messages
   hideMessages();
+
+  // Determine captain and vice-captain based on points
+  const pointSystem = document.getElementById("pointSystemSelect").value;
+  const captain = findCaptain(players, pointSystem);
+  const viceCaptain = findViceCaptain(players, captain, pointSystem);
+
+  // Group players by role
+  const groupedPlayers = groupPlayersByRole(players);
+  
+  // Clear existing players
+  clearPlayerSections();
+
+  // Display players by role
+  Object.entries(groupedPlayers).forEach(([role, rolePlayers]) => {
+    const sectionId = getSectionIdByRole(role);
+    const section = document.getElementById(sectionId);
+    if (section) {
+      rolePlayers.forEach(player => {
+        const playerCard = createPlayerCard(player, season, captain, viceCaptain);
+        section.appendChild(playerCard);
+      });
+    }
+  });
+
+  if (season !== "2025") {
+    updateTotalPoints(players, captain, viceCaptain);
+  }
 }
 
-function createPlayerCard(player, captain, viceCaptain) {
-  const isCaptain = player.playerId === captain.playerId;
-  const isViceCaptain = player.playerId === viceCaptain.playerId;
-  const points = calculatePlayerPoints(player, isCaptain, isViceCaptain);
+function createPlayerCard(player, season, captain, viceCaptain) {
+  const isCaptain = captain && player.playerId === captain.playerId;
+  const isViceCaptain = viceCaptain && player.playerId === viceCaptain.playerId;
+  const points = season === "2025" ? "" : calculatePlayerPoints(player, isCaptain, isViceCaptain);
 
   const card = document.createElement("div");
   card.className = "player-card";
@@ -173,8 +168,10 @@ function createPlayerCard(player, captain, viceCaptain) {
             <div class="player-name ${
               isCaptain || isViceCaptain ? "player-name-captain" : ""
             }">${player.playerNickName}</div>
-            <span class="player-separator">-</span>
-            <div class="player-points">${points}</div>
+            ${season !== "2025" ? `
+                <span class="player-separator">-</span>
+                <div class="player-points">${points}</div>
+            ` : ''}
         </div>
     `;
   return card;
@@ -365,75 +362,315 @@ if (matchSelect) {
   });
 }
 
-function displayPlayerStats(matchStats) {
-  const dreamTeamSection = document.getElementById("dreamTeamSection");
-  const playerStatsSection = document.getElementById("playerStatsSection");
+function displayPlayerStats(data) {
+  console.log("Displaying player stats with data:", data);
 
-  if (dreamTeamSection) dreamTeamSection.style.display = "none";
-  if (playerStatsSection) {
-    playerStatsSection.style.display = "block";
-    playerStatsSection.innerHTML = `
-            <div class="table-responsive">
-                <table class="table table-striped table-hover">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th>Player Name</th>
-                            <th>Runs</th>
-                            <th>4s</th>
-                            <th>6s</th>
-                            <th>SR</th>
-                            <th>Catches</th>
-                            
-                            <th>Overs</th>
-                            <th>Runs Given</th>
-                            <th>Wickets</th>
-                            <th>Economy</th>
-                           
-                            <th>Dream 11 New Points</th>
-                             <th>Dream 11 Old Points</th>
-                            <th>My 11 Circle Points</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${matchStats
-                          .map(
-                            (stat) => `
-                            <tr>
-                                <td>${stat.playerName}</td>
-                                <td>${stat.runsScored || 0}</td>
-                                <td>${stat.fours || 0}</td>
-                                <td>${stat.sixes || 0}</td>
-                                <td>${
-                                  stat.strikeRate
-                                    ? stat.strikeRate.toFixed(2)
-                                    : "0.00"
-                                }</td>
-                                 <td>${stat.catchTaken || 0}</td>
-                                   <td>${stat.overs || 0}</td>
-                                    <td>${stat.runsConceded || 0}</td>
-                                <td>${stat.totalWickets || 0}</td>
-                              
-                               
-                                <td>${
-                                  stat.economyRate
-                                    ? stat.economyRate.toFixed(2)
-                                    : "0.00"
-                                }</td>
-                                <td>${stat.totalPointDream11NewSystem || 0}</td>
-                                 <td>${
-                                   stat.totalPointDream11OldSystem || 0
-                                 }</td>
-                                  <td>${
-                                    stat.totalPointMy11CircleSystem || 0
-                                  }</td> 
-                               
-                            </tr>
-                        `
-                          )
-                          .join("")}
-                    </tbody>
-                </table>
-            </div>
-        `;
+  if (!data || !data.performanceDataJson) {
+    console.error("Invalid data format:", data);
+    showError("No player data available");
+    return;
   }
+
+  const players = Array.isArray(data.performanceDataJson) 
+    ? data.performanceDataJson 
+    : data.performanceDataJson;  // Already parsed from JSTL
+  
+  console.log("Processed players:", players);
+
+  const container = document.getElementById('playerStatsContainer');
+  if (!container) {
+    console.error("Container element not found");
+    return;
+  }
+  
+  container.innerHTML = ''; // Clear existing content
+
+  // Group players by role
+  const groupedPlayers = players.reduce((acc, player) => {
+    const role = player.role || 'Unknown';
+    if (!acc[role]) acc[role] = [];
+    acc[role].push(player);
+    return acc;
+  }, {});
+
+  console.log("Grouped players:", groupedPlayers);
+
+  // Create section for each role
+  const roles = ['Wicket Keeper', 'Batter', 'All Rounder', 'Bowler'];
+  roles.forEach(role => {
+    if (groupedPlayers[role] && groupedPlayers[role].length > 0) {
+      const section = createRoleSection(role, groupedPlayers[role]);
+      container.appendChild(section);
+    }
+  });
+}
+
+function createRoleSection(role, players) {
+  console.log(`Creating section for role: ${role}`, players);
+  
+  const section = document.createElement('div');
+  section.className = 'role-section';
+  
+  const header = document.createElement('h3');
+  header.textContent = role;
+  section.appendChild(header);
+
+  const playerGrid = document.createElement('div');
+  playerGrid.className = 'player-grid';
+
+  players.forEach(player => {
+    const card = createPlayerStatsCard(player);
+    playerGrid.appendChild(card);
+  });
+
+  section.appendChild(playerGrid);
+  return section;
+}
+
+function createPlayerStatsCard(player) {
+  console.log("Creating card for player:", player);
+
+  const card = document.createElement('div');
+  card.className = 'player-stats-card';
+
+  // Get last 5 matches
+  const recentMatches = player.recentMatches || [];
+  const last5Matches = recentMatches.slice(0, 5);
+
+  // Create match points display
+  const matchPointsHtml = last5Matches.map(match => {
+    const isInDreamTeam = match.isPartOfDreamTeam;
+    const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
+    return `<div class="match-point ${pointClass}">${match.points || 0}</div>`;
+  }).join('');
+
+  card.innerHTML = `
+    <div class="player-image">
+      <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}" 
+           onerror="this.src='../images/default-player.png'">
+    </div>
+    <div class="player-basic-info">
+      <div class="name-points-row">
+        <h4 class="player-name">${player.playerName}</h4>
+        <div class="points-container">
+          <span class="avg-points">Average Points: ${(player.averagePoints || 0).toFixed(1)}</span>
+          <span class="high-points">Highest Points: ${player.highestPoints || 0}</span>
+        </div>
+      </div>
+      <div class="last-matches">
+        <p>Last 5 matches</p>
+        <div class="match-points-container">
+          ${matchPointsHtml}
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Add click handler for detailed view
+  card.addEventListener('click', () => showPlayerDetailModal(player));
+  return card;
+}
+
+function showPlayerDetailModal(player) {
+  const modal = document.createElement('div');
+  modal.className = 'player-modal';
+  
+  const recentMatches = player.recentMatches || [];
+  const matchesHtml = recentMatches.map(match => `
+    <tr class="${match.isPartOfDreamTeam ? 'dream-team-match' : ''}">
+      <td>${new Date(match.matchDate).toLocaleDateString()}</td>
+      <td>${match.team1Name} vs ${match.team2Name}</td>
+      <td>${match.points}</td>
+      <td>${match.runsScored || 0}(${match.ballFaced || 0})</td>
+      <td>${match.wickets || 0}-${match.runsConceded || 0}</td>
+    </tr>
+  `).join('');
+
+  modal.innerHTML = `
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <div class="player-header">
+        <img src="${player.playerImageUrl}" alt="${player.playerName}">
+        <div>
+          <h3>${player.playerName}</h3>
+          <p>${player.role}</p>
+          <p>Batting: ${player.battingStyle}</p>
+          <p>Bowling: ${player.bowlingStyle || 'N/A'}</p>
+        </div>
+      </div>
+      <div class="player-performance">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Match</th>
+              <th>Points</th>
+              <th>Batting</th>
+              <th>Bowling</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${matchesHtml}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // Close modal functionality
+  const closeBtn = modal.querySelector('.close-modal');
+  closeBtn.onclick = () => modal.remove();
+  modal.onclick = (e) => {
+    if (e.target === modal) modal.remove();
+  };
+}
+
+// Helper functions
+function groupPlayersByRole(players) {
+  if (!Array.isArray(players)) return {};
+  
+  return players.reduce((groups, player) => {
+    const role = player.playerRole || 'Batter';
+    if (!groups[role]) {
+      groups[role] = [];
+    }
+    groups[role].push(player);
+    return groups;
+  }, {});
+}
+
+function clearPlayerSections() {
+  const sections = [
+    'wicketKeeperSection',
+    'battersSection',
+    'allRoundersSection',
+    'bowlersSection'
+  ];
+  
+  sections.forEach(sectionId => {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.innerHTML = '';
+    }
+  });
+}
+
+function showError(message) {
+  // Implement error display logic
+}
+
+function updateTotalPoints(players, captain, viceCaptain) {
+  const pointSystem = document.getElementById("pointSystemSelect").value;
+  const totalPoints = calculateTotalPoints(players, captain, viceCaptain, pointSystem);
+  const totalPointsElement = document.getElementById("totalPoints");
+  if (totalPointsElement) {
+    totalPointsElement.textContent = totalPoints.toFixed(2);
+  }
+}
+
+function generateLastFiveMatchesHtml(player) {
+  // Implement last 5 matches points display
+  return '<div class="match-points">Points history here</div>';
+}
+
+
+let globalPlayersData = null;
+
+function initializePlayerStats(data) {
+    if (!data || !data.performanceDataJson) {
+        console.error("Invalid data format:", data);
+        showError("No player data available");
+        return;
+    }
+
+    globalPlayersData = Array.isArray(data.performanceDataJson) 
+        ? data.performanceDataJson 
+        : data.performanceDataJson;
+
+    // Initialize tab click handlers
+    const roleTabs = document.querySelectorAll('.role-tab');
+    roleTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs
+            roleTabs.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tab
+            tab.classList.add('active');
+            // Display players for selected role
+            displayPlayersByRole(tab.dataset.role);
+        });
+    });
+
+    // Show Wicket Keeper tab by default
+    displayPlayersByRole('Wicket Keeper');
+}
+
+function displayPlayersByRole(selectedRole) {
+    console.log("Displaying players for role:", selectedRole);
+
+    const container = document.getElementById('playerStatsContainer');
+    if (!container) {
+        console.error("Container element not found");
+        return;
+    }
+    
+    container.innerHTML = ''; // Clear existing content
+
+    // Filter players by selected role
+    const playersInRole = globalPlayersData.filter(player => player.role === selectedRole);
+
+    if (playersInRole.length === 0) {
+        container.innerHTML = `<div class="no-players-message">No ${selectedRole}s found</div>`;
+        return;
+    }
+
+    const playerGrid = document.createElement('div');
+    playerGrid.className = 'player-grid';
+
+    playersInRole.forEach(player => {
+        const card = createPlayerStatsCard(player);
+        playerGrid.appendChild(card);
+    });
+
+    container.appendChild(playerGrid);
+}
+
+function createPlayerStatsCard(player) {
+    const card = document.createElement('div');
+    card.className = 'player-stats-card';
+
+    const recentMatches = player.recentMatches || [];
+    const last5Matches = recentMatches.slice(0, 5);
+
+    const matchPointsHtml = last5Matches.map(match => {
+        const isInDreamTeam = match.isPartOfDreamTeam;
+        const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
+        return `<div class="match-point ${pointClass}">${match.points || 0}</div>`;
+    }).join('');
+
+    card.innerHTML = `
+        <div class="player-image">
+            <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}" 
+                 onerror="this.src='../images/default-player.png'">
+        </div>
+        <div class="player-basic-info">
+            <div class="name-points-row">
+                <h4 class="player-name">${player.playerName}</h4>
+                <div class="points-container">
+                    <span class="avg-points">Average Points: ${(player.averagePoints || 0).toFixed(1)}</span>
+                    <span class="high-points">Highest Points: ${player.highestPoints || 0}</span>
+                </div>
+            </div>
+            <div class="last-matches">
+                <p>Last 5 matches</p>
+                <div class="match-points-container">
+                    ${matchPointsHtml}
+                </div>
+            </div>
+        </div>
+    `;
+
+    card.addEventListener('click', () => showPlayerDetailModal(player));
+    return card;
 }

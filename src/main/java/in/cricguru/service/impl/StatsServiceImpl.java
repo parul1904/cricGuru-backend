@@ -1,13 +1,10 @@
 package in.cricguru.service.impl;
 
-import in.cricguru.response.ListStatsResponse;
+import in.cricguru.response.*;
 import in.cricguru.dto.StatsDto;
-import in.cricguru.response.StatsPerMatchResponse;
-import in.cricguru.response.StatsPerPlayerResponse;
 import in.cricguru.entity.Stats;
 import in.cricguru.mapper.StatsMapper;
 import in.cricguru.repository.StatsRepository;
-import in.cricguru.response.VenueStatsResponse;
 import in.cricguru.service.StatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
@@ -94,5 +91,12 @@ public class StatsServiceImpl implements StatsService {
         List<Object[]> statsDtos = statsRepository.getAllStatsByVenue(Long.valueOf(venueId)).stream()
                 .collect(Collectors.toList());
         return statsMapper.mapToStatsPerVenue(statsDtos);
+    }
+
+    @Override
+    public List<PlayerPerformanceResponse> getPlayerPerformanceData(Integer team1Id, Integer team2Id) {
+        List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(team1Id), Long.valueOf(team2Id)).stream()
+                .collect(Collectors.toUnmodifiableList());
+        return statsMapper.mapToPlayerPerformanceResponse(performanceData);
     }
 } 

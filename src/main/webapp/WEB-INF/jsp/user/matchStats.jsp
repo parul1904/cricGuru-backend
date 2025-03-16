@@ -57,6 +57,7 @@
 
 <div class="container">
     <div class="navigation-container mb-4">
+        <input type="hidden" id="season" value="${season}">
         <div class="btn-group">
             <button type="button" class="btn btn-primary active" id="dreamTeamBtn">Dream Team</button>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -71,10 +72,10 @@
             </select>
         </div>
     </div>
-    <input type="hidden" id="oldDreamTeamData" value='${oldDreamTeamJson}'>
-    <input type="hidden" id="newDreamTeamData" value='${newDreamTeamJson}'>
-    <input type="hidden" id="my11DreamTeamData" value='${my11CirceTeamJson}'>
-    <input type="hidden" id="matchStatsData" value='${matchStats}'>
+    
+    <input type="hidden" id="performanceDataJson" value='${performanceDataJson}'>
+    <input type="hidden" id="seasonYear" value='${seasonYear}'>
+    
     <div id="dreamTeamSection">
         <h2 class="text-center">Dream Team</h2>
         
@@ -95,32 +96,28 @@
         
         <!-- Cricket Field -->
         <div id="cricketField" class="cricket-field" style="display: none;">
-            <div class="total-points-container">
+            <div class="total-points-container" id="totalPointsContainer">
                 <div id="totalPoints" class="total-points">0</div>
                 <div class="total-points-label">Total Points</div>
             </div>
             
             <!-- Player Sections -->
             <div class="player-sections">
-                <!-- Wicket Keeper Section -->
                 <div class="section wicket-keeper-section">
                     <h3 class="section-title">Wicket Keeper</h3>
                     <div id="wicketKeeperSection" class="players-container"></div>
                 </div>
 
-                <!-- Batters Section -->
                 <div class="section batters-section">
                     <h3 class="section-title">Batters</h3>
                     <div id="battersSection" class="players-container"></div>
                 </div>
 
-                <!-- All Rounders Section -->
                 <div class="section all-rounders-section">
                     <h3 class="section-title">All Rounders</h3>
                     <div id="allRoundersSection" class="players-container"></div>
                 </div>
 
-                <!-- Bowlers Section -->
                 <div class="section bowlers-section">
                     <h3 class="section-title">Bowlers</h3>
                     <div id="bowlersSection" class="players-container"></div>
@@ -129,9 +126,20 @@
         </div>
     </div>
 
-    <div id="playerStatsSection" style="display: none;">
-        <h2 class="text-center">Player Statistics</h2>
-        <!-- The table will be dynamically inserted here -->
+    <div id="playerStatsSection" class="player-stats-section">
+        <!-- Content will be dynamically populated by JavaScript -->
+         <!-- Add this where you want the player stats to appear -->
+<div class="stats-content">
+    <!-- Role tabs -->
+    <div class="role-tabs">
+        <button class="role-tab active" data-role="Wicket Keeper">Wicket Keeper</button>
+        <button class="role-tab" data-role="Batter">Batters</button>
+        <button class="role-tab" data-role="All Rounder">All Rounders</button>
+        <button class="role-tab" data-role="Bowler">Bowlers</button>
+    </div>
+    
+    <div id="playerStatsContainer" class="player-stats-container"></div>
+</div>
     </div>
 </div>
 
@@ -147,6 +155,21 @@
 <script src="${pageContext.request.contextPath}/js/isotope.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
 <script src="${pageContext.request.contextPath}/js/matchStats.js"></script>
+<script type="text/javascript">
+    const seasonYear = "${seasonYear}";
+    const oldDreamTeamJson = '${oldDreamTeamJson}';
+    const newDreamTeamJson = '${newDreamTeamJson}';
+    const my11CirceTeamJson = '${my11CirceTeamJson}';
+</script>
 <!-- ALL PLUGINS -->
+<script>
+    // Initialize player stats when document is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        const performanceData = {
+            performanceDataJson: ${performanceDataJson}
+        };
+        initializePlayerStats(performanceData);
+    });
+</script>
 </body>
 </html></html>

@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.match-centre-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const matchId = this.getAttribute('data-match-id');
-            window.location.href = `/matchcentre/${matchId}`;
+            window.location.href = `/dreamTeam/${matchId}`;
         });
     });
 

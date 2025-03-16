@@ -1,10 +1,7 @@
 package in.cricguru.service;
 
 import in.cricguru.dto.StatsDto;
-import in.cricguru.response.ListStatsResponse;
-import in.cricguru.response.StatsPerMatchResponse;
-import in.cricguru.response.StatsPerPlayerResponse;
-import in.cricguru.response.VenueStatsResponse;
+import in.cricguru.response.*;
 
 import java.util.List;
 
@@ -23,4 +20,6 @@ public interface StatsService {
     StatsPerPlayerResponse getAllStatsByTeamId(Integer teamId);
 
     VenueStatsResponse getVenueStats(Integer venueId);
+
+    List<PlayerPerformanceResponse> getPlayerPerformanceData(Integer team1Id, Integer team2Id);
 } 
