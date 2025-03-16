@@ -492,5 +492,80 @@
     <script src="${pageContext.request.contextPath}/js/glightbox.min.js"></script>
     <script src="${pageContext.request.contextPath}/js/tiny-slider.js"></script>
     <script src="${pageContext.request.contextPath}/js/main.js"></script>
+
+    <!-- Contact Form Section -->
+    <section class="contact-section py-5 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="section-title text-center mb-5">
+                        <h2>Get in Touch</h2>
+                        <p>Have questions? We'd love to hear from you.</p>
+                    </div>
+                    <div class="card shadow-sm">
+                        <div class="card-body p-4">
+                            <form id="contactForm" class="contact-form">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <input type="text" class="form-control" id="name" name="name" 
+                                               placeholder="Your Name" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <input type="email" class="form-control" id="email" name="email" 
+                                               placeholder="Your Email" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <input type="text" class="form-control" id="subject" name="subject" 
+                                           placeholder="Subject" required>
+                                </div>
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="message" name="message" rows="5" 
+                                              placeholder="Your Message" required></textarea>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary px-5">Send Message</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            subject: document.getElementById('subject').value,
+            message: document.getElementById('message').value
+        };
+
+        fetch('${pageContext.request.contextPath}/contact/send', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Thank you for your message. We will get back to you soon!');
+                this.reset();
+            } else {
+                alert('There was an error sending your message. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('There was an error sending your message. Please try again.');
+        });
+    });
+    </script>
 </body>
 </html>
