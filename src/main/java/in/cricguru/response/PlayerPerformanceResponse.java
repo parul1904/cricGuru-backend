@@ -43,5 +43,8 @@ public class PlayerPerformanceResponse {
         private Double overs;
         private Integer runsConceded;
         private Boolean isPartOfDreamTeam;
+        private Integer dream11OldPoints;
+        private Integer my11CirclePoints;
+        private Integer dream11NewPoints;
     }
 }

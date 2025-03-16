@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin("*")
@@ -35,21 +36,41 @@ public class DreamTeamController {
     @GetMapping("{matchNo}")
     public ModelAndView getDreamTeamByMatchNo(@PathVariable Integer matchNo) throws JsonProcessingException {
         ModelAndView modelAndView = new ModelAndView("user/matchStats");
-        MatchDto matchDetails = matchService.getMatchById(matchNo);
+        List<PlayerPerformanceResponse> performanceData = new ArrayList<>();
+        List<DreamTeamResponse> oldDreamTeam = new ArrayList<>();
+        String oldDreamTeamJson = "";
+        List<DreamTeamResponse> newDreamTeam = new ArrayList<>();
+        String newDreamTeamJson = "";
+        List<DreamTeamResponse> my11CircleTeam = new ArrayList<>();
+        String my11CirceTeamJson = "";
+        String performanceDataJson = "";
+                MatchDto matchDetails = matchService.getMatchById(matchNo);
         Integer team1Id = matchDetails.getTeam1Id();
         Integer team2Id = matchDetails.getTeam2Id();
-        List<DreamTeamResponse> oldDreamTeam = dreamTeamService.getOldDreamTeamByMatchNo(team1Id, team2Id);
-        String oldDreamTeamJson = objectMapper.writeValueAsString(oldDreamTeam);
-        List<DreamTeamResponse> newDreamTeam = dreamTeamService.getNewDreamTeamByMatchNo(team1Id, team2Id);
-        String newDreamTeamJson = objectMapper.writeValueAsString(newDreamTeam);
-        List<DreamTeamResponse> my11CircleTeam = dreamTeamService.getMy11CircleDreamTeamByMatchNo(team1Id, team2Id);
-        String my11CirceTeamJson = objectMapper.writeValueAsString(my11CircleTeam);
+        if (matchNo <= 74) {
+            oldDreamTeam = dreamTeamService.getOldDreamTeamByMatchNo(matchNo);
+            oldDreamTeamJson = objectMapper.writeValueAsString(oldDreamTeam);
+            newDreamTeam = dreamTeamService.getNewDreamTeamByMatchNo(matchNo);
+            newDreamTeamJson = objectMapper.writeValueAsString(newDreamTeam);
+            my11CircleTeam = dreamTeamService.getMy11CircleDreamTeamByMatchNo(matchNo);
+            my11CirceTeamJson = objectMapper.writeValueAsString(my11CircleTeam);
+            performanceData = statsService.getPlayerPerformanceStats(matchNo);
+            performanceDataJson = objectMapper.writeValueAsString(performanceData);
+            modelAndView.addObject("seasonYear", "2024");
+        } else {
+            oldDreamTeam = statsService.getOldDreamTeamByMatchNo(2, team1Id, team2Id, 1);
+            oldDreamTeamJson = objectMapper.writeValueAsString(oldDreamTeam);
+            newDreamTeam = statsService.getNewDreamTeamByMatchNo(2, team1Id, team2Id, 1);
+            newDreamTeamJson = objectMapper.writeValueAsString(newDreamTeam);
+            my11CircleTeam = statsService.getMy11CircleDreamTeamByMatchNo(2, team1Id, team2Id, 1);
+            my11CirceTeamJson = objectMapper.writeValueAsString(my11CircleTeam);
+            performanceData = statsService.getPlayerPerformanceData(2, team1Id, team2Id, 5);
+            performanceDataJson = objectMapper.writeValueAsString(performanceData);
+            modelAndView.addObject("seasonYear", "2025");
+        }
         modelAndView.addObject("oldDreamTeamJson", oldDreamTeamJson);
         modelAndView.addObject("newDreamTeamJson", newDreamTeamJson);
         modelAndView.addObject("my11CirceTeamJson", my11CirceTeamJson);
-        List<PlayerPerformanceResponse> performanceData = statsService.getPlayerPerformanceData(team1Id, team2Id);
-        String performanceDataJson = objectMapper.writeValueAsString(performanceData);
-        modelAndView.addObject("seasonYear", "2025");
         modelAndView.addObject("performanceDataJson", performanceDataJson);
         return modelAndView;
     }

@@ -78,7 +78,7 @@
     
     <div id="dreamTeamSection">
         <h2 class="text-center">Dream Team</h2>
-        
+
         <!-- Loading Spinner -->
         <div id="loadingSpinner" class="text-center" style="display: none;">
             <div class="spinner-border text-primary" role="status">
@@ -93,14 +93,14 @@
         <div id="noDataMessage" class="alert alert-info text-center" style="display: none;" role="alert">
             No team data available for this match
         </div>
-        
+
         <!-- Cricket Field -->
         <div id="cricketField" class="cricket-field" style="display: none;">
             <div class="total-points-container" id="totalPointsContainer">
                 <div id="totalPoints" class="total-points">0</div>
                 <div class="total-points-label">Total Points</div>
             </div>
-            
+
             <!-- Player Sections -->
             <div class="player-sections">
                 <div class="section wicket-keeper-section">
@@ -126,7 +126,7 @@
         </div>
     </div>
 
-    <div id="playerStatsSection" class="player-stats-section">
+    <div id="playerStatsSection" class="player-stats-section" style="display: none;">
         <!-- Content will be dynamically populated by JavaScript -->
          <!-- Add this where you want the player stats to appear -->
 <div class="stats-content">

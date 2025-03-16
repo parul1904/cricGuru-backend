@@ -21,5 +21,16 @@ public interface StatsService {
 
     VenueStatsResponse getVenueStats(Integer venueId);
 
-    List<PlayerPerformanceResponse> getPlayerPerformanceData(Integer team1Id, Integer team2Id);
-} 
+    List<StatsPerMatchResponse> getOldDreamTeamByMatchNo(Integer matchNo);
+
+    List<PlayerPerformanceResponse> getPlayerPerformanceData(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
+
+    List<PlayerPerformanceResponse> getPlayerPerformanceStats(Integer matchNo);
+
+    List<DreamTeamResponse>  getOldDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
+
+    List<DreamTeamResponse>  getNewDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
+
+    List<DreamTeamResponse>  getMy11CircleDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
+
+}

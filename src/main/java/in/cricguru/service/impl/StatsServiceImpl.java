@@ -94,9 +94,49 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<PlayerPerformanceResponse> getPlayerPerformanceData(Integer team1Id, Integer team2Id) {
-        List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(team1Id), Long.valueOf(team2Id)).stream()
+    public List<StatsPerMatchResponse> getOldDreamTeamByMatchNo(Integer matchNo) {
+        List<Object[]> statsDtos = statsRepository.getOldDreamTeamByMatchNo(Long.valueOf(matchNo)).stream()
+                .collect(Collectors.toList());
+        return statsMapper.mapToStatsPerMatchResponseList(statsDtos);
+    }
+
+    @Override
+    public List<PlayerPerformanceResponse> getPlayerPerformanceData(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+        List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
+                        Long.valueOf(statsBy)).stream()
                 .collect(Collectors.toUnmodifiableList());
         return statsMapper.mapToPlayerPerformanceResponse(performanceData);
     }
-} 
+
+    @Override
+    public List<PlayerPerformanceResponse> getPlayerPerformanceStats(Integer matchNo) {
+        List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(matchNo)).stream()
+                .collect(Collectors.toUnmodifiableList());
+        return statsMapper.mapToPlayerPerformanceResponse(performanceData);
+    }
+
+    @Override
+    public List<DreamTeamResponse> getOldDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+        List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
+                        Long.valueOf(statsBy)).stream()
+                .collect(Collectors.toUnmodifiableList());
+        return statsMapper.mapToOldPointDreamTeamResponse(performanceData);
+    }
+
+    @Override
+    public List<DreamTeamResponse> getNewDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+        List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
+                        Long.valueOf(statsBy)).stream()
+                .collect(Collectors.toUnmodifiableList());
+        return statsMapper.mapToNewPointDreamTeamResponse(performanceData);
+    }
+
+    @Override
+    public List<DreamTeamResponse> getMy11CircleDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+        List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
+                        Long.valueOf(statsBy)).stream()
+                .collect(Collectors.toUnmodifiableList());
+        return statsMapper.mapToMy11CirclePointDreamTeamResponse(performanceData);
+    }
+
+}

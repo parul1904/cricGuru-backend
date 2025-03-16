@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.math.BigDecimal;
+import java.util.stream.Collectors;
 
 @Component
 public class StatsMapper {
@@ -335,5 +336,103 @@ public class StatsMapper {
             responses.add(response);
         }
         return responses;
+    }
+
+    public List<DreamTeamResponse> mapToOldPointDreamTeamResponse(List<Object[]> performanceData) {
+        List<DreamTeamResponse> allPlayers = new ArrayList<>();
+        
+        // First, create DreamTeamResponse objects for all players
+        dreamTeamForSeason2(performanceData, allPlayers);
+
+        // Sort players by points (using Dream11NewPoints) in descending order
+        allPlayers.sort((p1, p2) -> {
+            Integer points1 = p1.getDream11OldPoints() != null ? p1.getDream11OldPoints() : 0;
+            Integer points2 = p2.getDream11OldPoints() != null ? p2.getDream11OldPoints() : 0;
+            return points2.compareTo(points1);
+        });
+        
+        // Return only the top 11 players
+        return allPlayers.stream()
+                .limit(11)
+                .collect(Collectors.toList());
+    }
+
+    public List<DreamTeamResponse> mapToNewPointDreamTeamResponse(List<Object[]> performanceData) {
+        List<DreamTeamResponse> allPlayers = new ArrayList<>();
+
+        // First, create DreamTeamResponse objects for all players
+        dreamTeamForSeason2(performanceData, allPlayers);
+
+        // Sort players by points (using Dream11NewPoints) in descending order
+        allPlayers.sort((p1, p2) -> {
+            Integer points1 = p1.getDream11NewPoints() != null ? p1.getDream11NewPoints() : 0;
+            Integer points2 = p2.getDream11NewPoints() != null ? p2.getDream11NewPoints() : 0;
+            return points2.compareTo(points1);
+        });
+
+        // Return only the top 11 players
+        return allPlayers.stream()
+                .limit(11)
+                .collect(Collectors.toList());
+    }
+
+    public List<DreamTeamResponse> mapToMy11CirclePointDreamTeamResponse(List<Object[]> performanceData) {
+        List<DreamTeamResponse> allPlayers = new ArrayList<>();
+
+        // First, create DreamTeamResponse objects for all players
+        dreamTeamForSeason2(performanceData, allPlayers);
+
+        // Sort players by points (using Dream11NewPoints) in descending order
+        allPlayers.sort((p1, p2) -> {
+            Integer points1 = p1.getMy11CirclePoints() != null ? p1.getMy11CirclePoints() : 0;
+            Integer points2 = p2.getMy11CirclePoints() != null ? p2.getMy11CirclePoints() : 0;
+            return points2.compareTo(points1);
+        });
+
+        // Return only the top 11 players
+        return allPlayers.stream()
+                .limit(11)
+                .collect(Collectors.toList());
+    }
+
+    private static void dreamTeamForSeason2(List<Object[]> performanceData, List<DreamTeamResponse> allPlayers) {
+        for (Object[] row : performanceData) {
+            DreamTeamResponse response = new DreamTeamResponse();
+
+            response.setPlayerId(row[0] != null ? ((Number) row[0]).intValue() : null);
+            response.setPlayerNickName(row[1] != null ? (String) row[1] : null);
+            response.setPlayerImgUrl(row[2] != null ? (String) row[2] : null);
+            response.setPlayerRole(row[3] != null ? (String) row[3] : null);
+
+            if (row[11] != null) {
+                String matchDetailsJson = (String) row[11];
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.registerModule(new JavaTimeModule());
+                try {
+                    List<PlayerPerformanceResponse.MatchPerformance> matchPerformances = objectMapper.readValue(
+                            matchDetailsJson,
+                            new TypeReference<List<PlayerPerformanceResponse.MatchPerformance>>() {}
+                    );
+                    if (!matchPerformances.isEmpty()) {
+                        PlayerPerformanceResponse.MatchPerformance lastMatch = matchPerformances.get(0);
+                        Integer lastMatchPoints = lastMatch.getPoints();
+                        response.setDream11OldPoints(lastMatchPoints);
+                        response.setMy11CirclePoints(lastMatchPoints);
+                        response.setDream11NewPoints(lastMatchPoints);
+                        // Set team logos from the last match
+                        response.setTeam1(lastMatch.getTeam1Logo());
+                        response.setTeam2(lastMatch.getTeam2Logo());
+                    }
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException("Error parsing match details JSON", e);
+                }
+            } else {
+                response.setDream11OldPoints(null);
+                response.setMy11CirclePoints(null);
+                response.setDream11NewPoints(null);
+            }
+
+            allPlayers.add(response);
+        }
     }
 }

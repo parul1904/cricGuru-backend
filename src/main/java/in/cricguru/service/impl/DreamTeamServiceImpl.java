@@ -15,29 +15,32 @@ import java.util.stream.Collectors;
 public class DreamTeamServiceImpl implements DreamTeamService {
 
     private final DreamTeamMapper dreamTeamMapper;
-    private final StatsService statsService;
+    private final StatsRepository statsRepository;
 
     public DreamTeamServiceImpl(DreamTeamMapper dreamTeamMapper,
-                                StatsService statsService) {
+                                StatsRepository statsRepository) {
         this.dreamTeamMapper = dreamTeamMapper;
-        this.statsService = statsService;
+        this.statsRepository = statsRepository;
     }
 
     @Override
-    public List<DreamTeamResponse> getOldDreamTeamByMatchNo(Integer teamId1, Integer teamId2) {
-        List<PlayerPerformanceResponse> performanceData = statsService.getPlayerPerformanceData(teamId1, teamId2);
-        return dreamTeamMapper.mapPerformanceDataToDreamTeam(performanceData);
+    public List<DreamTeamResponse> getOldDreamTeamByMatchNo(Integer matchNo) {
+        List<Object[]> dbResults = statsRepository.getOldDreamTeamByMatchNo(Long.valueOf(matchNo)).stream()
+                .collect(Collectors.toList());
+        return dreamTeamMapper.mapToDreamTeamResponse(dbResults);
     }
 
     @Override
-    public List<DreamTeamResponse> getNewDreamTeamByMatchNo(Integer teamId1, Integer teamId2) {
-        List<PlayerPerformanceResponse> performanceData = statsService.getPlayerPerformanceData(teamId1, teamId2);
-        return dreamTeamMapper.mapPerformanceDataToDreamTeam(performanceData);
+    public List<DreamTeamResponse> getNewDreamTeamByMatchNo(Integer matchNo) {
+        List<Object[]> dbResults = statsRepository.getNewDreamTeamByMatchNo(Long.valueOf(matchNo)).stream()
+                .collect(Collectors.toList());
+        return dreamTeamMapper.mapToDreamTeamResponse(dbResults);
     }
 
     @Override
-    public List<DreamTeamResponse> getMy11CircleDreamTeamByMatchNo(Integer teamId1, Integer teamId2) {
-        List<PlayerPerformanceResponse> performanceData = statsService.getPlayerPerformanceData(teamId1, teamId2);
-        return dreamTeamMapper.mapPerformanceDataToDreamTeam(performanceData);
+    public List<DreamTeamResponse> getMy11CircleDreamTeamByMatchNo(Integer matchNo) {
+        List<Object[]> dbResults = statsRepository.getMy11CircleDreamTeamByMatchNo(Long.valueOf(matchNo)).stream()
+                .collect(Collectors.toList());
+        return dreamTeamMapper.mapToDreamTeamResponse(dbResults);
     }
 }
