@@ -23,9 +23,6 @@
    <!-- Bootstrap CSS -->
    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LineIcons.2.0.css" />
-   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animate.css" />
-   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/tiny-slider.css" />
-   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/glightbox.min.css" />
    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css" />
    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/reset.css" />
    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/responsive.css" />
@@ -58,10 +55,9 @@
 <div class="container">
     <div class="navigation-container mb-4">
         <input type="hidden" id="season" value="${season}">
-        <div class="btn-group">
-            <button type="button" class="btn btn-primary active" id="dreamTeamBtn">Dream Team</button>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="button" class="btn btn-secondary" id="playerStatsBtn">Player Stats</button>
+        <div class="view-toggle-buttons">
+            <button id="dreamTeamBtn" class="stats-tab-button active">Dream Team</button>
+            <button id="playerStatsBtn" class="stats-tab-button">Player Stats</button>
         </div>
         
         <div id="dreamTeamDropdown" class="mt-2">
@@ -132,7 +128,7 @@
 <div class="stats-content">
     <!-- Role tabs -->
     <div class="role-tabs">
-        <button class="role-tab active" data-role="Wicket Keeper">Wicket Keeper</button>
+        <button class="role-tab active" data-role="Wicket Keeper">Wkt Keeper</button>
         <button class="role-tab" data-role="Batter">Batters</button>
         <button class="role-tab" data-role="All Rounder">All Rounders</button>
         <button class="role-tab" data-role="Bowler">Bowlers</button>

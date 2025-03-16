@@ -15,6 +15,8 @@ public class MatchResponse {
     private Integer matchNo;
     private String team1;
     private String team2;
+    private String team1Name;
+    private String team2Name;
     private String venueName;
     private LocalDate matchDate;
     private String matchTime;
@@ -22,4 +24,5 @@ public class MatchResponse {
     private String winningMargin;
     private String playerOfTheMatch;
     private String mvp;
-} 
+    private String matchStatus;
+}

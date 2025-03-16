@@ -1,4 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
+  // Hide breadcrumbs on initial load
+  const breadcrumbs = document.querySelector(".breadcrumbs");
+  if (breadcrumbs) {
+    breadcrumbs.style.display = "none";
+  }
+
   const dreamTeamData = {
     old: JSON.parse(oldDreamTeamJson || "[]"),
     new: JSON.parse(newDreamTeamJson || "[]"),
@@ -71,26 +77,53 @@ function toggleView(view, data, season) {
   const dreamTeamBtn = document.getElementById("dreamTeamBtn");
   const playerStatsBtn = document.getElementById("playerStatsBtn");
   const dreamTeamDropdown = document.getElementById("dreamTeamDropdown");
+  const breadcrumbs = document.querySelector(".breadcrumbs");
+  const roleTabs = document.querySelectorAll('.role-tab');
+
+  // Hide breadcrumbs for all views
+  if (breadcrumbs) {
+    breadcrumbs.style.display = "none";
+  }
 
   if (view === "player-stats") {
+    // Show player stats view
     dreamTeamSection.style.display = "none";
     playerStatsSection.style.display = "block";
-    dreamTeamDropdown.style.display = "none";
-    playerStatsBtn.classList.add("active", "btn-primary");
-    playerStatsBtn.classList.remove("btn-secondary");
-    dreamTeamBtn.classList.remove("active", "btn-primary");
-    dreamTeamBtn.classList.add("btn-secondary");
-    displayPlayerStats(data);
+    
+    // Update button states
+    dreamTeamBtn.classList.remove("active");
+    playerStatsBtn.classList.add("active");
+    
+    // Show role tabs
+    roleTabs.forEach(tab => {
+      tab.style.display = "block";
+    });
+    
+    if (dreamTeamDropdown) {
+      dreamTeamDropdown.style.display = "none";
+    }
+    
+    // Initialize player stats if not already done
+    if (data && data.performanceDataJson) {
+      initializePlayerStats(data);
+    }
   } else {
+    // Show dream team view
     dreamTeamSection.style.display = "block";
     playerStatsSection.style.display = "none";
-    if (season !== "2025") dreamTeamDropdown.style.display = "block";
-    dreamTeamBtn.classList.add("active", "btn-primary");
-    dreamTeamBtn.classList.remove("btn-secondary");
-    playerStatsBtn.classList.remove("active", "btn-primary");
-    playerStatsBtn.classList.add("btn-secondary");
-    const currentSystem = document.getElementById("pointSystemSelect").value;
-    displayDreamTeam(data[currentSystem], season);
+    
+    // Update button states
+    dreamTeamBtn.classList.add("active");
+    playerStatsBtn.classList.remove("active");
+    
+    // Hide role tabs
+    roleTabs.forEach(tab => {
+      tab.style.display = "none";
+    });
+    
+    if (dreamTeamDropdown && season !== "2025") {
+      dreamTeamDropdown.style.display = "block";
+    }
   }
 }
 
@@ -451,7 +484,8 @@ function createPlayerStatsCard(player) {
       <div class="player-header-section">
           <div class="player-image">
               <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}" 
-                   onerror="this.src='../images/default-player.png'">
+                   onerror="this.src='../images/default-player.png'"
+                   style="width: 80px; height: 80px; object-fit: cover;">
           </div>
           <div class="player-info-header">
               <h4 class="player-name">${player.playerName}</h4>
@@ -860,21 +894,20 @@ function createPlayerStatsCard(player) {
     const matchPointsHtml = last5Matches.map(match => {
         const isInDreamTeam = match.isPartOfDreamTeam;
         const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
-        return `<div class="match-point ${pointClass}">${match.points || 0}</div>`;
+        return `<div class="match-point ${pointClass}" title="${match.team1Name} vs ${match.team2Name}">${match.points || 0}</div>`;
     }).join('');
 
     card.innerHTML = `
         <div class="player-image">
             <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}" 
-                 onerror="this.src='../images/default-player.png'">
+                 onerror="this.src='../images/default-player.png'"
+                 style="width: 80px; height: 80px; object-fit: cover;">
         </div>
         <div class="player-basic-info">
-            <div class="name-points-row">
-                <h4 class="player-name">${player.playerName}</h4>
-                <div class="points-container">
-                    <span class="avg-points">Average Points: ${(player.averagePoints || 0).toFixed(1)}</span>
-                    <span class="high-points">Highest Points: ${player.highestPoints || 0}</span>
-                </div>
+            <h4 class="player-name">${player.playerName}</h4>
+            <div class="points-container">
+                <span class="avg-points">Average Points: ${(player.averagePoints || 0).toFixed(1)}</span>
+                <span class="high-points">Highest Points: ${player.highestPoints || 0}</span>
             </div>
             <div class="last-matches">
                 <p>Last 5 matches</p>

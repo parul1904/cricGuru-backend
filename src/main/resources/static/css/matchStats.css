@@ -161,10 +161,10 @@
 }
 
 .player-image-container-img img {
-    width: auto; /* Changed from 100% to auto */
-    height: auto; /* Changed from 100% to auto */
-    min-width: 100%;
-    min-height: 100%;
+    width: 80px;  /* Reduced from 125px */
+    height: 80px; /* Reduced from 100px */
+    min-width: 80px;  /* Reduced from 125px */
+    min-height: 80px; /* Reduced from 100px */
     object-fit: cover;
     object-position: center top; /* Focus on the top part where faces usually are */
     transform: scale(1.1); /* Slightly scale up to avoid white edges */
@@ -416,6 +416,18 @@
 .stats-tab-button.active {
     background: #007bff;
     color: white;
+}
+
+/* Add specific styles for dream team and player stats buttons */
+#dreamTeamBtn.active,
+#playerStatsBtn.active {
+    background: #007bff;
+    color: white;
+}
+
+#dreamTeamBtn,
+#playerStatsBtn {
+    transition: all 0.3s ease;
 }
 
 /* Stats Player Card - distinct from Dream Team cards */
@@ -848,19 +860,25 @@
     margin-bottom: 20px;
     padding: 10px;
     border-bottom: 1px solid #ddd;
-    justify-content: center; /* Center align the tabs */
+    justify-content: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .role-tab {
-    padding: 10px 20px;
+    padding: 8px 8px;
     border: none;
-    border-radius: 8px; /* Changed from 20px to 8px for less rounded corners */
+    border-radius: 8px;
     background: #f0f0f0;
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 500;
-    min-width: 120px; /* Ensure consistent width */
+    white-space: normal; /* Allow text to wrap */
     text-align: center;
+    flex: 1; /* Allow buttons to grow */
+    min-width: 100px; /* Minimum width for buttons */
+    max-width: 150px; /* Maximum width for buttons */
 }
 
 .role-tab:hover {
@@ -872,25 +890,39 @@
     color: white;
 }
 
+/* Hide role tabs by default */
+.role-tab {
+    display: none;
+}
+
+/* Show role tabs when player stats view is active */
+.player-stats-section:not([style*="display: none"]) .role-tab {
+    display: block;
+}
+
 .player-stats-container {
-    padding: 20px;
+    padding: 15px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .player-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(3, 1fr); /* Show 3 cards per row on desktop */
     gap: 20px;
+    padding: 10px;
 }
 
 .player-stats-card {
     background: white;
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 15px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+    max-width: 300px; /* Set maximum width */
+    margin: 0 auto; /* Center the card in its grid cell */
 }
 
 .player-stats-card:hover {
@@ -898,94 +930,65 @@
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-.player-header-section {
+.player-basic-details {
     display: flex;
     gap: 15px;
+    border: 1px solid #dee2e6;
+    padding: 12px;
+    border-radius: 8px;
     margin-bottom: 15px;
+    align-items: center;
 }
 
-.player-image {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+.player-image-container {
+    flex: 0 0 auto;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
     overflow: hidden;
-    flex-shrink: 0;
 }
 
-.player-image img {
-    width: 100%;
-    height: 100%;
+.player-image-container img {
+    width: 125px;
+    height: 100px;
     object-fit: cover;
+    border-radius: 8px;
 }
 
-.player-info-header {
+.player-info {
     flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.player-name {
-    font-size: 1.1rem;
-    margin: 0;
+.player-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.2rem;
     color: #333;
-    font-weight: 600;
+    line-height: 1.2;
 }
 
 .player-role {
     color: #666;
     font-size: 0.9rem;
-    margin: 4px 0;
+    margin-bottom: 4px;
 }
 
 .player-style {
-    color: #666;
+    color: #888;
     font-size: 0.85rem;
 }
 
-.player-stats-summary {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.stat-box {
-    flex: 1;
-    background: #f8f9fa;
-    padding: 8px;
-    border-radius: 6px;
-    text-align: center;
-}
-
-.stat-label {
-    font-size: 0.8rem;
-    color: #666;
-    margin-bottom: 2px;
-}
-
-.stat-value {
-    font-size: 1rem;
-    color: #1976d2;
-    font-weight: 600;
-}
-
-.dream-team-count {
-    color: #28a745;
-}
-
-.last-matches {
-    margin-top: 10px;
-}
-
-.last-matches p {
-    margin: 0 0 5px 0;
-    font-size: 0.9rem;
-    color: #666;
-}
-
+/* Recent Matches Display */
 .match-points-container {
     display: flex;
-    gap: 5px;
+    flex-direction: row;  /* ensure horizontal layout */
+    gap: 8px;
+    justify-content: center; /* Center the points */
+    align-items: center;
+    margin-top: 8px;
+    flex-wrap: nowrap;  /* prevent wrapping to next line */
 }
 
 .match-point {
@@ -996,25 +999,151 @@
     justify-content: center;
     border-radius: 50%;
     font-size: 0.9rem;
-    font-weight: bold;
+    font-weight: 600;
+    flex-shrink: 0; /* Prevent points from shrinking */
 }
 
-.regular-points {
-    background: #e3f2fd;
-    color: #1976d2;
+.last-matches {
+    margin-top: 10px;
 }
 
-.dream-team-points {
-    background: #1976d2;
+.last-matches p {
+    margin-bottom: 8px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .player-name {
+        font-size: 1.2em;
+    }
+}
+
+@media (max-width: 480px) {
+    .player-name {
+        font-size: 1.1em;
+    }
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .player-grid {
+        grid-template-columns: repeat(2, 1fr); /* Show 2 cards per row on mobile */
+        gap: 12px;
+        padding: 10px;
+    }
+
+    .player-stats-card {
+        padding: 10px;
+    }
+
+    .player-basic-details {
+        padding: 8px;
+        gap: 10px;
+    }
+
+    .player-image-container {
+        width: 70px;
+        height: 70px;
+    }
+
+    .player-info h3 {
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+
+    .player-role {
+        font-size: 0.8rem;
+    }
+
+    .player-style {
+        font-size: 0.75rem;
+    }
+
+    .match-point {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+    .player-grid {
+        grid-template-columns: repeat(2, 1fr); /* Maintain 2 cards per row */
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .player-stats-card {
+        padding: 8px;
+    }
+
+    .player-image-container {
+        width: 60px;
+        height: 60px;
+    }
+
+    .player-info h3 {
+        font-size: 0.9rem;
+    }
+
+    .player-role {
+        font-size: 0.75rem;
+    }
+
+    .player-style {
+        font-size: 0.7rem;
+    }
+
+    .match-point {
+        width: 25px;
+        height: 25px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Container padding for all screen sizes */
+.container {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Role tabs responsive styling */
+.role-tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.role-tab {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: #f8f9fa;
+    color: #495057;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.role-tab.active {
+    background: #007bff;
     color: white;
 }
 
-.no-players-message {
-    text-align: center;
-    padding: 20px;
-    color: #666;
-    font-style: italic;
-    grid-column: 1 / -1;
+/* Hide scrollbar but keep functionality */
+.role-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.role-tabs {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 /* Modal styles */
@@ -1470,4 +1599,304 @@
     padding: 20px;
     padding-top: 40px; /* Extra padding at top to accommodate close button */
     position: relative;
+}
+
+/* Player Stats Grid Layout */
+.player-stats-container {
+    padding: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.player-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 10px;
+}
+
+.player-stats-card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.player-stats-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.player-basic-details {
+    display: flex;
+    gap: 15px;
+    border: 1px solid #dee2e6;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+.player-image-container {
+    flex: 0 0 auto;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.player-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.player-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.player-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.2rem;
+    color: #333;
+    line-height: 1.2;
+}
+
+.player-role {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 4px;
+}
+
+.player-style {
+    color: #888;
+    font-size: 0.85rem;
+}
+
+/* Recent Matches Display */
+.recent-matches {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.match-point {
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.regular-points {
+    background-color: #e9ecef;
+    color: #495057;
+}
+
+.dream-team-points {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .player-grid {
+        grid-template-columns: repeat(2, 1fr); /* Show 2 cards per row on mobile */
+        gap: 12px;
+        padding: 10px;
+    }
+
+    .player-stats-card {
+        padding: 10px;
+    }
+
+    .player-basic-details {
+        padding: 8px;
+        gap: 10px;
+    }
+
+    .player-image-container {
+        width: 70px;
+        height: 70px;
+    }
+
+    .player-info h3 {
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+
+    .player-role {
+        font-size: 0.8rem;
+    }
+
+    .player-style {
+        font-size: 0.75rem;
+    }
+
+    .match-point {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+    .player-grid {
+        grid-template-columns: repeat(2, 1fr); /* Maintain 2 cards per row */
+        gap: 8px;
+        padding: 8px;
+    }
+
+    .player-stats-card {
+        padding: 8px;
+    }
+
+    .player-image-container {
+        width: 60px;
+        height: 60px;
+    }
+
+    .player-info h3 {
+        font-size: 0.9rem;
+    }
+
+    .player-role {
+        font-size: 0.75rem;
+    }
+
+    .player-style {
+        font-size: 0.7rem;
+    }
+
+    .match-point {
+        width: 25px;
+        height: 25px;
+        font-size: 0.75rem;
+    }
+}
+
+/* Container padding for all screen sizes */
+.container {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Role tabs responsive styling */
+.role-tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    -webkit-overflow-scrolling: touch;
+}
+
+.role-tab {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 20px;
+    background: #f8f9fa;
+    color: #495057;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.role-tab.active {
+    background: #007bff;
+    color: white;
+}
+
+/* Hide scrollbar but keep functionality */
+.role-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.role-tabs {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Prevent flickering on mobile */
+.player-stats-section {
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    position: relative;
+    z-index: 1;
+}
+
+#playerStatsContainer {
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    overflow-y: auto;
+    position: relative;
+    z-index: 2;
+}
+
+/* Role tabs container fixes */
+.role-tabs {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 100;
+    padding: 10px;
+    margin: 0;
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+}
+
+.role-tabs::-webkit-scrollbar {
+    display: none; /* Chrome, Safari and Opera */
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+    
+    .player-stats-section {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+    #playerStatsContainer {
+        max-height: calc(100vh - 200px); /* Adjust based on your header/footer size */
+        padding: 0 10px;
+    }
+
+    .stats-content {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+/* Prevent background image flickering */
+@media (max-width: 768px) {
+    body::before {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        content: "";
+        top: 0;
+        left: 0;
+        z-index: 0;
+    }
 }

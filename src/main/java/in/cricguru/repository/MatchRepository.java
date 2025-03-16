@@ -7,9 +7,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.time.LocalDate;
+import org.springframework.data.domain.Pageable;
 
 @Repository
-public interface MatchRepository extends JpaRepository<Match, Integer> {
+public interface MatchRepository extends JpaRepository<Match, Long> {
 
     @Query("FROM Match m WHERE m.season.seasonId = :seasonId ORDER BY m.matchNo ASC")
     List<Match> findAllBySeasonId(@Param("seasonId") Long seasonId);
@@ -45,5 +47,10 @@ public interface MatchRepository extends JpaRepository<Match, Integer> {
             WHERE s.year = :seasonYear ORDER BY m.match_no ASC
         """, nativeQuery = true)
     List<Object[]> getAllMatchDetailsBySeason(Integer seasonYear);
+
+    @Query("SELECT m FROM Match m " +
+            "WHERE m.matchDate >= :now " +
+            "ORDER BY m.matchDate ASC, m.matchTime ASC")
+    List<Match> findUpcomingMatches(@Param("now") LocalDate now, Pageable pageable);
 
 }

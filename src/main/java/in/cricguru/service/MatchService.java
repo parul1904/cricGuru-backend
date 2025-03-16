@@ -16,4 +16,6 @@ public interface MatchService {
     List<MatchBetweenResponse> getMatchDetailsByMatchId(Integer seasonId);
 
     List<MatchResponse> getAllMatchDetailsBySeasonId(Integer seasonId);
-} 
+
+    List<MatchResponse> getUpcomingMatches(int limit);
+}

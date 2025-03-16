@@ -1,663 +1,496 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="custom" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
-<html class="no-js" lang="zxx">
-
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="x-ua-compatible" content="ie=edge" />
-    <title>Bizfinity - Multipurpose Business & Consulting HTML Template.</title>
-    <meta name="description" content="" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../images/favicon.ico" />
-    <!-- Place favicon.ico in the root directory -->
-
-    <!-- Web Font -->
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-        rel="stylesheet">
-
-    <!-- ========================= CSS here ========================= -->
-    <link rel="stylesheet" href="../../css/bootstrap.min.css" />
-    <link rel="stylesheet" href="../../css/LineIcons.2.0.css" />
-    <link rel="stylesheet" href="../../css/animate.css" />
-    <link rel="stylesheet" href="../../css/tiny-slider.css" />
-    <link rel="stylesheet" href="../../css/glightbox.min.css" />
-    <link rel="stylesheet" href="../../css/main.css" />
-    <link rel="stylesheet" href="../../css/reset.css" />
-    <link rel="stylesheet" href="../../css/responsive.css" />
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CricGuru - Your Ultimate IPL 2025 Analysis Platform</title>
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LineIcons.2.0.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animate.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/tiny-slider.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/glightbox.min.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
 </head>
-
 <body>
-    <!--[if lte IE 9]>
-      <p class="browserupgrade">
-        You are using an <strong>outdated</strong> browser. Please
-        <a href="https://browsehappy.com/">upgrade your browser</a> to improve
-        your experience and security.
-      </p>
-    <![endif]-->
+    <!-- Header -->
+    <jsp:include page="/WEB-INF/jsp/includes/header.jsp" />
 
-    <!-- Preloader -->
-    <div class="preloader">
-        <div class="preloader-inner">
-            <div class="preloader-icon">
-                <span></span>
-                <span></span>
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="cricket-illustration">
+            <div class="cricket-ball"></div>
+            <div class="cricket-bat">
+                <div class="bat-handle"></div>
+                <div class="bat-blade"></div>
+            </div>
+            <div class="stats-overlay">
+                <div class="stat-line"></div>
+                <div class="stat-line"></div>
+                <div class="stat-line"></div>
             </div>
         </div>
-    </div>
-    <!-- /End Preloader -->
 
-    <!-- ========================= header start ========================= -->
-    <header class="header navbar-area">
-        <div class="container">
+        <div class="container position-relative">
             <div class="row align-items-center">
-                <div class="col-lg-12">
-                <div class="nav-inner">
-                    <nav class="navbar navbar-expand-lg">
-                        <a class="navbar-brand" href="index.html">
-                            <img src="../../images/cricguru-logo.png" alt="Logo">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                            <span class="toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
-                            <ul id="nav" class="navbar-nav ms-auto">
-                                <li class="nav-item">
-                                    <a class="page-scroll active" href="index.html">Home</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="about-us.html">About Us</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="javascript:void(0)">Services</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="javascript:void(0)">Portfolio</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll dd-menu collapsed" href="javascript:void(0)"
-                                        data-bs-toggle="collapse" data-bs-target="#submenu-1-1"
-                                        aria-controls="navbarSupportedContent" aria-expanded="false"
-                                        aria-label="Toggle navigation">Pages</a>
-                                    <ul class="sub-menu collapse" id="submenu-1-1">
-                                        <li class="nav-item"><a href="about-us.html">About Us</a></li>
-                                    </ul>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="javascript:void(0)">Blog</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="page-scroll" href="javascript:void(0)">Contact</a>
-                                </li>
-                            </ul>
-                        </div> <!-- navbar collapse -->
-                        <div class="button">
-                            <a href="javascript:void(0)" class="btn white-bg mouse-dir">Get a Quote <span class="dir-part"></span></a>
-                        </div>
-                    </nav> <!-- navbar -->
-                </div>
-                </div>
-            </div> <!-- row -->
-        </div> <!-- container -->
-
-    </header>
-    <!-- ========================= header end ========================= -->
-
-    <!-- Start Hero Area -->
-    <section class="hero-slider">
-        <!-- Single Slider -->
-        <div class="single-slider">
-            <div class="container">
-                <div class="row ">
-                    <div class="col-lg-6 co-12">
-                        <div class="home-slider">
-                            <div class="hero-text">
-                                <span class="small-title wow fadeInUp" data-wow-delay=".3s">Business Solution</span>
-                                <h1 class="wow fadeInUp" data-wow-delay=".5s"><span>We Provide Quality</span><br>
-                                    Consulting Services</h1>
-                                <p class="wow fadeInUp" data-wow-delay=".7s">Lorem Ipsum is simply dummy text of the
-                                    printing and typesetting <br> industry. Lorem Ipsum has been the industry's standard
-                                    <br>dummy text ever since.</p>
-                                <div class="button wow fadeInUp" data-wow-delay=".9s">
-                                    <a href="about-us.html" class="btn mouse-dir">Discover More <span
-                                            class="dir-part"></span></a>
-                                </div>
-                            </div>
+                <div class="col-lg-6">
+                    <div class="hero-content">
+                        <h1 class="animated fadeInUp">Welcome to CricGuru</h1>
+                        <h2 class="animated fadeInUp">Your Ultimate IPL Analysis Platform</h2>
+                        <p class="animated fadeInUp">
+                            Get real-time match predictions, player statistics, and expert analysis
+                            for IPL 2025. Make informed decisions with our advanced AI-powered insights.
+                        </p>
+                        <div class="hero-buttons animated fadeInUp">
+                            <a href="${pageContext.request.contextPath}/matches/fixture" class="btn btn-primary">View Fixtures</a>
+                            <a href="${pageContext.request.contextPath}/players/compare" class="btn btn-outline-primary ms-3">Compare Players</a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--/ End Single Slider -->
     </section>
-    <!--/ End Hero Area -->
 
-    <!-- Start Service Area -->
-    <section class="services section">
+    <!-- Live/Upcoming Matches Section -->
+    <section class="matches-section py-5">
+        <div class="container">
+            <h3 class="section-title text-center mb-4">Live/Upcoming Matches</h3>
+            <div class="row">
+                <c:choose>
+                    <c:when test="${empty liveMatches}">
+                        <div class="col-12 text-center">
+                            <div class="alert alert-info">
+                                No live or upcoming matches at the moment.
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach items="${liveMatches}" var="match">
+                            <div class="col-md-4 mb-4">
+                                <a href="${pageContext.request.contextPath}/dreamTeam/${match.matchId}"
+                                   class="match-card-link">
+                                    <div class="match-card card shadow-sm">
+                                        <div class="card-body">
+                                            <div class="match-header mb-3">
+                                                <span class="match-number">Match ${match.matchNo}</span>
+                                                <span class="match-status ${match.matchStatus == 'Live' ? 'status-live' : 'status-upcoming'}">
+                                                    ${match.matchStatus}
+                                                </span>
+                                            </div>
+                                            <div class="team-vs-team">
+                                                <!-- Team 1 -->
+                                                <div class="team team-1">
+                                                    <img src="${pageContext.request.contextPath}${match.team1}"
+                                                         alt="${match.team1Name}" class="team-logo">
+                                                    <h5 class="team-name">${match.team1Name}</h5>
+                                                </div>
+
+                                                <div class="vs-badge">VS</div>
+
+                                                <!-- Team 2 -->
+                                                <div class="team team-2">
+                                                    <img src="${pageContext.request.contextPath}${match.team2}"
+                                                         alt="${match.team2Name}" class="team-logo">
+                                                    <h5 class="team-name">${match.team2Name}</h5>
+                                                </div>
+                                            </div>
+                                            <div class="match-details mt-3">
+                                                <p class="venue">${match.venueName}</p>
+                                                <p class="match-time">
+                                                    ${match.matchDate} ${match.matchTime}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
+    </section>
+
+<!-- Stats Highlight Section -->
+    <section class="quick-stats-section py-4">
         <div class="container">
             <div class="row">
-                <div class="col-lg-8 offset-lg-2 col-12">
-                    <div class="section-title">
-                        <span class="wow fadeInDown" data-wow-delay=".2s">What We Offer You</span>
-                        <h2 class="wow fadeInUp" data-wow-delay=".4s">Our Services</h2>
-                        <p class="wow fadeInUp" data-wow-delay=".6s">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form.</p>
+                <div class="col-md-3 col-sm-6">
+                    <div class="quick-stat-item">
+                        <i class="lni lni-stats-up"></i>
+                        <h4>15+</h4>
+                        <p>Teams Analyzed</p>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="single-service wow fadeInUp" data-wow-delay=".2s">
-                        <div class="serial">
-                            <span><i class="lni lni-code"></i></span>
-                        </div>
-                        <h3><a href="service-single.html">Web Solution</a></h3>
-                        <p>Need A Project Completed By An Expert? Let’s Go! Access A Human Resources Consultant To Answer Questions</p>
+                <div class="col-md-3 col-sm-6">
+                    <div class="quick-stat-item">
+                        <i class="lni lni-target"></i>
+                        <h4>95%</h4>
+                        <p>Prediction Accuracy</p>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="single-service wow fadeInUp" data-wow-delay=".3s">
-                        <div class="serial">
-                            <span><i class="lni lni-vector"></i></span>
-                        </div>
-                        <h3><a href="service-single.html">Graphics Design</a></h3>
-                        <p>Need A Project Completed By An Expert? Let’s Go! Access A Human Resources Consultant To Answer Questions</p>
+                <div class="col-md-3 col-sm-6">
+                    <div class="quick-stat-item">
+                        <i class="lni lni-graph"></i>
+                        <h4>1000+</h4>
+                        <p>Matches Analyzed</p>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="single-service wow fadeInUp" data-wow-delay=".4s">
-                        <div class="serial">
-                            <span><i class="lni lni-ux"></i></span>
-                        </div>
-                        <h3><a href="service-single.html">Ui/Ux Design</a></h3>
-                        <p>Need A Project Completed By An Expert? Let’s Go! Access A Human Resources Consultant To Answer Questions</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="single-service wow fadeInUp" data-wow-delay=".5s">
-                        <div class="serial">
-                            <span><i class="lni lni-keyword-research"></i></span>
-                        </div>
-                        <h3><a href="service-single.html">Strategy & Research</a></h3>
-                        <p>Need A Project Completed By An Expert? Let’s Go! Access A Human Resources Consultant To Answer Questions</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="single-service wow fadeInUp" data-wow-delay=".6s">
-                        <div class="serial">
-                            <span><i class="lni lni-seo"></i></span>
-                        </div>
-                        <h3><a href="service-single.html">SEO & Marketing</a></h3>
-                        <p>Need A Project Completed By An Expert? Let’s Go! Access A Human Resources Consultant To Answer Questions</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="single-service wow fadeInUp" data-wow-delay=".7s">
-                        <div class="serial">
-                            <span><i class="lni lni-bar-chart"></i></span>
-                        </div>
-                        <h3><a href="service-single.html">Growth Tracking</a></h3>
-                        <p>Need A Project Completed By An Expert? Let’s Go! Access A Human Resources Consultant To Answer Questions</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- /End Services Area -->
-
-    <section class="section free-version-banner">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-xl-5 col-lg-7">
-                    <div class="section-title mb-60">
-                        <span class="text-white wow fadeInDown" data-wow-delay=".2s"
-                            style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInDown;">Bizfinity
-                            Free Lite</span>
-                        <h2 class="text-white wow fadeInUp" data-wow-delay=".4s"
-                            style="visibility: visible; animation-delay: 0.4s; animation-name: fadeInUp;">You are using
-                            free lite version of Bizfinity</h2>
-                        <p class="text-white wow fadeInUp" data-wow-delay=".6s"
-                            style="visibility: visible; animation-delay: 0.6s; animation-name: fadeInUp;">Please,
-                            purchase full version of the template to get all pages, features and commercial license</p>
-                    </div>
-                </div>
-                <div class="col-xl-7 col-lg-5">
-                    <div class="contact-btn text-right text-lg-right button wow fadeInRight" data-wow-delay=".8s">
-                        <a href="https://rebrand.ly/bizfinity-gg" rel="nofollow" class="btn mouse-dir">Purchase Now
-                            <span class="dir-part"></span></a>
+                <div class="col-md-3 col-sm-6">
+                    <div class="quick-stat-item">
+                        <i class="lni lni-crown"></i>
+                        <h4>10+</h4>
+                        <p>Expert Analysts</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing Table -->
-    <section id="pricing" class="pricing-table section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 offset-lg-2 col-12">
-                    <div class="section-title">
-                        <span class="wow fadeInDown" data-wow-delay=".2s">Pricing Table</span>
-                        <h2 class="wow fadeInUp" data-wow-delay=".4s">Our Pricing Plan</h2>
-                        <p class="wow fadeInUp" data-wow-delay=".6s">There are many variations of passages of Lorem
-                            Ipsum available, but the majority have suffered alteration in some form.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-12">
-                    <!-- Single Table -->
-                    <div class="single-table wow fadeInUp" data-wow-delay=".3s">
-                        <!-- Table Head -->
-                        <div class="table-head">
-                            <h4 class="title">Basic <span>for small business</span></h4>
-                            <div class="price">
-                                <p class="amount"><span class="curency">$</span>29<span class="duration">/mo</span></p>
-                            </div>
-                        </div>
-                        <!-- Table List -->
-                        <ul class="table-list">
-                            <li>3 Users</li>
-                            <li>Unlimited Projects</li>
-                            <li>Download Prototypes</li>
-                        </ul>
-                        <div class="button">
-                            <a class="btn white-bg mouse-dir" href="#">Get Started <span class="dir-part"></span></a>
-                        </div>
-                        <!-- Table Bottom -->
-                    </div>
-                    <!-- End Single Table-->
-                </div>
-                <div class="col-lg-3 col-md-6 col-12">
-                    <!-- Single Table -->
-                    <div class="single-table wow fadeInUp" data-wow-delay=".5s">
-                        <!-- Table Head -->
-                        <div class="table-head">
-                            <h4 class="title">Standard <span>for companies</span></h4>
-                            <div class="price">
-                                <p class="amount"><span class="curency">$</span>59<span class="duration">/mo</span></p>
-                            </div>
-                        </div>
-                        <!-- Table List -->
-                        <ul class="table-list">
-                            <li>5 Users</li>
-                            <li>Unlimited Projects</li>
-                            <li>Download Prototypes</li>
-                        </ul>
-                        <div class="button">
-                            <a class="btn white-bg mouse-dir" href="#">Get Started <span class="dir-part"></span></a>
-                        </div>
-                        <!-- Table Bottom -->
-                    </div>
-                    <!-- End Single Table-->
-                </div>
-                <div class="col-lg-3 col-md-6 col-12">
-                    <!-- Single Table -->
-                    <div class="single-table wow fadeInUp" data-wow-delay=".7s">
-                        <p class="popular">Popular</p>
-                        <!-- Table Head -->
-                        <div class="table-head">
-                            <h4 class="title">Professonal <span>for small business</span></h4>
-                            <div class="price">
-                                <p class="amount"><span class="curency">$</span>79<span class="duration">/mo</span></p>
-                            </div>
-                        </div>
-                        <!-- Table List -->
-                        <ul class="table-list">
-                            <li>8 Users</li>
-                            <li>Unlimited Projects</li>
-                            <li>Download Prototypes</li>
-                        </ul>
-                        <div class="button">
-                            <a class="btn white-bg mouse-dir" href="#">Get Started <span class="dir-part"></span></a>
-                        </div>
-                        <!-- Table Bottom -->
-                    </div>
-                    <!-- End Single Table-->
-                </div>
-                <div class="col-lg-3 col-md-6 col-12">
-                    <!-- Single Table -->
-                    <div class="single-table wow fadeInUp" data-wow-delay=".9s">
-                        <!-- Table Head -->
-                        <div class="table-head">
-                            <h4 class="title">Most Popular <span>for small business</span></h4>
-                            <div class="price">
-                                <p class="amount"><span class="curency">$</span>99<span class="duration">/mo</span></p>
-                            </div>
-                        </div>
-                        <!-- Table List -->
-                        <ul class="table-list">
-                            <li>10 Users</li>
-                            <li>Unlimited Projects</li>
-                            <li>Download Prototypes</li>
-                        </ul>
-                        <div class="button">
-                            <a class="btn white-bg mouse-dir" href="#">Get Started <span class="dir-part"></span></a>
-                        </div>
-                        <!-- Table Bottom -->
-                    </div>
-                    <!-- End Single Table-->
-                </div>
-            </div>
-        </div>
-    </section>
-    <!--/ End Pricing Table -->
+    <style>
+        .matches-section {
+            background-color: #f8f9fa;
+        }
+        
+        .match-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer;
+        }
 
-    <!-- Start Clients Area -->
-    <section class="client-logo-section">
-        <div class="container">
-            <div class="client-logo-wrapper">
-                <div class="client-logo-carousel d-flex align-items-center justify-content-between">
-                    <div class="client-logo">
-                        <img src="../../images/client1.png" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="../../images/client2.png" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="../../images/client3.png" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="../../images/client4.png" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="../../images/client5.png" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="../../images/client2.png" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="../../images/client3.png" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="../../images/client4.png" alt="">
-                    </div>
-                    <div class="client-logo">
-                        <img src="../../images/client5.png" alt="">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- End Clients Area -->
+        .match-card-link:hover {
+            text-decoration: none;
+            color: inherit;
+        }
 
-    <!-- Start Newsletter Area -->
-    <section class="newsletter section">
-        <div class="container">
-            <div class="row ">
-                <div class="col-lg-6 col-12">
-                    <!-- Start Newsletter Form -->
-                    <div class="subscribe-text wow fadeInLeft" data-wow-delay=".3s">
-                        <h6>Sign up for Newsletter</h6>
-                        <p class="">Cu qui soleat partiendo urbanitas. Eum aperiri indoctum eu,<br> homero alterum.</p>
-                    </div>
-                    <!-- End Newsletter Form -->
-                </div>
-                <div class="col-lg-6 col-12">
-                    <!-- Start Newsletter Form -->
-                    <div class="subscribe-form wow fadeInRight" data-wow-delay=".5s">
-                        <form action="mail/mail.php" method="get" target="_blank" class="newsletter-inner">
-                            <input name="EMAIL" placeholder="Your email address" class="common-input"
-                                onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your email address'"
-                                required="" type="email">
-                            <div class="button">
-                                <button class="btn mouse-dir white-bg">Subscribe Now! <span
-                                        class="dir-part"></span></button>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- End Newsletter Form -->
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- /End Newsletter Area -->
+        .match-card {
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        }
+        
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .match-number {
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .match-status {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        
+        .status-live {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        .status-upcoming {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .team-vs-team {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        .team {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .team-logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        
+        .team-name {
+            font-size: 1.1em;
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .vs-badge {
+            padding: 0 15px;
+            font-weight: bold;
+            color: #666;
+        }
+        
+        .match-details {
+            text-align: center;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+        
+        .venue {
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .match-time {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .stat-card {
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin: 0;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
 
-    <!-- Start Footer Area -->
-    <footer class="footer">
-        <!-- Start Middle Top -->
-        <div class="footer-middle">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-3 col-md-5 col-12">
-                        <!-- Single Widget -->
-                        <div class="f-about single-footer">
-                            <div class="logo">
-                                <a href="index.html"><img src="../../images/logo.svg" alt="#"></a>
-                            </div>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum
-                                has been the industry.</p>
-                            <div class="footer-social">
-                                <ul>
-                                    <li><a href="#"><i class="lni lni-facebook-filled"></i></a></li>
-                                    <li><a href="#"><i class="lni lni-twitter-original"></i></a></li>
-                                    <li><a href="#"><i class="lni lni-linkedin-original"></i></a></li>
-                                    <li><a href="#"><i class="lni lni-behance-original"></i></a></li>
-                                    <li><a href="#"><i class="lni lni-dribbble"></i></a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <!-- End Single Widget -->
-                    </div>
-                    <div class="col-lg-5 col-md-7 col-12">
-                        <div class="row">
-                            <div class="col-lg-6 col-md-6 col-6">
-                                <!-- Single Widget -->
-                                <div class="single-footer f-link">
-                                    <h3>Company</h3>
-                                    <ul>
-                                        <li><a href="#">About Comapny</a></li>
-                                        <li><a href="#">World Wide Clients</a></li>
-                                        <li><a href="#">Happy People’s</a></li>
-                                        <li><a href="#">Winning Awards</a></li>
-                                        <li><a href="#">Company Statics</a></li>
-                                        <li><a href="#">Privacy Policy</a></li>
-                                    </ul>
-                                </div>
-                                <!-- End Single Widget -->
-                            </div>
-                            <div class="col-lg-6 col-md-6 col-6">
-                                <!-- Single Widget -->
-                                <div class="single-footer f-contact f-link">
-                                    <h3>Contact Us</h3>
-                                    <p>Untrammelled & nothing preven our being able</p>
-                                    <ul class="footer-contact">
-                                        <li><i class="lni lni-phone"></i> <a href="#">+012 (345) 6789</a></li>
-                                        <li><i class="lni lni-envelope"></i> <a
-                                                href="mailto:support@gmail.com">support@gmail.com</a></li>
-                                        <li><i class="lni lni-map-marker"></i> Broklyn Street USA</li>
-                                        <li><i class="lni lni-world"></i> <a href="#">www.yoursite.com</a></li>
-                                    </ul>
-                                </div>
-                                <!-- End Single Widget -->
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-12">
-                        <!-- Single Widget -->
-                        <div class="single-footer gallery">
-                            <h3>Instagram Feed</h3>
-                            <ul class="list">
-                                <li><a href="#"><img src="../../images/gallery1.jpg" alt="#"><i
-                                            class="lni lni-instagram"></i></a></li>
-                                <li><a href="#"><img src="../../images/gallery2.jpg" alt="#"><i
-                                            class="lni lni-instagram"></i></a></li>
-                                <li><a href="#"><img src="../../images/gallery3.jpg" alt="#"><i
-                                            class="lni lni-instagram"></i></a></li>
-                                <li><a href="#"><img src="../../images/gallery4.jpg" alt="#"><i
-                                            class="lni lni-instagram"></i></a></li>
-                                <li><a href="#"><img src="../../images/gallery5.jpg" alt="#"><i
-                                            class="lni lni-instagram"></i></a></li>
-                                <li><a href="#"><img src="../../images/gallery6.jpg" alt="#"><i
-                                            class="lni lni-instagram"></i></a></li>
-                            </ul>
-                        </div>
-                        <!-- End Single Widget -->
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--/ End Footer Middle -->
-        <!-- Start Footer Bottom -->
-        <div class="footer-bottom">
-            <div class="container">
-                <div class="inner">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-12">
-                            <div class="left">
-                                <p>Designed and Developed by<a href="https://graygrids.com/" rel="nofollow"
-                                        target="_blank">GrayGrids</a></p>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-12">
-                            <div class="right">
-                                <p>All Right Reserved Design By Bizfinity</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- End Footer Middle -->
-    </footer>
-    <!--/ End Footer Area -->
+        .hero-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+        }
 
-    <!-- ========================= scroll-top ========================= -->
-    <a href="#" class="scroll-top btn-hover">
-        <i class="lni lni-chevron-up"></i>
-    </a>
+        .cricket-illustration {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.1;
+        }
 
-    <!-- ========================= JS here ========================= -->
-    <script src="../../js/bootstrap.min.js"></script>
-    <script src="../../js/count-up.min.js"></script>
-    <script src="../../js/wow.min.js"></script>
-    <script src="../../js/tiny-slider.js"></script>
-    <script src="../../js/glightbox.min.js"></script>
-    <script src="../../js/imagesloaded.min.js"></script>
-    <script src="../../js/isotope.min.js"></script>
-    <script src="../../js/main.js"></script>
-    <script type="text/javascript">
-        //========= glightbox
-        GLightbox({
-            'href': 'https://www.youtube.com/watch?v=BqI0Q7e4kbk&t=1s',
-            'type': 'video',
-            'source': 'youtube', //vimeo, youtube or local
-            'width': 900,
-            'autoplayVideos': true,
-        });
+        .cricket-ball {
+            width: 60px;
+            height: 60px;
+            background: #e74c3c;
+            border-radius: 50%;
+            position: absolute;
+            top: 40%;
+            left: 60%;
+            transform: translate(-50%, -50%);
+            box-shadow: inset -5px -5px 15px rgba(0,0,0,0.3);
+            animation: floatBall 3s ease-in-out infinite;
+        }
 
-        //====== Clients Logo Slider
-        tns({
-            container: '.client-logo-carousel',
-            slideBy: 'page',
-            autoplay: true,
-            autoplayButtonOutput: false,
-            mouseDrag: true,
-            gutter: 15,
-            nav: false,
-            controls: false,
-            responsive: {
-                0: {
-                    items: 1,
-                },
-                540: {
-                    items: 2,
-                },
-                768: {
-                    items: 3,
-                },
-                992: {
-                    items: 4,
-                },
-                1170: {
-                    items: 6,
-                }
+        .cricket-bat {
+            position: absolute;
+            top: 50%;
+            right: 20%;
+            transform: translate(50%, -50%) rotate(45deg);
+        }
+
+        .bat-handle {
+            width: 15px;
+            height: 120px;
+            background: linear-gradient(90deg, #8B4513, #A0522D);
+            border-radius: 5px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .bat-blade {
+            width: 100px;
+            height: 300px;
+            background: linear-gradient(90deg, #DEB887, #D2691E);
+            border-radius: 10px;
+            position: absolute;
+            top: 110px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding-right: 30px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #1a75ff, #00264d);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-content h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .hero-buttons .btn {
+            padding: 12px 30px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hero-image {
+            position: relative;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-stats-section {
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .quick-stat-item {
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .quick-stat-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .quick-stat-item i {
+            font-size: 2.5rem;
+            color: #1a75ff;
+        }
+
+        .stats-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .stat-line {
+            height: 2px;
+            background: rgba(255,255,255,0.1);
+            margin: 10px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-line::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 100%;
+            background: rgba(255,255,255,0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
+        }
+
+        @keyframes floatBall {
+            0%, 100% { transform: translate(-50%, -50%); }
+            50% { transform: translate(-50%, -60%); }
+        }
+
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .hero-section {
+                min-height: 400px;
+                padding: 40px 0;
             }
-        });
 
-        //======== Home Slider
-        var slider = new tns({
-            container: '.home-slider',
-            slideBy: 'page',
-            autoplay: false,
-            mouseDrag: true,
-            gutter: 0,
-            items: 1,
-            nav: true,
-            controls: false,
-            controlsText: [
-                '<i class="lni lni-arrow-left prev"></i>',
-                '<i class="lni lni-arrow-right next"></i>'
-            ],
-            responsive: {
-                1200: {
-                    items: 1,
-                },
-                992: {
-                    items: 1,
-                },
-                0: {
-                    items: 1,
-                }
-
+            .cricket-illustration {
+                opacity: 0.05;
             }
-        });
 
-        //======== Testimonial Slider
-        var slider = new tns({
-            container: '.testimonial-slider',
-            slideBy: 'page',
-            autoplay: false,
-            mouseDrag: true,
-            gutter: 0,
-            items: 1,
-            nav: true,
-            controls: false,
-            controlsText: [
-                '<i class="lni lni-arrow-left prev"></i>',
-                '<i class="lni lni-arrow-right next"></i>'
-            ],
-            responsive: {
-                1200: {
-                    items: 2,
-                },
-                992: {
-                    items: 1,
-                },
-                0: {
-                    items: 1,
-                }
-
+            .hero-content {
+                text-align: center;
+                padding-right: 0;
             }
-        });
 
-        //============== isotope masonry js with imagesloaded
-        imagesLoaded('#container', function () {
-            var elem = document.querySelector('.grid');
-            var iso = new Isotope(elem, {
-                // options
-                itemSelector: '.grid-item',
-                masonry: {
-                    // use outer width of grid-sizer for columnWidth
-                    columnWidth: '.grid-item'
-                }
-            });
+            .hero-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
 
-            let filterButtons = document.querySelectorAll('.portfolio-btn-wrapper button');
-            filterButtons.forEach(e =>
-                e.addEventListener('click', () => {
+            .hero-buttons .btn {
+                width: 100%;
+                margin: 0 !important;
+            }
 
-                    let filterValue = event.target.getAttribute('data-filter');
-                    iso.arrange({
-                        filter: filterValue
-                    });
-                })
-            );
-        });
-    </script>
+            .cricket-bat {
+                right: 10%;
+                transform: translate(50%, -50%) rotate(45deg) scale(0.8);
+            }
+        }
+    </style>
+
+    <!-- Footer -->
+    <jsp:include page="/WEB-INF/jsp/includes/footer.jsp" />
+
+    <!-- Scripts -->
+    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/count-up.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/waypoints.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/jquery.counterup.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/glightbox.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/tiny-slider.js"></script>
+    <script src="${pageContext.request.contextPath}/js/main.js"></script>
 </body>
-
 </html>

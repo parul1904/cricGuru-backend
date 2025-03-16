@@ -20,6 +20,6 @@ logging:
   level:
     org:
       springframework:
-        web: DEBUG
+        web: INFO
       apache:
-        jasper: DEBUG
+        jasper: INFO

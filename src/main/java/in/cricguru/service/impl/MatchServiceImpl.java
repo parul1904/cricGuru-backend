@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.time.LocalDate;
+import org.springframework.data.domain.PageRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public MatchDto getMatchById(Integer id) {
-        Match match = matchRepository.findById(id)
+        Match match = matchRepository.findById(Long.valueOf(id))
                 .orElseThrow(() -> new RuntimeException("Match not found with id: " + id));
         return matchMapper.mapToMatchDto(match);
     }
@@ -52,10 +54,10 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public MatchDto updateMatch(Integer id, MatchDto matchDto) {
-        if (!matchRepository.existsById(id)) {
+        if (!matchRepository.existsById(Long.valueOf(id))) {
             throw new RuntimeException("Match not found with id: " + id);
         }
-        Match existingMatch = matchRepository.findById(id).orElseThrow();
+        Match existingMatch = matchRepository.findById(Long.valueOf(id)).orElseThrow();
         Match updatedMatch = matchMapper.mapToMatch(matchDto);
         updatedMatch.setMatchId(existingMatch.getMatchId());
         Match savedMatch = matchRepository.save(updatedMatch);
@@ -64,10 +66,10 @@ public class MatchServiceImpl implements MatchService {
 
     @Override
     public void deleteMatch(Integer id) {
-        if (!matchRepository.existsById(id)) {
+        if (!matchRepository.existsById(Long.valueOf(id))) {
             throw new RuntimeException("Match not found with id: " + id);
         }
-        matchRepository.deleteById(id);
+        matchRepository.deleteById(Long.valueOf(id));
     }
 
     @Override
@@ -78,4 +80,13 @@ public class MatchServiceImpl implements MatchService {
         return matchDto;
     }
 
+    @Override
+    public List<MatchResponse> getUpcomingMatches(int limit) {
+        LocalDate today = LocalDate.now();
+
+        List<Match> upcomingMatches = matchRepository.findUpcomingMatches(today, PageRequest.of(0, limit));
+        return upcomingMatches.stream()
+                .map(matchMapper::mapToMatchResponse)
+                .collect(Collectors.toList());
+    }
 }

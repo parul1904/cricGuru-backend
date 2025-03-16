@@ -94,8 +94,6 @@ public class MatchMapper {
 
     public List<MatchResponse> mapToMatchResponse(List<Object[]> matchDtos) {
         List<MatchResponse> matchResponses = new ArrayList<>();
-        List<MatchBetweenResponse> matchBetweenResponses = new ArrayList<>();
-
         for (Object[] row : matchDtos) {
             MatchResponse response = new MatchResponse();
             response.setMatchId((Integer) row[0]);
@@ -104,7 +102,14 @@ public class MatchMapper {
             response.setTeam1((String) row[3]);
             response.setTeam2((String) row[4]);
             response.setVenueName((String) row[5]);
-            response.setMatchDate(((java.sql.Date) row[6]).toLocalDate());
+
+            // Handle date conversion properly
+            if (row[6] instanceof java.sql.Date) {
+                response.setMatchDate(((java.sql.Date) row[6]).toLocalDate());
+            } else if (row[6] instanceof LocalDate) {
+                response.setMatchDate((LocalDate) row[6]);
+            }
+
             response.setMatchTime((String) row[7]);
             response.setWinnerTeam((String) row[8]);
             response.setWinningMargin((String) row[9]);
@@ -127,4 +132,31 @@ public List<MatchBetweenResponse> mapToMatchBetweenResponse(List<Object[]> resul
     }
     return matchBetweenResponses;
 }
+
+    public MatchResponse mapToMatchResponse(Match match) {
+        MatchResponse response = new MatchResponse();
+        response.setMatchId(match.getMatchId());
+        response.setSeasonYear(match.getSeason().getYear());
+        response.setMatchNo(match.getMatchNo());
+        response.setTeam1(match.getTeam1().getTeamLogoUrl());
+        response.setTeam2(match.getTeam2().getTeamLogoUrl());
+        response.setTeam1Name(match.getTeam1().getTeamName());
+        response.setTeam2Name(match.getTeam2().getTeamName());
+        response.setVenueName(match.getVenue().getVenueName());
+        response.setMatchDate(match.getMatchDate());
+        response.setMatchTime(match.getMatchTime());
+        response.setMatchStatus(determineMatchStatus(match));
+        return response;
+    }
+
+    private String determineMatchStatus(Match match) {
+        LocalDate today = LocalDate.now();
+        if (match.getMatchDate().isBefore(today)) {
+            return "Completed";
+        } else if (match.getMatchDate().isEqual(today)) {
+            return "Today";
+        } else {
+            return "Upcoming";
+        }
+    }
 }

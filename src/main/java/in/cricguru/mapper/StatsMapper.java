@@ -78,7 +78,7 @@ public class StatsMapper {
     public Stats mapToStats(StatsDto statsDto) {
         Stats stats = new Stats();
         stats.setSeason(seasonRepository.findById(Long.valueOf(statsDto.getSeasonId())).orElseThrow());
-        stats.setMatchNo(matchRepository.findById(Math.toIntExact(Long.valueOf(statsDto.getMatchId()))).orElseThrow());
+        stats.setMatchNo(matchRepository.findById(Long.valueOf(statsDto.getMatchId())).orElseThrow());
         Optional<Player> playerDetails = playerRepository.findById(Long.valueOf(statsDto.getPlayerId()));
         stats.setPlayerId(playerDetails.orElseThrow());
         stats.setRunsScored(statsDto.getRunsScored());
@@ -340,7 +340,7 @@ public class StatsMapper {
 
     public List<DreamTeamResponse> mapToOldPointDreamTeamResponse(List<Object[]> performanceData) {
         List<DreamTeamResponse> allPlayers = new ArrayList<>();
-        
+
         // First, create DreamTeamResponse objects for all players
         dreamTeamForSeason2(performanceData, allPlayers);
 
@@ -350,7 +350,7 @@ public class StatsMapper {
             Integer points2 = p2.getDream11OldPoints() != null ? p2.getDream11OldPoints() : 0;
             return points2.compareTo(points1);
         });
-        
+
         // Return only the top 11 players
         return allPlayers.stream()
                 .limit(11)

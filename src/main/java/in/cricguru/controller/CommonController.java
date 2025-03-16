@@ -2,6 +2,8 @@ package in.cricguru.controller;
 
 import in.cricguru.dto.PlayerDto;
 import in.cricguru.dto.TeamDto;
+import in.cricguru.response.MatchResponse;
+import in.cricguru.service.MatchService;
 import in.cricguru.service.PlayerService;
 import in.cricguru.service.TeamService;
 import org.slf4j.Logger;
@@ -14,8 +16,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.time.format.DateTimeFormatter;
 
 @RestController
 public class CommonController {
@@ -28,10 +33,29 @@ public class CommonController {
     @Autowired
     private TeamService teamService;
 
-    @GetMapping("/")
-    public ModelAndView home() {
-        logger.info("*** Home page requested ****");
-        return new ModelAndView("redirect:/matches/fixture");
+    @Autowired
+    private MatchService matchService;
+
+    @GetMapping("")
+    public ModelAndView index() {
+        ModelAndView modelAndView = new ModelAndView("index");
+
+        // Get live/upcoming matches
+        List<MatchResponse> upcomingMatches = matchService.getUpcomingMatches(3);
+        modelAndView.addObject("liveMatches", upcomingMatches);
+
+        // Add stats for counter section
+        Map<String, Object> stats = new HashMap<>();
+        stats.put("activeUsers", "50K+");
+        stats.put("predictionAccuracy", "95%");
+        stats.put("matchesAnalyzed", "74");
+        stats.put("expertAnalysts", "10+");
+        modelAndView.addObject("stats", stats);
+
+        // Set page name for header highlighting
+        modelAndView.addObject("pageName", "index");
+
+        return modelAndView;
     }
 
     @GetMapping("/about")
