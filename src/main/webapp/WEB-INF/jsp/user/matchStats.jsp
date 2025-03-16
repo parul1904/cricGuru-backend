@@ -154,7 +154,9 @@
 <script src="${pageContext.request.contextPath}/js/imagesloaded.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/isotope.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="${pageContext.request.contextPath}/js/matchStats.js"></script>
+
 <script type="text/javascript">
     const seasonYear = "${seasonYear}";
     const oldDreamTeamJson = '${oldDreamTeamJson}';

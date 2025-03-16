@@ -477,56 +477,188 @@ function showPlayerDetailModal(player) {
   
   const recentMatches = player.recentMatches || [];
   const matchesHtml = recentMatches.map(match => `
-    <tr class="${match.isPartOfDreamTeam ? 'dream-team-match' : ''}">
-      <td>${new Date(match.matchDate).toLocaleDateString()}</td>
-      <td>${match.team1Name} vs ${match.team2Name}</td>
-      <td>${match.points}</td>
-      <td>${match.runsScored || 0}(${match.ballFaced || 0})</td>
-      <td>${match.wickets || 0}-${match.runsConceded || 0}</td>
-    </tr>
+      <tr class="${match.isPartOfDreamTeam ? 'dream-team-match' : ''}">
+          <td>${new Date(match.matchDate).toLocaleDateString()}</td>
+          <td>${match.team1Name} vs ${match.team2Name}</td>
+          <td>${match.points}</td>
+          <td>${match.runsScored || 0}(${match.ballFaced || 0})</td>
+          <td>${match.wickets || 0}-${match.runsConceded || 0}</td>
+      </tr>
   `).join('');
 
+  // Generate unique IDs for charts
+  const performanceChartId = `performanceChart_${player.playerId}_${Date.now()}`;
+  const pointsDistributionId = `distributionChart_${player.playerId}_${Date.now()}`;
+
   modal.innerHTML = `
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      <div class="player-header">
-        <img src="${player.playerImageUrl}" alt="${player.playerName}">
-        <div>
-          <h3>${player.playerName}</h3>
-          <p>${player.role}</p>
-          <p>Batting: ${player.battingStyle}</p>
-          <p>Bowling: ${player.bowlingStyle || 'N/A'}</p>
-        </div>
+      <div class="modal-content">
+          <span class="close-modal">&times;</span>
+          <div class="player-header">
+              <img src="${player.playerImageUrl}" alt="${player.playerName}">
+              <div>
+                  <h3>${player.playerName}</h3>
+                  <p>${player.role}</p>
+                  <p>Batting: ${player.battingStyle}</p>
+                  <p>Bowling: ${player.bowlingStyle || 'N/A'}</p>
+              </div>
+          </div>
+          
+          <div class="performance-charts">
+              <div class="chart-container">
+                  <h4>Performance Trend</h4>
+                  <canvas id="${performanceChartId}"></canvas>
+              </div>
+              <div class="chart-container">
+                  <h4>Points Distribution</h4>
+                  <canvas id="${pointsDistributionId}"></canvas>
+              </div>
+          </div>
+
+          <div class="performance-summary">
+              <div class="summary-box">
+                  <span class="summary-label">Average Points</span>
+                  <span class="summary-value">${(player.averagePoints || 0).toFixed(1)}</span>
+              </div>
+              <div class="summary-box">
+                  <span class="summary-label">Highest Score</span>
+                  <span class="summary-value">${player.highestPoints || 0}</span>
+              </div>
+              <div class="summary-box">
+                  <span class="summary-label">Dream Team Appearances</span>
+                  <span class="summary-value">${recentMatches.filter(m => m.isPartOfDreamTeam).length}</span>
+              </div>
+          </div>
+
+          <div class="player-performance">
+              <h4>Recent Matches</h4>
+              <table>
+                  <thead>
+                      <tr>
+                          <th>Date</th>
+                          <th>Match</th>
+                          <th>Points</th>
+                          <th>Batting</th>
+                          <th>Bowling</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      ${matchesHtml}
+                  </tbody>
+              </table>
+          </div>
       </div>
-      <div class="player-performance">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Match</th>
-              <th>Points</th>
-              <th>Batting</th>
-              <th>Bowling</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${matchesHtml}
-          </tbody>
-        </table>
-      </div>
-    </div>
   `;
 
   document.body.appendChild(modal);
+
+  // Initialize charts
+  initializePerformanceChart(performanceChartId, player);
+  initializeDistributionChart(pointsDistributionId, player);
 
   // Close modal functionality
   const closeBtn = modal.querySelector('.close-modal');
   closeBtn.onclick = () => modal.remove();
   modal.onclick = (e) => {
-    if (e.target === modal) modal.remove();
+      if (e.target === modal) modal.remove();
   };
 }
 
+function initializePerformanceChart(chartId, player) {
+  const ctx = document.getElementById(chartId).getContext('2d');
+  const matches = player.recentMatches || [];
+  
+  new Chart(ctx, {
+      type: 'line',
+      data: {
+          labels: matches.map(m => new Date(m.matchDate).toLocaleDateString()),
+          datasets: [{
+              label: 'Match Points',
+              data: matches.map(m => m.points),
+              borderColor: '#1976d2',
+              backgroundColor: 'rgba(25, 118, 210, 0.1)',
+              fill: true,
+              tension: 0.4,
+              pointBackgroundColor: matches.map(m => 
+                  m.isPartOfDreamTeam ? '#1976d2' : '#64b5f6'
+              ),
+              pointRadius: 6
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+              legend: {
+                  display: false
+              },
+              tooltip: {
+                  callbacks: {
+                      label: (context) => {
+                          const match = matches[context.dataIndex];
+                          return [
+                              `Points: ${match.points}`,
+                              `Batting: ${match.runsScored}(${match.ballFaced})`,
+                              `Bowling: ${match.wickets}-${match.runsConceded}`
+                          ];
+                      }
+                  }
+              }
+          },
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  title: {
+                      display: true,
+                      text: 'Points'
+                  }
+              }
+          }
+      }
+  });
+}
+
+function initializeDistributionChart(chartId, player) {
+  const ctx = document.getElementById(chartId).getContext('2d');
+  const matches = player.recentMatches || [];
+  
+  // Calculate average distribution
+  const battingPoints = matches.reduce((sum, m) => sum + calculateBattingPoints(m), 0) / matches.length;
+  const bowlingPoints = matches.reduce((sum, m) => sum + calculateBowlingPoints(m), 0) / matches.length;
+  const fieldingPoints = matches.reduce((sum, m) => sum + calculateFieldingPoints(m), 0) / matches.length;
+
+  new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+          labels: ['Batting', 'Bowling', 'Fielding'],
+          datasets: [{
+              data: [battingPoints, bowlingPoints, fieldingPoints],
+              backgroundColor: ['#1976d2', '#64b5f6', '#bbdefb']
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+              legend: {
+                  position: 'bottom'
+              }
+          }
+      }
+  });
+}
+
+// Helper functions to calculate points (adjust based on your scoring system)
+function calculateBattingPoints(match) {
+  return (match.runsScored || 0) * 1;  // Simplified scoring
+}
+
+function calculateBowlingPoints(match) {
+  return (match.wickets || 0) * 25;  // Simplified scoring
+}
+
+function calculateFieldingPoints(match) {
+  return ((match.points || 0) - calculateBattingPoints(match) - calculateBowlingPoints(match));
+}
 // Helper functions
 function groupPlayersByRole(players) {
   if (!Array.isArray(players)) return {};
