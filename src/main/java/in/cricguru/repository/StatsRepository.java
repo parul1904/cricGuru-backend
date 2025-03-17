@@ -130,7 +130,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             FROM match_stats) ranked WHERE rn = 1),
             PlayerMatchStats AS (SELECT  ms.player_id, ms.match_no, m.match_date, t1.team_short_name as team1_name, t1.team_logo_url as team1_logo,
             t2.team_short_name as team2_name, t2.team_logo_url as team2_logo, ms.total_point_dream11_new_system as points, ms.runs_scored, ms.ball_faced,
-            ms.fours, ms.sixes, ms.total_wickets, ms.overs, ms.runs_conceded, dt.is_in_dream_team, ROW_NUMBER() OVER (PARTITION BY ms.player_id ORDER BY ms.match_no DESC) as match_rank,
+            ms.fours, ms.sixes, ms.catch_taken, ms.stumping, ms.direct_runout, ms.in_direct_runout, ms.total_wickets, ms.overs, ms.runs_conceded, dt.is_in_dream_team, ROW_NUMBER() OVER (PARTITION BY ms.player_id ORDER BY ms.match_no DESC) as match_rank,
             ms.total_point_dream11_old_system, ms.total_point_my11_circle_system, ms.total_point_dream11_new_system,
             AVG(ms.total_point_dream11_new_system) OVER (PARTITION BY ms.player_id) as avg_points,
             MAX(ms.total_point_dream11_new_system) OVER (PARTITION BY ms.player_id) as highest_points,
@@ -141,7 +141,8 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             pms.lowest_points, lms.last_match_points, lms.last_match_no, JSON_ARRAYAGG(JSON_OBJECT(
             'matchNo', pms.match_no, 'matchDate', pms.match_date, 'team1Name', pms.team1_name, 'team1Logo', pms.team1_logo, 'team2Name', pms.team2_name,
             'team2Logo', pms.team2_logo, 'points', pms.points, 'runsScored', pms.runs_scored, 'ballFaced', pms.ball_faced, 'fours', pms.fours,
-            'sixes', pms.sixes, 'wickets', pms.total_wickets, 'overs', pms.overs, 'runsConceded', pms.runs_conceded, 'isPartOfDreamTeam', pms.is_in_dream_team,
+            'sixes', pms.sixes, 'catches', pms.catch_taken, 'stumpings', pms.stumping, 'runOutDirect', pms.direct_runout, 'runOutInDirect', pms.in_direct_runout,
+            'wickets', pms.total_wickets, 'overs', pms.overs, 'runsConceded', pms.runs_conceded, 'isPartOfDreamTeam', pms.is_in_dream_team,
             'dream11OldPoints', pms.total_point_dream11_old_system, 'my11CirclePoints', pms.total_point_my11_circle_system, 'dream11NewPoints', pms.total_point_dream11_new_system)
             ) as match_details
             FROM CurrentSquadPlayers csp LEFT JOIN PlayerMatchStats pms ON csp.player_id = pms.player_id AND pms.match_rank <= :statsBy
@@ -180,8 +181,8 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                     t1.team_short_name as team1_name, t1.team_logo_url as team1_logo,
                     t2.team_short_name as team2_name, t2.team_logo_url as team2_logo,
                     ms.total_point_dream11_new_system as points, ms.runs_scored, ms.ball_faced,
-                    ms.fours, ms.sixes, ms.total_wickets, ms.overs, ms.runs_conceded,
-                    dt.is_in_dream_team,
+                    ms.fours, ms.sixes, ms.catch_taken, ms.stumpings, ms.runOutDirect, ms.runOutInDirect, 
+                    ms.total_wickets, ms.overs, ms.runs_conceded, dt.is_in_dream_team,
                     ROW_NUMBER() OVER (PARTITION BY ms.player_id ORDER BY ms.match_no DESC) as match_rank,
                     AVG(ms.total_point_dream11_new_system) OVER (PARTITION BY ms.player_id) as avg_points,
                     MAX(ms.total_point_dream11_new_system) OVER (PARTITION BY ms.player_id) as highest_points,
@@ -210,6 +211,10 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                         'ballFaced', pms.ball_faced,
                         'fours', pms.fours,
                         'sixes', pms.sixes,
+                        'catches', pms.catch_taken,
+                        'stumpings', pms.stumping,
+                        'runOutDirect', pms.direct_runout,
+                        'runOutInDirect', pms.in_direct_runout,
                         'wickets', pms.total_wickets,
                         'overs', pms.overs,
                         'runsConceded', pms.runs_conceded,

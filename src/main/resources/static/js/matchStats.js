@@ -684,9 +684,7 @@ function initializePerformanceChart(chartId, player) {
     data: {
       labels: matches.map(m => {
         const date = new Date(m.matchDate);
-        return isMobile ? 
-          `${date.getDate()}/${date.getMonth() + 1}` : 
-          date.toLocaleDateString();
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().slice(-2)}`;
       }),
       datasets: [{
         label: 'Match Points',
@@ -698,7 +696,7 @@ function initializePerformanceChart(chartId, player) {
         pointBackgroundColor: matches.map(m => 
           m.isPartOfDreamTeam ? '#1976d2' : '#64b5f6'
         ),
-        pointRadius: isMobile ? 3 : 5
+        pointRadius: 5
       }]
     },
     options: {
@@ -732,56 +730,231 @@ function initializePerformanceChart(chartId, player) {
 }
 
 function initializeDistributionChart(chartId, player) {
-  const ctx = document.getElementById(chartId).getContext('2d');
-  
-  // Set a fixed size for the canvas
-  ctx.canvas.style.height = '100%';
-  ctx.canvas.style.width = '100%';
-  
-  const matches = player.recentMatches || [];
-  const isMobile = window.innerWidth <= 768;
-  
-  const battingPoints = matches.reduce((sum, m) => sum + calculateBattingPoints(m), 0) / matches.length;
-  const bowlingPoints = matches.reduce((sum, m) => sum + calculateBowlingPoints(m), 0) / matches.length;
-  const fieldingPoints = matches.reduce((sum, m) => sum + calculateFieldingPoints(m), 0) / matches.length;
+    const ctx = document.getElementById(chartId).getContext('2d');
+    
+    const matches = player.recentMatches || [];
+    const matchCount = matches.length || 1;
+    
+    let totalBattingPoints = 0;
+    let totalBowlingPoints = 0;
+    let totalFieldingPoints = 0;
 
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Batting', 'Bowling', 'Fielding'],
-      datasets: [{
-        data: [battingPoints, bowlingPoints, fieldingPoints],
-        backgroundColor: ['#1976d2', '#64b5f6', '#bbdefb']
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: isMobile ? 'bottom' : 'right',
-          labels: {
-            font: {
-              size: isMobile ? 11 : 12
-            }
-          }
-        }
-      }
+    matches.forEach(match => {
+        // Log raw match data for debugging
+        console.log('Processing match:', match);
+        
+        const battingPoints = calculateBattingPoints(match, player.role || 'Batter');
+        const bowlingPoints = calculateBowlingPoints(match);
+        const fieldingPoints = calculateFieldingPoints(match);
+
+        totalBattingPoints += battingPoints;
+        totalBowlingPoints += bowlingPoints;
+        totalFieldingPoints += fieldingPoints;
+
+        // Log points calculation for each match
+        console.log('Match points:', {
+            matchId: match.matchId || match.id,
+            date: match.matchDate || match.date,
+            batting: battingPoints,
+            bowling: bowlingPoints,
+            fielding: fieldingPoints,
+            total: battingPoints + bowlingPoints + fieldingPoints
+        });
+    });
+
+    const averages = {
+        batting: Math.round(totalBattingPoints / matchCount),
+        bowling: Math.round(totalBowlingPoints / matchCount),
+        fielding: Math.round(totalFieldingPoints / matchCount)
+    };
+
+    console.log('Total points:', {
+        batting: totalBattingPoints,
+        bowling: totalBowlingPoints,
+        fielding: totalFieldingPoints,
+        matches: matchCount
+    });
+
+    // Create chart with non-zero values only
+    const labels = [];
+    const data = [];
+    const colors = [];
+
+    if (averages.batting > 0) {
+        labels.push(`Batting (${averages.batting})`);
+        data.push(averages.batting);
+        colors.push('#1976d2');
     }
-  });
+    if (averages.bowling > 0) {
+        labels.push(`Bowling (${averages.bowling})`);
+        data.push(averages.bowling);
+        colors.push('#2e7d32');
+    }
+    if (averages.fielding > 0) {
+        labels.push(`Fielding (${averages.fielding})`);
+        data.push(averages.fielding);
+        colors.push('#f57c00');
+    }
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: window.innerWidth <= 768 ? 'bottom' : 'right',
+                    labels: {
+                        font: { size: window.innerWidth <= 768 ? 11 : 12 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            const label = context.label.split(' ')[0];
+                            const value = context.raw;
+                            return `${label}: ${value} points`;
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 // Helper functions to calculate points (adjust based on your scoring system)
-function calculateBattingPoints(match) {
-  return (match.runsScored || 0) * 1;  // Simplified scoring
+
+// Helper functions to calculate points (using the point system from My11CirclePointCalculator.java)
+function calculateBattingPoints(match, role) {
+    let points = 0;
+
+    // Run points
+    points += match.runsScored || 0;
+
+    // Boundary points
+    points += (match.fours || 0) * 4;
+    points += (match.sixes || 0) * 6;
+
+    // Milestone bonus points
+    if (match.runsScored >= 25) {
+        if (match.runsScored < 50) {
+            points += 4;
+        } else if (match.runsScored < 75) {
+            points += 8;
+        } else if (match.runsScored < 100) {
+            points += 12;
+        } else {
+            points += 16;
+        }
+    }
+
+    // Strike rate bonus/penalty (excluding bowlers)
+    if (role !== 'Bowler') {
+        if (match.runsScored === 0) {
+            points -= 2;
+        } else if (match.runsScored > 0 && match.ballFaced >= 10) {
+            const strikeRate = (match.runsScored / match.ballFaced) * 100;
+            if (strikeRate > 170) points += 6;
+            else if (strikeRate > 150) points += 4;
+            else if (strikeRate >= 130) points += 2;
+            else if (strikeRate >= 60 && strikeRate <= 70) points -= 2;
+            else if (strikeRate >= 50 && strikeRate < 60) points -= 4;
+            else if (strikeRate < 50) points -= 6;
+        }
+    }
+
+    return points;
 }
 
 function calculateBowlingPoints(match) {
-  return (match.wickets || 0) * 25;  // Simplified scoring
+    let points = 0;
+    
+    // Debug log the bowling data
+    console.log('Bowling data:', {
+        wickets: match.totalWickets || match.wickets,
+        bowledLbw: match.bowledLbw,
+        maidens: match.maiden || match.maidens,
+        dots: match.dots || match.dotBalls,
+        overs: match.overs,
+        runsGiven: match.runsGiven || match.runsConceded,
+        rawMatch: match
+    });
+
+    // Wicket points (check both possible property names)
+    const wickets = match.totalWickets || match.wickets || 0;
+    points += wickets * 25;
+    
+    // LBW/Bowled bonus
+    points += (match.bowledLbw || 0) * 8;
+    
+    // Wicket milestone bonus
+    if (wickets === 3) {
+        points += 4;
+    } else if (wickets === 4) {
+        points += 8;
+    } else if (wickets >= 5) {
+        points += 16;
+    }
+    
+    // Maiden over points (check both possible property names)
+    points += (match.maiden || match.maidens || 0) * 12;
+    
+    // Dot ball points (check both possible property names)
+    points += (match.dots || match.dotBalls || 0);
+    
+    // Economy rate bonus/penalty
+    const overs = match.overs || 0;
+    const runsConceded = match.runsGiven || match.runsConceded || 0;
+    
+    if (overs >= 2) {
+        const economyRate = runsConceded / overs;
+        if (economyRate <= 5) points += 6;
+        else if (economyRate <= 6) points += 4;
+        else if (economyRate <= 7) points += 2;
+        else if (economyRate >= 10 && economyRate <= 11) points -= 2;
+        else if (economyRate > 11 && economyRate <= 12) points -= 4;
+        else if (economyRate > 12) points -= 6;
+    }
+    
+    return points;
 }
 
 function calculateFieldingPoints(match) {
-  return ((match.points || 0) - calculateBattingPoints(match) - calculateBowlingPoints(match));
+    let points = 0;
+    
+    // Debug log the fielding data
+    console.log('Fielding data:', {
+        catches: match.catchTaken || match.catches,
+        stumping: match.stumping || match.stumpings,
+        directRunout: match.directRunout || match.runOutDirect,
+        indirectRunout: match.inDirectRunout || match.runOutIndirect,
+        rawMatch: match
+    });
+    
+    // Catch points (check both possible property names)
+    const catches = match.catchTaken || match.catches || 0;
+    points += catches * 8;
+    
+    // Catch milestone bonus
+    if (catches >= 3) {
+        points += 4;
+    }
+    
+    // Stumping points (check both possible property names)
+    points += (match.stumping || match.stumpings || 0) * 12;
+    
+    // Run out points (check both possible property names)
+    points += (match.directRunout || match.runOutDirect || 0) * 12;
+    points += (match.inDirectRunout || match.runOutIndirect || 0) * 6;
+    
+    return points;
 }
 // Helper functions
 function groupPlayersByRole(players) {

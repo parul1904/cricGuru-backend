@@ -133,10 +133,10 @@
 <div class="stats-content">
     <!-- Role tabs -->
     <div class="role-tabs">
-        <button class="role-tab active" data-role="Wicket Keeper">Wkt Keeper</button>
-        <button class="role-tab" data-role="Batter">Batters</button>
-        <button class="role-tab" data-role="All Rounder">All Rounders</button>
-        <button class="role-tab" data-role="Bowler">Bowlers</button>
+        <button class="role-tab active" data-role="Wicket Keeper">WK</button>
+        <button class="role-tab" data-role="Batter">BAT</button>
+        <button class="role-tab" data-role="All Rounder">AR</button>
+        <button class="role-tab" data-role="Bowler">BOWL</button>
     </div>
     
     <div id="playerStatsContainer" class="player-stats-container"></div>
