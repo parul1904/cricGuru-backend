@@ -1,8 +1,7 @@
-<div class="footer">
-    <div class="footer-bottom">
-       <div class="container">
-          <p>&copy; 2025 CricGuru</p>
-       </div>
+<footer class="footer">
+    <div class="container">
+        <div class="copyright">
+            <p>&copy; <script>document.write(new Date().getFullYear())</script> CricGuru. All rights reserved.</p>
+        </div>
     </div>
- </div>
- <a href="#home" data-scroll class="dmtop global-radius"><i class="fa fa-angle-up"></i></a>
+</footer>

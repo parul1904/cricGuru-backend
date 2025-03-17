@@ -2735,7 +2735,157 @@ span.circle {
 .testimonials .section-title span {
   color: #fff;
   background: #fff;
-  color: #3e54ff;
+}
+/* Header Styles */
+.header-area {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: #fff;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.top-bar {
+    background: linear-gradient(135deg, #031537 0%, #3f71cf 100%);
+    padding: 8px 0;
+    color: #fff;
+}
+
+.live-indicator {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.live-indicator i {
+    color: #ff4444;
+    font-size: 10px;
+    margin-right: 5px;
+    animation: pulse 1.5s infinite;
+}
+
+.match-ticker {
+    display: inline-block;
+}
+
+.ticker-label {
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.social-links a {
+    color: #fff;
+    margin-left: 15px;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    color: #ffd700;
+    transform: translateY(-2px);
+}
+
+.main-navbar {
+    padding: 15px 0;
+    background: #fff;
+}
+
+.main-logo {
+    height: 50px;
+    width: auto;
+}
+
+.navbar-nav .nav-item {
+    margin: 0 5px;
+}
+
+.navbar-nav .nav-link {
+    color: #031537;
+    font-weight: 500;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link i {
+    margin-right: 5px;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+    color: #3f71cf;
+    background: rgba(63, 113, 207, 0.1);
+}
+
+.navbar-toggler {
+    border: none;
+    padding: 0;
+}
+
+.toggler-icon {
+    display: block;
+    width: 25px;
+    height: 2px;
+    background: #031537;
+    margin: 5px 0;
+    transition: all 0.3s ease;
+}
+
+/* Footer Styles */
+.footer {
+    background: #f8f9fa;
+    padding: 20px 0;
+    position: relative;
+    border-top: 1px solid #eaeaea;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #031537, #3f71cf);
+}
+
+.footer .container {
+    width: 100%;
+    text-align: center;
+}
+
+.copyright {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.copyright p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.brand-highlight {
+    color: #3f71cf;
+    font-weight: 500;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .footer {
+        padding: 15px 10px;
+    }
+    
+    .copyright p {
+        font-size: 13px;
+    }
 }
 
 .testimonials .section-title p {
@@ -3163,7 +3313,6 @@ span.circle {
 }
 
 .latest-news-area .letest-news-item .meta-list:last-child {
-  margin: 0;
 }
 
 .latest-news-area .letest-news-item .meta-list i {
@@ -3583,7 +3732,168 @@ blockquote h4 {
 .comment-title {
   margin-bottom: 30px !important;
   font-size: 25px;
-  font-weight: 600;
+}
+
+/* Contact Section Styles */
+.contact-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><circle cx="2" cy="2" r="2" fill="%23007bff" opacity="0.1"/></svg>') repeat;
+    z-index: 0;
+}
+
+.contact-heading {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.heading-underline {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #007bff, #00ff88);
+    margin: 15px auto 25px;
+    border-radius: 2px;
+}
+
+.contact-subtitle {
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+.contact-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transform: translateY(0);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.contact-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+.input-wrapper {
+    position: relative;
+    margin-bottom: 1.5rem;
+}
+
+.input-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #007bff;
+    font-size: 1.1rem;
+}
+
+.custom-input {
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+}
+
+.custom-input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+}
+
+textarea.custom-input {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.custom-button {
+    background: linear-gradient(45deg, #007bff, #00ff88);
+    border: none;
+    color: white;
+    padding: 12px 35px;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+}
+
+.custom-button span {
+    margin-right: 10px;
+}
+
+.custom-button i {
+    font-size: 0.9rem;
+}
+
+/* Message Status Styles */
+#messageStatus {
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    display: none;
+    animation: slideDown 0.3s ease-out;
+}
+
+#messageStatus.success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+#messageStatus.error {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .contact-card {
+        padding: 1.5rem;
+    }
+
+    .contact-heading {
+        font-size: 2rem;
+    }
+
+    .custom-button {
+        width: 100%;
+    }
+}
   border-left: 4px solid #3E54FF;
   padding-left: 10px;
   padding-bottom: 5px;
@@ -4618,3 +4928,4 @@ blockquote h4 {
 /*======================================
 	End Footer	CSS
 ========================================*/
+
