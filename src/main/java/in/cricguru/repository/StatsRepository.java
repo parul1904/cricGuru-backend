@@ -181,7 +181,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                     t1.team_short_name as team1_name, t1.team_logo_url as team1_logo,
                     t2.team_short_name as team2_name, t2.team_logo_url as team2_logo,
                     ms.total_point_dream11_new_system as points, ms.runs_scored, ms.ball_faced,
-                    ms.fours, ms.sixes, ms.catch_taken, ms.stumpings, ms.runOutDirect, ms.runOutInDirect, 
+                    ms.fours, ms.sixes, ms.catch_taken, ms.stumping, ms.direct_runout, ms.in_direct_runout, 
                     ms.total_wickets, ms.overs, ms.runs_conceded, dt.is_in_dream_team,
                     ROW_NUMBER() OVER (PARTITION BY ms.player_id ORDER BY ms.match_no DESC) as match_rank,
                     AVG(ms.total_point_dream11_new_system) OVER (PARTITION BY ms.player_id) as avg_points,

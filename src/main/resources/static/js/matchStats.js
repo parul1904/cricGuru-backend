@@ -94,20 +94,20 @@ function toggleView(view, data, season) {
     // Show player stats view
     dreamTeamSection.style.display = "none";
     playerStatsSection.style.display = "block";
-    
+
     // Update button states
     dreamTeamBtn.classList.remove("active");
     playerStatsBtn.classList.add("active");
-    
+
     // Show role tabs
     roleTabs.forEach(tab => {
       tab.style.display = "block";
     });
-    
+
     if (dreamTeamDropdown) {
       dreamTeamDropdown.style.display = "none";
     }
-    
+
     // Initialize player stats if not already done
     if (data && data.performanceDataJson) {
       initializePlayerStats(data);
@@ -116,11 +116,11 @@ function toggleView(view, data, season) {
     // Show dream team view
     dreamTeamSection.style.display = "block";
     playerStatsSection.style.display = "none";
-    
+
     // Update button states
     dreamTeamBtn.classList.add("active");
     playerStatsBtn.classList.remove("active");
-    
+
     // Hide role tabs
     roleTabs.forEach(tab => {
       tab.style.display = "none";
@@ -474,11 +474,10 @@ function createPlayerStatsCard(player) {
 
   const recentMatches = player.recentMatches || [];
   const last5Matches = recentMatches.slice(0, 5);
-  const dreamTeamCount = recentMatches.filter(match => match.isPartOfDreamTeam).length;
-  const averagePoints = recentMatches.length > 0 
+  const averagePoints = recentMatches.length > 0
       ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)
       : 0;
-  const highestPoints = recentMatches.length > 0 
+  const highestPoints = recentMatches.length > 0
       ? Math.max(...recentMatches.map(match => match.points || 0))
       : 0;
 
@@ -491,7 +490,7 @@ function createPlayerStatsCard(player) {
   card.innerHTML = `
       <div class="player-header-section">
           <div class="player-image">
-              <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}" 
+              <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
                    onerror="this.src='../images/default-player.png'"
                    style="width: 80px; height: 80px; object-fit: cover;">
           </div>
@@ -572,7 +571,7 @@ function showPlayerDetailModal(player) {
           <!-- Player header section -->
           <div class="player-basic-details">
               <div class="player-image-container">
-                  <img src="${player.playerImageUrl || player.playerImgUrl}" 
+                  <img src="${player.playerImageUrl || player.playerImgUrl}"
                        alt="${player.playerName}"
                        onerror="this.src='../images/default-player.png'">
               </div>
@@ -645,7 +644,7 @@ function showPlayerDetailModal(player) {
 
   // Close modal functionality
   const closeBtn = modal.querySelector('.close-modal');
-  
+
   // Close on button click
   closeBtn.addEventListener('click', () => {
     modal.remove();
@@ -671,14 +670,14 @@ function showPlayerDetailModal(player) {
 
 function initializePerformanceChart(chartId, player) {
   const ctx = document.getElementById(chartId).getContext('2d');
-  
+
   // Remove any dynamic height/width styling from the canvas
   ctx.canvas.style.removeProperty('height');
   ctx.canvas.style.removeProperty('width');
-  
+
   const matches = player.recentMatches || [];
   const isMobile = window.innerWidth <= 768;
-  
+
   new Chart(ctx, {
     type: 'line',
     data: {
@@ -693,7 +692,7 @@ function initializePerformanceChart(chartId, player) {
         backgroundColor: 'rgba(25, 118, 210, 0.1)',
         fill: true,
         tension: 0.4,
-        pointBackgroundColor: matches.map(m => 
+        pointBackgroundColor: matches.map(m =>
           m.isPartOfDreamTeam ? '#1976d2' : '#64b5f6'
         ),
         pointRadius: 5
@@ -731,10 +730,10 @@ function initializePerformanceChart(chartId, player) {
 
 function initializeDistributionChart(chartId, player) {
     const ctx = document.getElementById(chartId).getContext('2d');
-    
+
     const matches = player.recentMatches || [];
     const matchCount = matches.length || 1;
-    
+
     let totalBattingPoints = 0;
     let totalBowlingPoints = 0;
     let totalFieldingPoints = 0;
@@ -742,7 +741,7 @@ function initializeDistributionChart(chartId, player) {
     matches.forEach(match => {
         // Log raw match data for debugging
         console.log('Processing match:', match);
-        
+
         const battingPoints = calculateBattingPoints(match, player.role || 'Batter');
         const bowlingPoints = calculateBowlingPoints(match);
         const fieldingPoints = calculateFieldingPoints(match);
@@ -875,7 +874,7 @@ function calculateBattingPoints(match, role) {
 
 function calculateBowlingPoints(match) {
     let points = 0;
-    
+
     // Debug log the bowling data
     console.log('Bowling data:', {
         wickets: match.totalWickets || match.wickets,
@@ -890,10 +889,10 @@ function calculateBowlingPoints(match) {
     // Wicket points (check both possible property names)
     const wickets = match.totalWickets || match.wickets || 0;
     points += wickets * 25;
-    
+
     // LBW/Bowled bonus
     points += (match.bowledLbw || 0) * 8;
-    
+
     // Wicket milestone bonus
     if (wickets === 3) {
         points += 4;
@@ -902,17 +901,17 @@ function calculateBowlingPoints(match) {
     } else if (wickets >= 5) {
         points += 16;
     }
-    
+
     // Maiden over points (check both possible property names)
     points += (match.maiden || match.maidens || 0) * 12;
-    
+
     // Dot ball points (check both possible property names)
     points += (match.dots || match.dotBalls || 0);
-    
+
     // Economy rate bonus/penalty
     const overs = match.overs || 0;
     const runsConceded = match.runsGiven || match.runsConceded || 0;
-    
+
     if (overs >= 2) {
         const economyRate = runsConceded / overs;
         if (economyRate <= 5) points += 6;
@@ -922,13 +921,13 @@ function calculateBowlingPoints(match) {
         else if (economyRate > 11 && economyRate <= 12) points -= 4;
         else if (economyRate > 12) points -= 6;
     }
-    
+
     return points;
 }
 
 function calculateFieldingPoints(match) {
     let points = 0;
-    
+
     // Debug log the fielding data
     console.log('Fielding data:', {
         catches: match.catchTaken || match.catches,
@@ -937,29 +936,29 @@ function calculateFieldingPoints(match) {
         indirectRunout: match.inDirectRunout || match.runOutIndirect,
         rawMatch: match
     });
-    
+
     // Catch points (check both possible property names)
     const catches = match.catchTaken || match.catches || 0;
     points += catches * 8;
-    
+
     // Catch milestone bonus
     if (catches >= 3) {
         points += 4;
     }
-    
+
     // Stumping points (check both possible property names)
     points += (match.stumping || match.stumpings || 0) * 12;
-    
+
     // Run out points (check both possible property names)
     points += (match.directRunout || match.runOutDirect || 0) * 12;
     points += (match.inDirectRunout || match.runOutIndirect || 0) * 6;
-    
+
     return points;
 }
 // Helper functions
 function groupPlayersByRole(players) {
   if (!Array.isArray(players)) return {};
-  
+
   return players.reduce((groups, player) => {
     const role = player.playerRole || 'Batter';
     if (!groups[role]) {
@@ -977,7 +976,7 @@ function clearPlayerSections() {
     'allRoundersSection',
     'bowlersSection'
   ];
-  
+
   sections.forEach(sectionId => {
     const section = document.getElementById(sectionId);
     if (section) {
@@ -1014,8 +1013,8 @@ function initializePlayerStats(data) {
         return;
     }
 
-    globalPlayersData = Array.isArray(data.performanceDataJson) 
-        ? data.performanceDataJson 
+    globalPlayersData = Array.isArray(data.performanceDataJson)
+        ? data.performanceDataJson
         : data.performanceDataJson;
 
     // Initialize tab click handlers
@@ -1043,7 +1042,7 @@ function displayPlayersByRole(selectedRole) {
         console.error("Container element not found");
         return;
     }
-    
+
     container.innerHTML = ''; // Clear existing content
 
     // Filter players by selected role
@@ -1071,6 +1070,12 @@ function createPlayerStatsCard(player) {
 
     const recentMatches = player.recentMatches || [];
     const last5Matches = recentMatches.slice(0, 5);
+    const averagePoints = recentMatches.length > 0
+        ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)
+        : 0;
+    const highestPoints = recentMatches.length > 0
+        ? Math.max(...recentMatches.map(match => match.points || 0))
+        : 0;
 
     const matchPointsHtml = last5Matches.map(match => {
         const isInDreamTeam = match.isPartOfDreamTeam;
@@ -1080,21 +1085,20 @@ function createPlayerStatsCard(player) {
 
     card.innerHTML = `
         <div class="player-image">
-            <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}" 
-                 onerror="this.src='../images/default-player.png'"
-                 style="width: 80px; height: 80px; object-fit: cover;">
+            <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
+                 onerror="this.src='../images/default-player.png'">
         </div>
         <div class="player-basic-info">
             <h4 class="player-name">${player.playerName}</h4>
             <div class="points-container">
-                <span class="avg-points">Average Points: ${(player.averagePoints || 0).toFixed(1)}</span>
-                <span class="high-points">Highest Points: ${player.highestPoints || 0}</span>
+                <span class="avg-points">Avg: ${averagePoints}</span>
+                <span class="high-points">High: ${highestPoints}</span>
             </div>
-            <div class="last-matches">
-                <p>Last 5 matches</p>
-                <div class="match-points-container">
-                    ${matchPointsHtml}
-                </div>
+        </div>
+        <div class="last-matches">
+            <p>Last 5 matches</p>
+            <div class="match-points-container">
+                ${matchPointsHtml}
             </div>
         </div>
     `;
