@@ -55,10 +55,11 @@
 <div class="container">
     <div class="navigation-container mb-4">
         <input type="hidden" id="season" value="${season}">
-        <div class="view-toggle-buttons">
-            <button id="dreamTeamBtn" class="stats-tab-button active">Dream Team</button>
-            <button id="playerStatsBtn" class="stats-tab-button">Player Stats</button>
-        </div>
+       <!-- Add this in the view toggle section -->
+       <div class="view-toggle-container no-select">
+           <button id="dreamTeamBtn" class="active" type="button">Dream Team</button>
+           <button id="playerStatsBtn" type="button">Player Stats</button>
+       </div>
         
         <div id="dreamTeamDropdown" class="mt-2">
             <select id="pointSystemSelect" class="form-select">
@@ -73,7 +74,6 @@
     <input type="hidden" id="seasonYear" value='${seasonYear}'>
     
     <div id="dreamTeamSection">
-        <h2 class="text-center">Dream Team</h2>
 
         <!-- Loading Spinner -->
         <div id="loadingSpinner" class="text-center" style="display: none;">

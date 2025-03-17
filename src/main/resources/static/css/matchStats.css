@@ -14,32 +14,46 @@
         transparent 75%,
         rgba(255, 255, 255, 0.1) 75%
     );
-    background-size: 100% 100%, 20px 20px;  /* Second value creates subtle texture */
+    background-size: 100% 100%, 20px 20px;
     padding: 15px;
     border-radius: 15px;
     margin: 15px auto;
     max-width: 800px;
     width: 90%;
-    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.2),  /* Inner shadow for depth */
-                0 4px 8px rgba(0, 0, 0, 0.1);  /* Outer shadow for elevation */
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.2),
+                0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
 }
 
-/* Add stadium-like lines */
+/* Single logo with centered alignment */
 .cricket-field::before {
     content: '';
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 80%;
-    height: 80%;
-    border: 2px solid rgba(255, 255, 255, 0.1);
-    border-radius: 50%;
+    top: 50%;          /* Center vertically */
+    left: 50%;         /* Center horizontally */
+    transform: translate(-50%, -50%); /* Perfect centering */
+    width: 200px;      /* Increased size for desktop */
+    height: 200px;     /* Increased size for desktop */
+    background: url('../images/dreamTeam-bg.png') no-repeat center / contain;
+    opacity: 0.2;
     pointer-events: none;
+    z-index: 1;
 }
 
+/* Adjust for mobile devices */
+@media (max-width: 768px) {
+    .cricket-field::before {
+        width: 50px;
+        height: 50px;
+        top: 5px;    /* Original mobile positioning */
+        right: 5px;  /* Original mobile positioning */
+        left: auto;  /* Reset left positioning */
+        transform: none; /* Reset transform */
+    }
+}
+
+/* Add stadium-like lines */
 .cricket-field::after {
     content: '';
     position: absolute;
@@ -84,9 +98,9 @@
 
 .section {
     position: relative;
-    padding: 15px 10px;
+    padding: 2px 5px;
     min-height: 100px;
-    background: rgba(255, 255, 255, 0.05);  /* Subtle white overlay */
+  /*background: rgba(255, 255, 255, 0.05);*/  /* Subtle white overlay */
     border-radius: 10px;
     backdrop-filter: blur(2px);
 }
@@ -94,8 +108,8 @@
 .section-title {
     color: white;
     text-align: center;
-    margin-bottom: 15px;
-    font-size: 1.2em;
+    margin-bottom: 0px;
+    font-size: 1.0em;
     text-transform: uppercase;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     letter-spacing: 1px;
@@ -127,8 +141,8 @@
 }
 
 .player-card {
-    padding: 2px;
-    width: 100px; /* Further reduced width */
+    padding: 0px;
+    width: 80px; /* Further reduced width */
     text-align: center;
     transition: transform 0.3s ease;
 }
@@ -240,8 +254,8 @@
 /* Responsive Design */
 @media (max-width: 768px) {
     .cricket-field {
-        padding: 10px;
-        width: 95%;
+        padding: 5px;
+        width: 100%;
     }
     
     .cricket-field::before,
@@ -1016,13 +1030,13 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .player-name {
-        font-size: 1.2em;
+        font-size: 1.0em;
     }
 }
 
 @media (max-width: 480px) {
     .player-name {
-        font-size: 1.1em;
+        font-size: 0.9em;
     }
 }
 
@@ -1648,10 +1662,10 @@
 }
 
 .player-image-container img {
-    width: 100%;
-    height: 100%;
+    width: 80%;
+    height: 80%;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 4px;
 }
 
 .player-info {
@@ -1663,7 +1677,7 @@
 
 .player-info h3 {
     margin: 0 0 8px 0;
-    font-size: 1.2rem;
+    font-size: 1.0rem;
     color: #333;
     line-height: 1.2;
 }
@@ -1899,4 +1913,66 @@
         left: 0;
         z-index: 0;
     }
+}
+
+/* View toggle buttons styling */
+#dreamTeamBtn,
+#playerStatsBtn {
+    position: relative;
+    cursor: pointer;
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    background: #fff;
+    transition: all 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+#dreamTeamBtn.active,
+#playerStatsBtn.active {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    #dreamTeamBtn,
+    #playerStatsBtn {
+        min-height: 44px; /* Minimum touch target size */
+        font-size: 16px; /* Larger font for better readability */
+        margin: 0 5px;
+        padding: 8px 16px;
+        border-radius: 4px;
+    }
+
+    /* Add visual feedback for touch */
+    #dreamTeamBtn:active,
+    #playerStatsBtn:active {
+        transform: scale(0.98);
+        background-color: #f0f0f0;
+    }
+
+    #dreamTeamBtn.active:active,
+    #playerStatsBtn.active:active {
+        background-color: #0056b3;
+    }
+
+    /* Ensure buttons are easily tappable */
+    .view-toggle-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        padding: 10px 0;
+        margin-bottom: 15px;
+    }
+}
+
+/* Prevent text selection during taps */
+.no-select {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }

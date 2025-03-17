@@ -112,7 +112,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
     List<Object[]> getAllStatsByVenue(@Param("venueId") Long venueId);
 
     @Query(value = """
-            WITH CurrentSquadPlayers AS (SELECT DISTINCT p.player_id, p.player_name, p.player_img_url, p.role, p.batting_style, p.bowling_style
+            WITH CurrentSquadPlayers AS (SELECT DISTINCT p.player_id, p.nick_name, p.player_img_url, p.role, p.batting_style, p.bowling_style
             FROM players p
             JOIN squads sq ON p.player_id = sq.player_id
             WHERE sq.season_id = :seasonId\s
@@ -137,7 +137,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             MIN(ms.total_point_dream11_new_system) OVER (PARTITION BY ms.player_id) as lowest_points
             FROM match_stats ms JOIN matches m ON ms.match_no = m.match_id JOIN teams t1 ON m.team1_id = t1.team_id JOIN teams t2 ON m.team2_id = t2.team_id
             LEFT JOIN DreamTeamRanks dt ON ms.match_no = dt.match_no AND ms.player_id = dt.player_id)
-            SELECT csp.player_id, csp.player_name, csp.player_img_url, csp.role, csp.batting_style, csp.bowling_style, pms.avg_points, pms.highest_points,
+            SELECT csp.player_id, csp.nick_name, csp.player_img_url, csp.role, csp.batting_style, csp.bowling_style, pms.avg_points, pms.highest_points,
             pms.lowest_points, lms.last_match_points, lms.last_match_no, JSON_ARRAYAGG(JSON_OBJECT(
             'matchNo', pms.match_no, 'matchDate', pms.match_date, 'team1Name', pms.team1_name, 'team1Logo', pms.team1_logo, 'team2Name', pms.team2_name,
             'team2Logo', pms.team2_logo, 'points', pms.points, 'runsScored', pms.runs_scored, 'ballFaced', pms.ball_faced, 'fours', pms.fours,
@@ -146,14 +146,14 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             ) as match_details
             FROM CurrentSquadPlayers csp LEFT JOIN PlayerMatchStats pms ON csp.player_id = pms.player_id AND pms.match_rank <= :statsBy
             LEFT JOIN LastMatchStats lms ON csp.player_id = lms.player_id
-            GROUP BY csp.player_id,  csp.player_name,  csp.player_img_url,  csp.role, csp.batting_style, csp.bowling_style, pms.avg_points, pms.highest_points,
+            GROUP BY csp.player_id,  csp.nick_name,  csp.player_img_url,  csp.role, csp.batting_style, csp.bowling_style, pms.avg_points, pms.highest_points,
             pms.lowest_points, lms.last_match_points, lms.last_match_no ORDER BY lms.last_match_no DESC, pms.match_no DESC;
             """, nativeQuery = true)
     List<Object[]> getPlayerPerformanceStats(@Param("seasonId") Long seasonId, @Param("team1Id") Long team1Id, @Param("team2Id") Long team2Id, @Param("statsBy") Long statsBy);
 
     @Query(value = """
             WITH MatchPlayers AS (
-                SELECT DISTINCT p.player_id, p.player_name, p.player_img_url, p.role, p.batting_style, p.bowling_style
+                SELECT DISTINCT p.player_id, p.nick_name, p.player_img_url, p.role, p.batting_style, p.bowling_style
                 FROM players p
                 JOIN match_stats ms ON p.player_id = ms.player_id
                 WHERE ms.match_no = :matchNo
@@ -193,7 +193,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                 LEFT JOIN DreamTeamRanks dt ON ms.match_no = dt.match_no AND ms.player_id = dt.player_id
             )
             SELECT 
-                mp.player_id, mp.player_name, mp.player_img_url, mp.role,
+                mp.player_id, mp.nick_name, mp.player_img_url, mp.role,
                 mp.batting_style, mp.bowling_style,
                 pms.avg_points, pms.highest_points, pms.lowest_points,
                 lms.last_match_points, lms.last_match_no,
@@ -220,7 +220,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             LEFT JOIN PlayerMatchStats pms ON mp.player_id = pms.player_id AND pms.match_rank <= 5
             LEFT JOIN LastMatchStats lms ON mp.player_id = lms.player_id
             GROUP BY 
-                mp.player_id, mp.player_name, mp.player_img_url, mp.role,
+                mp.player_id, mp.nick_name, mp.player_img_url, mp.role,
                 mp.batting_style, mp.bowling_style,
                 pms.avg_points, pms.highest_points, pms.lowest_points,
                 lms.last_match_points, lms.last_match_no

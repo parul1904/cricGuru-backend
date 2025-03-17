@@ -41,7 +41,6 @@ function initializeView(season, dreamTeamData) {
   const totalPointsContainer = document.getElementById("totalPointsContainer");
 
   if (season === "2025") {
-    // Hide points-related elements for 2025
     if (totalPointsContainer) totalPointsContainer.style.display = "none";
     if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
   }
@@ -49,16 +48,22 @@ function initializeView(season, dreamTeamData) {
   // Initialize with Dream Team view
   displayDreamTeam(dreamTeamData.old, season);
 
-  // Event Listeners
+  // Enhanced event listeners for both desktop and mobile
   if (dreamTeamBtn) {
-    dreamTeamBtn.addEventListener("click", function() {
-      toggleView("dream-team", dreamTeamData, season);
+    ['click', 'touchend'].forEach(eventType => {
+      dreamTeamBtn.addEventListener(eventType, function(e) {
+        e.preventDefault();
+        toggleView("dream-team", dreamTeamData, season);
+      });
     });
   }
 
   if (playerStatsBtn) {
-    playerStatsBtn.addEventListener("click", function() {
-      toggleView("player-stats", dreamTeamData, season);
+    ['click', 'touchend'].forEach(eventType => {
+      playerStatsBtn.addEventListener(eventType, function(e) {
+        e.preventDefault();
+        toggleView("player-stats", dreamTeamData, season);
+      });
     });
   }
 
@@ -201,10 +206,7 @@ function createPlayerCard(player, season, captain, viceCaptain) {
             <div class="player-name ${
               isCaptain || isViceCaptain ? "player-name-captain" : ""
             }">${player.playerNickName}</div>
-            ${season !== "2025" ? `
-                <span class="player-separator">-</span>
-                <div class="player-points">${points}</div>
-            ` : ''}
+            ${season !== "2025" ? ` ${points} ` : ''}
         </div>
     `;
   return card;
