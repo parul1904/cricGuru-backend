@@ -138,6 +138,12 @@ function displayDreamTeam(players, season) {
     return;
   }
 
+  // Show download button when dream team is displayed
+  const downloadButton = document.querySelector('.download-button');
+  if (downloadButton) {
+    downloadButton.style.display = 'flex';
+  }
+
   // Show cricket field
   const cricketField = document.getElementById("cricketField");
   if (cricketField) {
@@ -187,7 +193,7 @@ function createPlayerCard(player, season, captain, viceCaptain) {
           isCaptain || isViceCaptain ? "player-image-container-captain" : ""
         }">
             <div class="player-image-container-img">
-                <img src="${player.playerImgUrl}" alt="${
+                <img src="${player.playerImgUrl}" crossorigin="anonymous" alt="${
     player.playerNickName
   }">
             </div>
@@ -946,3 +952,123 @@ window.addEventListener('resize', () => {
         }
     }, 250);
 });
+
+function downloadDreamTeamImage() {
+    const dreamTeamElement = document.getElementById('dreamTeamSection');
+    const downloadButton = document.querySelector('.download-button');
+    
+    // Temporarily hide the download button
+    if (downloadButton) {
+        downloadButton.style.display = 'none';
+    }
+
+    // Create loading indicator outside the dreamTeamElement
+    const loadingIndicator = document.createElement('div');
+    loadingIndicator.className = 'download-loading';
+    loadingIndicator.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Converting...</span></div>';
+    document.body.appendChild(loadingIndicator);
+
+    // First, ensure all images are loaded
+    const imagePromises = [];
+    const images = dreamTeamElement.getElementsByTagName('img');
+    
+    for (let img of images) {
+        const newImg = new Image();
+        newImg.crossOrigin = "anonymous";
+        
+        const promise = new Promise((resolve, reject) => {
+            newImg.onload = () => {
+                img.src = newImg.src;
+                resolve();
+            };
+            newImg.onerror = () => {
+                newImg.src = '../images/default-player.png';
+                resolve();
+            };
+        });
+        
+        const timestamp = new Date().getTime();
+        newImg.src = img.src.includes('?') ? 
+            `${img.src}&t=${timestamp}` : 
+            `${img.src}?t=${timestamp}`;
+            
+        imagePromises.push(promise);
+    }
+
+    Promise.all(imagePromises)
+        .then(() => {
+            return html2canvas(dreamTeamElement, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                onclone: function(clonedDoc) {
+                    const clonedImages = clonedDoc.getElementsByTagName('img');
+                    for (let img of clonedImages) {
+                        img.crossOrigin = "anonymous";
+                        img.style.width = img.width + 'px';
+                        img.style.height = img.height + 'px';
+                    }
+                }
+            });
+        })
+        .then(canvas => {
+            // Remove loading indicator from body
+            document.body.removeChild(loadingIndicator);
+            
+            // Show download button again
+            if (downloadButton) {
+                downloadButton.style.display = 'flex';
+            }
+
+            // Generate filename using match details
+            let filename = 'dream-team';
+
+            filename = `${filename}.png`;
+
+            // Create download link
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        })
+        .catch(error => {
+            console.error('Error generating image:', error);
+            
+            // Remove loading indicator from body
+            if (document.body.contains(loadingIndicator)) {
+                document.body.removeChild(loadingIndicator);
+            }
+            
+            // Show download button again
+            if (downloadButton) {
+                downloadButton.style.display = 'flex';
+            }
+
+            alert('Failed to generate image. Please try again.');
+        });
+}
+
+// Update the loading indicator styles to be fixed to the viewport
+const style = document.createElement('style');
+style.textContent = `
+    .download-loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+    }
+`;
+document.head.appendChild(style);
