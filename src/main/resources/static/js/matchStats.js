@@ -469,63 +469,70 @@ function createRoleSection(role, players) {
 }
 
 function createPlayerStatsCard(player) {
-  const card = document.createElement('div');
-  card.className = 'player-stats-card';
+    const card = document.createElement('div');
+    card.className = 'player-stats-card';
 
-  const recentMatches = player.recentMatches || [];
-  const last5Matches = recentMatches.slice(0, 5);
-  const averagePoints = recentMatches.length > 0
-      ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)
-      : 0;
-  const highestPoints = recentMatches.length > 0
-      ? Math.max(...recentMatches.map(match => match.points || 0))
-      : 0;
+    // Sort recentMatches in descending order of matchNo
+    const recentMatches = (player.recentMatches || []).sort((a, b) => b.matchNo - a.matchNo);
+    const last5Matches = recentMatches.slice(0, 5);
+    const averagePoints = recentMatches.length > 0
+        ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)
+        : 0;
+    const highestPoints = recentMatches.length > 0
+        ? Math.max(...recentMatches.map(match => match.points || 0))
+        : 0;
 
-  const matchPointsHtml = last5Matches.map(match => {
-      const isInDreamTeam = match.isPartOfDreamTeam;
-      const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
-      return `<div class="match-point ${pointClass}" title="${match.team1Name} vs ${match.team2Name}">${match.points || 0}</div>`;
-  }).join('');
+    // Generate match points HTML with DNP for matches not played
+    const matchPointsHtml = Array.from({ length: 5 }).map((_, index) => {
+        const match = last5Matches[index];
+        if (match && match.points !== undefined && match.points !== null) {
+            const isInDreamTeam = match.isPartOfDreamTeam;
+            const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
+            return `<div class="match-point ${pointClass}" title="${match.team1Name || 'Unknown'} vs ${match.team2Name || 'Unknown'}">${match.points}</div>`;
+        } else {
+            return `<div class="match-point dnp" title="Did Not Play">DNP</div>`;
+        }
+    }).join('');
 
-  card.innerHTML = `
-      <div class="player-header-section">
-          <div class="player-image">
-              <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
-                   onerror="this.src='../images/default-player.png'"
-                   style="width: 80px; height: 80px; object-fit: cover;">
-          </div>
-          <div class="player-info-header">
-              <h4 class="player-name">${player.playerName}</h4>
-              <div class="player-role">${player.role}</div>
-              <div class="player-style">
-                  ${player.battingStyle || ''} ${player.battingStyle && player.bowlingStyle ? '•' : ''} ${player.bowlingStyle || ''}
-              </div>
-          </div>
-      </div>
-      <div class="player-stats-summary">
-          <div class="stat-box">
-              <div class="stat-label">Average</div>
-              <div class="stat-value">${averagePoints}</div>
-          </div>
-          <div class="stat-box">
-              <div class="stat-label">Highest</div>
-              <div class="stat-value">${highestPoints}</div>
-          </div>
-          <div class="stat-box">
-              <div class="stat-label">Dream Team</div>
-              <div class="stat-value dream-team-count">${dreamTeamCount}</div>
-          </div>
-      </div>
-      <div class="last-matches">
-          <p>Last 5 matches</p>
-          <div class="match-points-container">
-              ${matchPointsHtml}
-          </div>
-      </div>
-  `;
+    card.innerHTML = `
+        <div class="player-header-section">
+            <div class="player-image">
+                <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
+                     onerror="this.src='../images/default-player.png'"
+                     style="width: 80px; height: 80px; object-fit: cover;">
+            </div>
+            <div class="player-info-header">
+                <h4 class="player-name">${player.playerName}</h4>
+                <div class="player-role">${player.role}</div>
+                <div class="player-style">
+                    ${player.battingStyle || ''} ${player.battingStyle && player.bowlingStyle ? '•' : ''} ${player.bowlingStyle || ''}
+                </div>
+            </div>
+        </div>
+        <div class="player-stats-summary">
+            <div class="stat-box">
+                <div class="stat-label">Average</div>
+                <div class="stat-value">${averagePoints}</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Highest</div>
+                <div class="stat-value">${highestPoints}</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Dream Team</div>
+                <div class="stat-value dream-team-count">${recentMatches.filter(match => match.isPartOfDreamTeam).length}</div>
+            </div>
+        </div>
+        <div class="last-matches">
+            <p>Last 5 matches (Most Recent to Oldest)</p>
+            <div class="match-points-container">
+                ${matchPointsHtml}
+            </div>
+        </div>
+    `;
 
-  card.addEventListener('click', () => showPlayerDetailModal(player));
-  return card;
+    card.addEventListener('click', () => showPlayerDetailModal(player));
+    return card;
 }
 
 function showPlayerDetailModal(player) {
@@ -1068,7 +1075,8 @@ function createPlayerStatsCard(player) {
     const card = document.createElement('div');
     card.className = 'player-stats-card';
 
-    const recentMatches = player.recentMatches || [];
+    // Sort recentMatches in descending order of matchNo
+    const recentMatches = (player.recentMatches || []).sort((a, b) => b.matchNo - a.matchNo);
     const last5Matches = recentMatches.slice(0, 5);
     const averagePoints = recentMatches.length > 0
         ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)
@@ -1077,10 +1085,16 @@ function createPlayerStatsCard(player) {
         ? Math.max(...recentMatches.map(match => match.points || 0))
         : 0;
 
-    const matchPointsHtml = last5Matches.map(match => {
-        const isInDreamTeam = match.isPartOfDreamTeam;
-        const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
-        return `<div class="match-point ${pointClass}" title="${match.team1Name} vs ${match.team2Name}">${match.points || 0}</div>`;
+    // Generate match points HTML with DNP for matches not played
+    const matchPointsHtml = Array.from({ length: 5 }).map((_, index) => {
+        const match = last5Matches[index];
+        if (match) {
+            const isInDreamTeam = match.isPartOfDreamTeam;
+            const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
+            return `<div class="match-point ${pointClass}" title="${match.team1Name || 'Unknown'} vs ${match.team2Name || 'Unknown'}">${match.points !== undefined ? match.points : 'DNP'}</div>`;
+        } else {
+            return `<div class="match-point dnp" title="Did Not Play">DNP</div>`;
+        }
     }).join('');
 
     card.innerHTML = `
@@ -1096,7 +1110,7 @@ function createPlayerStatsCard(player) {
             </div>
         </div>
         <div class="last-matches">
-            <p>Last 5 matches</p>
+            <p>Last 5 matches (Most Recent to Oldest)</p>
             <div class="match-points-container">
                 ${matchPointsHtml}
             </div>
