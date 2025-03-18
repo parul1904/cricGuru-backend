@@ -17,4 +17,8 @@ public class DreamTeamResponse {
     private Integer dream11OldPoints;
     private Integer my11CirclePoints;
     private Integer dream11NewPoints;
+    private Double dream11AvgVenuePoints;
+    private Double my11CircleAvgVenuePoints;
+    private Double dream11Last3MatchPoints;
+    private Double my11CircleLast3MatchPoints;
 }

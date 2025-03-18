@@ -417,6 +417,10 @@ public class StatsMapper {
             response.setPlayerNickName(row[1] != null ? (String) row[1] : null);
             response.setPlayerImgUrl(row[2] != null ? (String) row[2] : null);
             response.setPlayerRole(row[3] != null ? (String) row[3] : null);
+            response.setDream11NewPoints(row[6] != null ? ((Number) row[6]).intValue() : null);
+            response.setMy11CirclePoints(row[7] != null ? ((Number) row[7]).intValue() : null);
+            response.setDream11Last3MatchPoints(row[8] != null ? ((Number) row[8]).doubleValue() : null);
+            response.setMy11CircleLast3MatchPoints(row[9] != null ? ((Number) row[9]).doubleValue() : null);
 
             if (row[12] != null) {
                 String matchDetailsJson = (String) row[12];
@@ -429,10 +433,6 @@ public class StatsMapper {
                     );
                     if (!matchPerformances.isEmpty()) {
                         PlayerPerformanceResponse.MatchPerformance lastMatch = matchPerformances.get(0);
-                        Integer lastMatchPoints = lastMatch.getPoints();
-                        response.setDream11OldPoints(lastMatchPoints);
-                        response.setMy11CirclePoints(lastMatchPoints);
-                        response.setDream11NewPoints(lastMatchPoints);
                         // Set team logos from the last match
                         response.setTeam1(lastMatch.getTeam1Logo());
                         response.setTeam2(lastMatch.getTeam2Logo());

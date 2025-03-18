@@ -164,6 +164,8 @@
     const oldDreamTeamJson = '${oldDreamTeamJson}';
     const newDreamTeamJson = '${newDreamTeamJson}';
     const my11CirceTeamJson = '${my11CirceTeamJson}';
+    const season2DreamTeamJson = '${season2DreamTeamJson}';
+
     // Add match details
     const matchDetails = {
         matchNo: "${match.matchNo}"

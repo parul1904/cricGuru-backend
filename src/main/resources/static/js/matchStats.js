@@ -8,7 +8,8 @@ document.addEventListener("DOMContentLoaded", function() {
   const dreamTeamData = {
     old: JSON.parse(oldDreamTeamJson || "[]"),
     new: JSON.parse(newDreamTeamJson || "[]"),
-    my11: JSON.parse(my11CirceTeamJson || "[]")
+    my11: JSON.parse(my11CirceTeamJson || "[]"),
+    season2: JSON.parse(season2DreamTeamJson || "[]")
   };
 
   const season = seasonYear;
@@ -43,10 +44,13 @@ function initializeView(season, dreamTeamData) {
   if (season === "2025") {
     if (totalPointsContainer) totalPointsContainer.style.display = "none";
     if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
+      displayDreamTeam(dreamTeamData.season2, season);
+  } else {
+      // Initialize with Dream Team view
+      displayDreamTeam(dreamTeamData.old, season);
   }
 
-  // Initialize with Dream Team view
-  displayDreamTeam(dreamTeamData.old, season);
+
 
   // Enhanced event listeners for both desktop and mobile
   if (dreamTeamBtn) {
@@ -133,6 +137,7 @@ function toggleView(view, data, season) {
 }
 
 function displayDreamTeam(players, season) {
+    console.log('Players are:: ', players)
   if (!Array.isArray(players) || players.length === 0) {
     showError("No team data available");
     return;
