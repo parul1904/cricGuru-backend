@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <header class="header-area">
     <div class="main-navbar">
         <div class="container">
@@ -22,7 +23,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link ${pageName == 'about' ? 'active' : ''}" href="${pageContext.request.contextPath}/about">
-                                <i class="fas fa-info-circle"></i> About Us
+                                <i class="fas fa-info-circle"></i> About
                             </a>
                         </li>
                         <li class="nav-item">
@@ -40,19 +41,10 @@
                                 <i class="fas fa-map-marker-alt"></i> Venue Stats
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link ${pageName == 'todaysAnalysis' ? 'active' : ''}" href="#">
-                                <i class="fas fa-chart-bar"></i> Today's Analysis
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link ${pageName == 'pastAnalysis' ? 'active' : ''}" href="#">
-                                <i class="fas fa-history"></i> Past Analysis
-                            </a>
-                        </li>
+
                         <li class="nav-item">
                             <a class="nav-link ${pageName == 'contact' ? 'active' : ''}" href="${pageContext.request.contextPath}/contact">
-                                <i class="fas fa-envelope"></i> Contact Us
+                                <i class="fas fa-envelope"></i> Contact
                             </a>
                         </li>
                     </ul>

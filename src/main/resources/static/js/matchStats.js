@@ -94,20 +94,20 @@ function toggleView(view, data, season) {
     // Show player stats view
     dreamTeamSection.style.display = "none";
     playerStatsSection.style.display = "block";
-    
+
     // Update button states
     dreamTeamBtn.classList.remove("active");
     playerStatsBtn.classList.add("active");
-    
+
     // Show role tabs
     roleTabs.forEach(tab => {
       tab.style.display = "block";
     });
-    
+
     if (dreamTeamDropdown) {
       dreamTeamDropdown.style.display = "none";
     }
-    
+
     // Initialize player stats if not already done
     if (data && data.performanceDataJson) {
       initializePlayerStats(data);
@@ -116,11 +116,11 @@ function toggleView(view, data, season) {
     // Show dream team view
     dreamTeamSection.style.display = "block";
     playerStatsSection.style.display = "none";
-    
+
     // Update button states
     dreamTeamBtn.classList.add("active");
     playerStatsBtn.classList.remove("active");
-    
+
     // Hide role tabs
     roleTabs.forEach(tab => {
       tab.style.display = "none";
@@ -136,6 +136,12 @@ function displayDreamTeam(players, season) {
   if (!Array.isArray(players) || players.length === 0) {
     showError("No team data available");
     return;
+  }
+
+  // Show download button when dream team is displayed
+  const downloadButton = document.querySelector('.download-button');
+  if (downloadButton) {
+    downloadButton.style.display = 'flex';
   }
 
   // Show cricket field
@@ -187,7 +193,7 @@ function createPlayerCard(player, season, captain, viceCaptain) {
           isCaptain || isViceCaptain ? "player-image-container-captain" : ""
         }">
             <div class="player-image-container-img">
-                <img src="${player.playerImgUrl}" alt="${
+                <img src="${player.playerImgUrl}" crossorigin="anonymous" alt="${
     player.playerNickName
   }">
             </div>
@@ -463,64 +469,70 @@ function createRoleSection(role, players) {
 }
 
 function createPlayerStatsCard(player) {
-  const card = document.createElement('div');
-  card.className = 'player-stats-card';
+    const card = document.createElement('div');
+    card.className = 'player-stats-card';
 
-  const recentMatches = player.recentMatches || [];
-  const last5Matches = recentMatches.slice(0, 5);
-  const dreamTeamCount = recentMatches.filter(match => match.isPartOfDreamTeam).length;
-  const averagePoints = recentMatches.length > 0 
-      ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)
-      : 0;
-  const highestPoints = recentMatches.length > 0 
-      ? Math.max(...recentMatches.map(match => match.points || 0))
-      : 0;
+    // Sort recentMatches in descending order of matchNo
+    const recentMatches = (player.recentMatches || []).sort((a, b) => b.matchNo - a.matchNo);
+    const last5Matches = recentMatches.slice(0, 5);
+    const averagePoints = recentMatches.length > 0
+        ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)
+        : 0;
+    const highestPoints = recentMatches.length > 0
+        ? Math.max(...recentMatches.map(match => match.points || 0))
+        : 0;
 
-  const matchPointsHtml = last5Matches.map(match => {
-      const isInDreamTeam = match.isPartOfDreamTeam;
-      const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
-      return `<div class="match-point ${pointClass}" title="${match.team1Name} vs ${match.team2Name}">${match.points || 0}</div>`;
-  }).join('');
+    // Generate match points HTML with DNP for matches not played
+    const matchPointsHtml = Array.from({ length: 5 }).map((_, index) => {
+        const match = last5Matches[index];
+        if (match && match.points !== undefined && match.points !== null) {
+            const isInDreamTeam = match.isPartOfDreamTeam;
+            const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
+            return `<div class="match-point ${pointClass}" title="${match.team1Name || 'Unknown'} vs ${match.team2Name || 'Unknown'}">${match.points}</div>`;
+        } else {
+            return `<div class="match-point dnp" title="Did Not Play">DNP</div>`;
+        }
+    }).join('');
 
-  card.innerHTML = `
-      <div class="player-header-section">
-          <div class="player-image">
-              <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}" 
-                   onerror="this.src='../images/default-player.png'"
-                   style="width: 80px; height: 80px; object-fit: cover;">
-          </div>
-          <div class="player-info-header">
-              <h4 class="player-name">${player.playerName}</h4>
-              <div class="player-role">${player.role}</div>
-              <div class="player-style">
-                  ${player.battingStyle || ''} ${player.battingStyle && player.bowlingStyle ? '•' : ''} ${player.bowlingStyle || ''}
-              </div>
-          </div>
-      </div>
-      <div class="player-stats-summary">
-          <div class="stat-box">
-              <div class="stat-label">Average</div>
-              <div class="stat-value">${averagePoints}</div>
-          </div>
-          <div class="stat-box">
-              <div class="stat-label">Highest</div>
-              <div class="stat-value">${highestPoints}</div>
-          </div>
-          <div class="stat-box">
-              <div class="stat-label">Dream Team</div>
-              <div class="stat-value dream-team-count">${dreamTeamCount}</div>
-          </div>
-      </div>
-      <div class="last-matches">
-          <p>Last 5 matches</p>
-          <div class="match-points-container">
-              ${matchPointsHtml}
-          </div>
-      </div>
-  `;
+    card.innerHTML = `
+        <div class="player-header-section">
+            <div class="player-image">
+                <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
+                     onerror="this.src='../images/default-player.png'"
+                     style="width: 80px; height: 80px; object-fit: cover;">
+            </div>
+            <div class="player-info-header">
+                <h4 class="player-name">${player.playerName}</h4>
+                <div class="player-role">${player.role}</div>
+                <div class="player-style">
+                    ${player.battingStyle || ''} ${player.battingStyle && player.bowlingStyle ? '•' : ''} ${player.bowlingStyle || ''}
+                </div>
+            </div>
+        </div>
+        <div class="player-stats-summary">
+            <div class="stat-box">
+                <div class="stat-label">Average</div>
+                <div class="stat-value">${averagePoints}</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Highest</div>
+                <div class="stat-value">${highestPoints}</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Dream Team</div>
+                <div class="stat-value dream-team-count">${recentMatches.filter(match => match.isPartOfDreamTeam).length}</div>
+            </div>
+        </div>
+        <div class="last-matches">
+            <p>Last 5 matches (Most Recent to Oldest)</p>
+            <div class="match-points-container">
+                ${matchPointsHtml}
+            </div>
+        </div>
+    `;
 
-  card.addEventListener('click', () => showPlayerDetailModal(player));
-  return card;
+    card.addEventListener('click', () => showPlayerDetailModal(player));
+    return card;
 }
 
 function showPlayerDetailModal(player) {
@@ -566,7 +578,7 @@ function showPlayerDetailModal(player) {
           <!-- Player header section -->
           <div class="player-basic-details">
               <div class="player-image-container">
-                  <img src="${player.playerImageUrl || player.playerImgUrl}" 
+                  <img src="${player.playerImageUrl || player.playerImgUrl}"
                        alt="${player.playerName}"
                        onerror="this.src='../images/default-player.png'">
               </div>
@@ -639,7 +651,7 @@ function showPlayerDetailModal(player) {
 
   // Close modal functionality
   const closeBtn = modal.querySelector('.close-modal');
-  
+
   // Close on button click
   closeBtn.addEventListener('click', () => {
     modal.remove();
@@ -665,22 +677,20 @@ function showPlayerDetailModal(player) {
 
 function initializePerformanceChart(chartId, player) {
   const ctx = document.getElementById(chartId).getContext('2d');
-  
+
   // Remove any dynamic height/width styling from the canvas
   ctx.canvas.style.removeProperty('height');
   ctx.canvas.style.removeProperty('width');
-  
+
   const matches = player.recentMatches || [];
   const isMobile = window.innerWidth <= 768;
-  
+
   new Chart(ctx, {
     type: 'line',
     data: {
       labels: matches.map(m => {
         const date = new Date(m.matchDate);
-        return isMobile ? 
-          `${date.getDate()}/${date.getMonth() + 1}` : 
-          date.toLocaleDateString();
+        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().slice(-2)}`;
       }),
       datasets: [{
         label: 'Match Points',
@@ -689,10 +699,10 @@ function initializePerformanceChart(chartId, player) {
         backgroundColor: 'rgba(25, 118, 210, 0.1)',
         fill: true,
         tension: 0.4,
-        pointBackgroundColor: matches.map(m => 
+        pointBackgroundColor: matches.map(m =>
           m.isPartOfDreamTeam ? '#1976d2' : '#64b5f6'
         ),
-        pointRadius: isMobile ? 3 : 5
+        pointRadius: 5
       }]
     },
     options: {
@@ -726,61 +736,236 @@ function initializePerformanceChart(chartId, player) {
 }
 
 function initializeDistributionChart(chartId, player) {
-  const ctx = document.getElementById(chartId).getContext('2d');
-  
-  // Set a fixed size for the canvas
-  ctx.canvas.style.height = '100%';
-  ctx.canvas.style.width = '100%';
-  
-  const matches = player.recentMatches || [];
-  const isMobile = window.innerWidth <= 768;
-  
-  const battingPoints = matches.reduce((sum, m) => sum + calculateBattingPoints(m), 0) / matches.length;
-  const bowlingPoints = matches.reduce((sum, m) => sum + calculateBowlingPoints(m), 0) / matches.length;
-  const fieldingPoints = matches.reduce((sum, m) => sum + calculateFieldingPoints(m), 0) / matches.length;
+    const ctx = document.getElementById(chartId).getContext('2d');
 
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Batting', 'Bowling', 'Fielding'],
-      datasets: [{
-        data: [battingPoints, bowlingPoints, fieldingPoints],
-        backgroundColor: ['#1976d2', '#64b5f6', '#bbdefb']
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: isMobile ? 'bottom' : 'right',
-          labels: {
-            font: {
-              size: isMobile ? 11 : 12
-            }
-          }
-        }
-      }
+    const matches = player.recentMatches || [];
+    const matchCount = matches.length || 1;
+
+    let totalBattingPoints = 0;
+    let totalBowlingPoints = 0;
+    let totalFieldingPoints = 0;
+
+    matches.forEach(match => {
+        // Log raw match data for debugging
+        console.log('Processing match:', match);
+
+        const battingPoints = calculateBattingPoints(match, player.role || 'Batter');
+        const bowlingPoints = calculateBowlingPoints(match);
+        const fieldingPoints = calculateFieldingPoints(match);
+
+        totalBattingPoints += battingPoints;
+        totalBowlingPoints += bowlingPoints;
+        totalFieldingPoints += fieldingPoints;
+
+        // Log points calculation for each match
+        console.log('Match points:', {
+            matchId: match.matchId || match.id,
+            date: match.matchDate || match.date,
+            batting: battingPoints,
+            bowling: bowlingPoints,
+            fielding: fieldingPoints,
+            total: battingPoints + bowlingPoints + fieldingPoints
+        });
+    });
+
+    const averages = {
+        batting: Math.round(totalBattingPoints / matchCount),
+        bowling: Math.round(totalBowlingPoints / matchCount),
+        fielding: Math.round(totalFieldingPoints / matchCount)
+    };
+
+    console.log('Total points:', {
+        batting: totalBattingPoints,
+        bowling: totalBowlingPoints,
+        fielding: totalFieldingPoints,
+        matches: matchCount
+    });
+
+    // Create chart with non-zero values only
+    const labels = [];
+    const data = [];
+    const colors = [];
+
+    if (averages.batting > 0) {
+        labels.push(`Batting (${averages.batting})`);
+        data.push(averages.batting);
+        colors.push('#1976d2');
     }
-  });
+    if (averages.bowling > 0) {
+        labels.push(`Bowling (${averages.bowling})`);
+        data.push(averages.bowling);
+        colors.push('#2e7d32');
+    }
+    if (averages.fielding > 0) {
+        labels.push(`Fielding (${averages.fielding})`);
+        data.push(averages.fielding);
+        colors.push('#f57c00');
+    }
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: window.innerWidth <= 768 ? 'bottom' : 'right',
+                    labels: {
+                        font: { size: window.innerWidth <= 768 ? 11 : 12 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (context) => {
+                            const label = context.label.split(' ')[0];
+                            const value = context.raw;
+                            return `${label}: ${value} points`;
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 // Helper functions to calculate points (adjust based on your scoring system)
-function calculateBattingPoints(match) {
-  return (match.runsScored || 0) * 1;  // Simplified scoring
+
+// Helper functions to calculate points (using the point system from My11CirclePointCalculator.java)
+function calculateBattingPoints(match, role) {
+    let points = 0;
+
+    // Run points
+    points += match.runsScored || 0;
+
+    // Boundary points
+    points += (match.fours || 0) * 4;
+    points += (match.sixes || 0) * 6;
+
+    // Milestone bonus points
+    if (match.runsScored >= 25) {
+        if (match.runsScored < 50) {
+            points += 4;
+        } else if (match.runsScored < 75) {
+            points += 8;
+        } else if (match.runsScored < 100) {
+            points += 12;
+        } else {
+            points += 16;
+        }
+    }
+
+    // Strike rate bonus/penalty (excluding bowlers)
+    if (role !== 'Bowler') {
+        if (match.runsScored === 0) {
+            points -= 2;
+        } else if (match.runsScored > 0 && match.ballFaced >= 10) {
+            const strikeRate = (match.runsScored / match.ballFaced) * 100;
+            if (strikeRate > 170) points += 6;
+            else if (strikeRate > 150) points += 4;
+            else if (strikeRate >= 130) points += 2;
+            else if (strikeRate >= 60 && strikeRate <= 70) points -= 2;
+            else if (strikeRate >= 50 && strikeRate < 60) points -= 4;
+            else if (strikeRate < 50) points -= 6;
+        }
+    }
+
+    return points;
 }
 
 function calculateBowlingPoints(match) {
-  return (match.wickets || 0) * 25;  // Simplified scoring
+    let points = 0;
+
+    // Debug log the bowling data
+    console.log('Bowling data:', {
+        wickets: match.totalWickets || match.wickets,
+        bowledLbw: match.bowledLbw,
+        maidens: match.maiden || match.maidens,
+        dots: match.dots || match.dotBalls,
+        overs: match.overs,
+        runsGiven: match.runsGiven || match.runsConceded,
+        rawMatch: match
+    });
+
+    // Wicket points (check both possible property names)
+    const wickets = match.totalWickets || match.wickets || 0;
+    points += wickets * 25;
+
+    // LBW/Bowled bonus
+    points += (match.bowledLbw || 0) * 8;
+
+    // Wicket milestone bonus
+    if (wickets === 3) {
+        points += 4;
+    } else if (wickets === 4) {
+        points += 8;
+    } else if (wickets >= 5) {
+        points += 16;
+    }
+
+    // Maiden over points (check both possible property names)
+    points += (match.maiden || match.maidens || 0) * 12;
+
+    // Dot ball points (check both possible property names)
+    points += (match.dots || match.dotBalls || 0);
+
+    // Economy rate bonus/penalty
+    const overs = match.overs || 0;
+    const runsConceded = match.runsGiven || match.runsConceded || 0;
+
+    if (overs >= 2) {
+        const economyRate = runsConceded / overs;
+        if (economyRate <= 5) points += 6;
+        else if (economyRate <= 6) points += 4;
+        else if (economyRate <= 7) points += 2;
+        else if (economyRate >= 10 && economyRate <= 11) points -= 2;
+        else if (economyRate > 11 && economyRate <= 12) points -= 4;
+        else if (economyRate > 12) points -= 6;
+    }
+
+    return points;
 }
 
 function calculateFieldingPoints(match) {
-  return ((match.points || 0) - calculateBattingPoints(match) - calculateBowlingPoints(match));
+    let points = 0;
+
+    // Debug log the fielding data
+    console.log('Fielding data:', {
+        catches: match.catchTaken || match.catches,
+        stumping: match.stumping || match.stumpings,
+        directRunout: match.directRunout || match.runOutDirect,
+        indirectRunout: match.inDirectRunout || match.runOutIndirect,
+        rawMatch: match
+    });
+
+    // Catch points (check both possible property names)
+    const catches = match.catchTaken || match.catches || 0;
+    points += catches * 8;
+
+    // Catch milestone bonus
+    if (catches >= 3) {
+        points += 4;
+    }
+
+    // Stumping points (check both possible property names)
+    points += (match.stumping || match.stumpings || 0) * 12;
+
+    // Run out points (check both possible property names)
+    points += (match.directRunout || match.runOutDirect || 0) * 12;
+    points += (match.inDirectRunout || match.runOutIndirect || 0) * 6;
+
+    return points;
 }
 // Helper functions
 function groupPlayersByRole(players) {
   if (!Array.isArray(players)) return {};
-  
+
   return players.reduce((groups, player) => {
     const role = player.playerRole || 'Batter';
     if (!groups[role]) {
@@ -798,7 +983,7 @@ function clearPlayerSections() {
     'allRoundersSection',
     'bowlersSection'
   ];
-  
+
   sections.forEach(sectionId => {
     const section = document.getElementById(sectionId);
     if (section) {
@@ -835,8 +1020,8 @@ function initializePlayerStats(data) {
         return;
     }
 
-    globalPlayersData = Array.isArray(data.performanceDataJson) 
-        ? data.performanceDataJson 
+    globalPlayersData = Array.isArray(data.performanceDataJson)
+        ? data.performanceDataJson
         : data.performanceDataJson;
 
     // Initialize tab click handlers
@@ -864,7 +1049,7 @@ function displayPlayersByRole(selectedRole) {
         console.error("Container element not found");
         return;
     }
-    
+
     container.innerHTML = ''; // Clear existing content
 
     // Filter players by selected role
@@ -890,32 +1075,44 @@ function createPlayerStatsCard(player) {
     const card = document.createElement('div');
     card.className = 'player-stats-card';
 
-    const recentMatches = player.recentMatches || [];
+    // Sort recentMatches in descending order of matchNo
+    const recentMatches = (player.recentMatches || []).sort((a, b) => b.matchNo - a.matchNo);
     const last5Matches = recentMatches.slice(0, 5);
+    const averagePoints = recentMatches.length > 0
+        ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)
+        : 0;
+    const highestPoints = recentMatches.length > 0
+        ? Math.max(...recentMatches.map(match => match.points || 0))
+        : 0;
 
-    const matchPointsHtml = last5Matches.map(match => {
-        const isInDreamTeam = match.isPartOfDreamTeam;
-        const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
-        return `<div class="match-point ${pointClass}" title="${match.team1Name} vs ${match.team2Name}">${match.points || 0}</div>`;
+    // Generate match points HTML with DNP for matches not played
+    const matchPointsHtml = Array.from({ length: 5 }).map((_, index) => {
+        const match = last5Matches[index];
+        if (match) {
+            const isInDreamTeam = match.isPartOfDreamTeam;
+            const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
+            return `<div class="match-point ${pointClass}" title="${match.team1Name || 'Unknown'} vs ${match.team2Name || 'Unknown'}">${match.points !== undefined ? match.points : 'DNP'}</div>`;
+        } else {
+            return `<div class="match-point dnp" title="Did Not Play">DNP</div>`;
+        }
     }).join('');
 
     card.innerHTML = `
         <div class="player-image">
-            <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}" 
-                 onerror="this.src='../images/default-player.png'"
-                 style="width: 80px; height: 80px; object-fit: cover;">
+            <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
+                 onerror="this.src='../images/default-player.png'">
         </div>
         <div class="player-basic-info">
             <h4 class="player-name">${player.playerName}</h4>
             <div class="points-container">
-                <span class="avg-points">Average Points: ${(player.averagePoints || 0).toFixed(1)}</span>
-                <span class="high-points">Highest Points: ${player.highestPoints || 0}</span>
+                <span class="avg-points">Avg: ${averagePoints}</span>
+                <span class="high-points">High: ${highestPoints}</span>
             </div>
-            <div class="last-matches">
-                <p>Last 5 matches</p>
-                <div class="match-points-container">
-                    ${matchPointsHtml}
-                </div>
+        </div>
+        <div class="last-matches">
+            <p>Last 5 matches (Most Recent to Oldest)</p>
+            <div class="match-points-container">
+                ${matchPointsHtml}
             </div>
         </div>
     `;
@@ -946,3 +1143,123 @@ window.addEventListener('resize', () => {
         }
     }, 250);
 });
+
+function downloadDreamTeamImage() {
+    const dreamTeamElement = document.getElementById('dreamTeamSection');
+    const downloadButton = document.querySelector('.download-button');
+    
+    // Temporarily hide the download button
+    if (downloadButton) {
+        downloadButton.style.display = 'none';
+    }
+
+    // Create loading indicator outside the dreamTeamElement
+    const loadingIndicator = document.createElement('div');
+    loadingIndicator.className = 'download-loading';
+    loadingIndicator.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Converting...</span></div>';
+    document.body.appendChild(loadingIndicator);
+
+    // First, ensure all images are loaded
+    const imagePromises = [];
+    const images = dreamTeamElement.getElementsByTagName('img');
+    
+    for (let img of images) {
+        const newImg = new Image();
+        newImg.crossOrigin = "anonymous";
+        
+        const promise = new Promise((resolve, reject) => {
+            newImg.onload = () => {
+                img.src = newImg.src;
+                resolve();
+            };
+            newImg.onerror = () => {
+                newImg.src = '../images/default-player.png';
+                resolve();
+            };
+        });
+        
+        const timestamp = new Date().getTime();
+        newImg.src = img.src.includes('?') ? 
+            `${img.src}&t=${timestamp}` : 
+            `${img.src}?t=${timestamp}`;
+            
+        imagePromises.push(promise);
+    }
+
+    Promise.all(imagePromises)
+        .then(() => {
+            return html2canvas(dreamTeamElement, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff',
+                logging: false,
+                onclone: function(clonedDoc) {
+                    const clonedImages = clonedDoc.getElementsByTagName('img');
+                    for (let img of clonedImages) {
+                        img.crossOrigin = "anonymous";
+                        img.style.width = img.width + 'px';
+                        img.style.height = img.height + 'px';
+                    }
+                }
+            });
+        })
+        .then(canvas => {
+            // Remove loading indicator from body
+            document.body.removeChild(loadingIndicator);
+            
+            // Show download button again
+            if (downloadButton) {
+                downloadButton.style.display = 'flex';
+            }
+
+            // Generate filename using match details
+            let filename = 'dream-team';
+
+            filename = `${filename}.png`;
+
+            // Create download link
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        })
+        .catch(error => {
+            console.error('Error generating image:', error);
+            
+            // Remove loading indicator from body
+            if (document.body.contains(loadingIndicator)) {
+                document.body.removeChild(loadingIndicator);
+            }
+            
+            // Show download button again
+            if (downloadButton) {
+                downloadButton.style.display = 'flex';
+            }
+
+            alert('Failed to generate image. Please try again.');
+        });
+}
+
+// Update the loading indicator styles to be fixed to the viewport
+const style = document.createElement('style');
+style.textContent = `
+    .download-loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        pointer-events: none;
+    }
+`;
+document.head.appendChild(style);

@@ -22,6 +22,7 @@ public class PlayerPerformanceResponse {
     private Integer lowestPoints;
     private Integer lastMatchPoints;
     private Integer lastMatchNo;
+    private Double last3MatchAveragePoints;
     private List<MatchPerformance> recentMatches;
 
     @Data
@@ -40,6 +41,10 @@ public class PlayerPerformanceResponse {
         private Integer fours;
         private Integer sixes;
         private Integer wickets;
+        private Integer catches;
+        private Integer stumpings;
+        private Integer runOutDirect;
+        private Integer runOutInDirect;
         private Double overs;
         private Integer runsConceded;
         private Boolean isPartOfDreamTeam;

@@ -32,6 +32,7 @@
    <!-- end font family -->
    <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
    <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+
 </head>
 <body class="game_info" data-spy="scroll" data-target=".header">
 <!-- ========================= header start ========================= -->
@@ -74,7 +75,11 @@
     <input type="hidden" id="seasonYear" value='${seasonYear}'>
     
     <div id="dreamTeamSection">
-
+        <!-- Add the download button at the top -->
+        <div class="download-button" onclick="downloadDreamTeamImage()">
+            <i class="fas fa-download"></i>
+        </div>
+        
         <!-- Loading Spinner -->
         <div id="loadingSpinner" class="text-center" style="display: none;">
             <div class="spinner-border text-primary" role="status">
@@ -128,10 +133,10 @@
 <div class="stats-content">
     <!-- Role tabs -->
     <div class="role-tabs">
-        <button class="role-tab active" data-role="Wicket Keeper">Wkt Keeper</button>
-        <button class="role-tab" data-role="Batter">Batters</button>
-        <button class="role-tab" data-role="All Rounder">All Rounders</button>
-        <button class="role-tab" data-role="Bowler">Bowlers</button>
+        <button class="role-tab active" data-role="Wicket Keeper">WK</button>
+        <button class="role-tab" data-role="Batter">BAT</button>
+        <button class="role-tab" data-role="All Rounder">AR</button>
+        <button class="role-tab" data-role="Bowler">BOWL</button>
     </div>
     
     <div id="playerStatsContainer" class="player-stats-container"></div>
@@ -151,6 +156,7 @@
 <script src="${pageContext.request.contextPath}/js/isotope.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/matchStats.js"></script>
 
 <script type="text/javascript">
@@ -158,6 +164,10 @@
     const oldDreamTeamJson = '${oldDreamTeamJson}';
     const newDreamTeamJson = '${newDreamTeamJson}';
     const my11CirceTeamJson = '${my11CirceTeamJson}';
+    // Add match details
+    const matchDetails = {
+        matchNo: "${match.matchNo}"
+    };
 </script>
 <!-- ALL PLUGINS -->
 <script>

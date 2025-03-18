@@ -105,14 +105,14 @@ public class StatsServiceImpl implements StatsService {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
                         Long.valueOf(statsBy)).stream()
                 .collect(Collectors.toUnmodifiableList());
-        return statsMapper.mapToPlayerPerformanceResponse(performanceData);
+        return statsMapper.mapToPlayerPerformanceResponse(performanceData, seasonId);
     }
 
     @Override
     public List<PlayerPerformanceResponse> getPlayerPerformanceStats(Integer matchNo) {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(matchNo)).stream()
                 .collect(Collectors.toUnmodifiableList());
-        return statsMapper.mapToPlayerPerformanceResponse(performanceData);
+        return statsMapper.mapToPlayerPerformanceResponse(performanceData, null);
     }
 
     @Override

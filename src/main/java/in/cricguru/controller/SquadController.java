@@ -13,8 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 
-import static in.cricguru.shared.CricGuruConstant.BASE_URL;
-
+@CrossOrigin("*")
 @AllArgsConstructor
 @RestController
 public class SquadController {

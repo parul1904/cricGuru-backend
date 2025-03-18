@@ -9,18 +9,18 @@ import in.cricguru.response.StatsPerMatchResponse;
 import in.cricguru.service.DreamTeamService;
 import in.cricguru.service.MatchService;
 import in.cricguru.service.StatsService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@CrossOrigin("*")
-@AllArgsConstructor
-@RestController
+@Controller
 @RequestMapping("/dreamTeam")
 public class DreamTeamController {
 
@@ -32,6 +32,21 @@ public class DreamTeamController {
     private final StatsService statsService;
 
     private final MatchService matchService;
+
+    public DreamTeamController(DreamTeamService dreamTeamService, StatsService statsService, MatchService matchService) {
+        this.dreamTeamService = dreamTeamService;
+        this.statsService = statsService;
+        this.matchService = matchService;
+    }
+
+    @ModelAttribute
+    public void setResponseHeaders(HttpServletResponse response) {
+        response.setHeader("Access-Control-Allow-Origin", "*");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+        response.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    }
+
+
 
     @GetMapping("{matchNo}")
     public ModelAndView getDreamTeamByMatchNo(@PathVariable Integer matchNo) throws JsonProcessingException {
@@ -71,6 +86,7 @@ public class DreamTeamController {
         modelAndView.addObject("oldDreamTeamJson", oldDreamTeamJson);
         modelAndView.addObject("newDreamTeamJson", newDreamTeamJson);
         modelAndView.addObject("my11CirceTeamJson", my11CirceTeamJson);
+        modelAndView.addObject("matchDetails", matchDetails);
         modelAndView.addObject("performanceDataJson", performanceDataJson);
         return modelAndView;
     }
