@@ -268,14 +268,15 @@ public class StatsMapper {
                 response.setRole((String) row[3]);
                 response.setBattingStyle((String) row[4]);
                 response.setBowlingStyle((String) row[5]);
-                response.setAveragePoints(row[6] != null ? ((Number) row[6]).doubleValue() : null);
-                response.setHighestPoints(row[7] != null ? ((Number) row[7]).intValue() : null);
-                response.setLowestPoints(row[8] != null ? ((Number) row[8]).intValue() : null);
-                response.setLastMatchPoints(row[9] != null ? ((Number) row[9]).intValue() : null);
-                response.setLastMatchNo(row[10] != null ? ((Number) row[10]).intValue() : null);
+                response.setDream11Points(row[6] != null ? ((Number) row[6]).intValue() : null);
+                response.setAverageDream11Points(row[7] != null ? ((Number) row[7]).doubleValue() : null);
+                response.setMy11Points(row[8] != null ? ((Number) row[8]).intValue() : null);
+                response.setAverageMy11Points(row[9] != null ? ((Number) row[9]).doubleValue() : null);
+                response.setHighestPoints(row[10] != null ? ((Number) row[10]).intValue() : 0);
                 if(null!=seasonId && seasonId==2){
-                    response.setLast3MatchAveragePoints(row[11] != null ? ((Number) row[11]).doubleValue() : null);
-                    String matchDetailsJson = (String) row[12];
+                    response.setLowestPoints(row[11] != null ? ((Number) row[11]).intValue() : 0);
+                    response.setLastMatchNo(row[12] != null ? ((Number) row[12]).intValue() : 0);
+                    String matchDetailsJson = (String) row[13];
                     if (matchDetailsJson != null) {
                         List<PlayerPerformanceResponse.MatchPerformance> matchPerformances = objectMapper.readValue(
                                 matchDetailsJson,
@@ -341,7 +342,7 @@ public class StatsMapper {
             response.setRecentMatches(matchPerformances);
 
             // Calculate averages and set additional fields
-            response.setAveragePoints((double) matchPerformance.getPoints());
+            response.setAverageDream11Points((double) matchPerformance.getPoints());
             response.setHighestPoints(matchPerformance.getPoints());
             response.setLowestPoints(matchPerformance.getPoints());
             response.setLastMatchPoints(matchPerformance.getPoints());
@@ -409,17 +410,57 @@ public class StatsMapper {
                 .collect(Collectors.toList());
     }
 
+    public List<DreamTeamResponse> mapToDream11AverageDreamTeamResponse(List<Object[]> performanceData) {
+        List<DreamTeamResponse> allPlayers = new ArrayList<>();
+
+        // First, create DreamTeamResponse objects for all players
+        dreamTeamForSeason2(performanceData, allPlayers);
+
+        // Sort players by points (using Dream11NewPoints) in descending order
+        allPlayers.sort((p1, p2) -> {
+            Double points1 = p1.getAverageDream11Points() != null ? p1.getAverageDream11Points() : 0;
+            Double points2 = p2.getAverageDream11Points() != null ? p2.getAverageDream11Points() : 0;
+            return points2.compareTo(points1);
+        });
+
+        // Return only the top 11 players
+        return allPlayers.stream()
+                .limit(11)
+                .collect(Collectors.toList());
+    }
+
+    public List<DreamTeamResponse> mapToMy11CircleAverageDreamTeamResponse(List<Object[]> performanceData) {
+        List<DreamTeamResponse> allPlayers = new ArrayList<>();
+
+        // First, create DreamTeamResponse objects for all players
+        dreamTeamForSeason2(performanceData, allPlayers);
+
+        // Sort players by points (using Dream11NewPoints) in descending order
+        allPlayers.sort((p1, p2) -> {
+            Double points1 = p1.getAverageMy11Points() != null ? p1.getAverageMy11Points() : 0;
+            Double points2 = p2.getAverageMy11Points() != null ? p2.getAverageMy11Points() : 0;
+            return points2.compareTo(points1);
+        });
+
+        // Return only the top 11 players
+        return allPlayers.stream()
+                .limit(11)
+                .collect(Collectors.toList());
+    }
+
     private static void dreamTeamForSeason2(List<Object[]> performanceData, List<DreamTeamResponse> allPlayers) {
         for (Object[] row : performanceData) {
             DreamTeamResponse response = new DreamTeamResponse();
-
             response.setPlayerId(row[0] != null ? ((Number) row[0]).intValue() : null);
             response.setPlayerNickName(row[1] != null ? (String) row[1] : null);
             response.setPlayerImgUrl(row[2] != null ? (String) row[2] : null);
             response.setPlayerRole(row[3] != null ? (String) row[3] : null);
-
+            response.setDream11NewPoints(row[6] != null ? ((Number) row[6]).intValue() : null);
+            response.setAverageDream11Points(row[7] != null ? ((Number) row[7]).doubleValue() : null);
+            response.setMy11CirclePoints(row[8] != null ? ((Number) row[8]).intValue() : null);
+            response.setAverageMy11Points(row[9] != null ? ((Number) row[9]).doubleValue() : null);
             if (row[12] != null) {
-                String matchDetailsJson = (String) row[12];
+                String matchDetailsJson = (String) row[13];
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.registerModule(new JavaTimeModule());
                 try {
@@ -429,10 +470,6 @@ public class StatsMapper {
                     );
                     if (!matchPerformances.isEmpty()) {
                         PlayerPerformanceResponse.MatchPerformance lastMatch = matchPerformances.get(0);
-                        Integer lastMatchPoints = lastMatch.getPoints();
-                        response.setDream11OldPoints(lastMatchPoints);
-                        response.setMy11CirclePoints(lastMatchPoints);
-                        response.setDream11NewPoints(lastMatchPoints);
                         // Set team logos from the last match
                         response.setTeam1(lastMatch.getTeam1Logo());
                         response.setTeam2(lastMatch.getTeam2Logo());

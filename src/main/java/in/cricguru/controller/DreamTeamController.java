@@ -59,6 +59,12 @@ public class DreamTeamController {
         List<DreamTeamResponse> my11CircleTeam = new ArrayList<>();
         String my11CirceTeamJson = "";
         String performanceDataJson = "";
+
+        List<DreamTeamResponse> dreamAvgTeam = new ArrayList<>();
+        String dreamAvgTeamJson = "";
+        List<DreamTeamResponse> my11CircleAvgTeam = new ArrayList<>();
+        String my11CircleAvgTeamJson = "";
+
                 MatchDto matchDetails = matchService.getMatchById(matchNo);
         Integer team1Id = matchDetails.getTeam1Id();
         Integer team2Id = matchDetails.getTeam2Id();
@@ -79,6 +85,11 @@ public class DreamTeamController {
             newDreamTeamJson = objectMapper.writeValueAsString(newDreamTeam);
             my11CircleTeam = statsService.getMy11CircleDreamTeamByMatchNo(2, team1Id, team2Id, 1);
             my11CirceTeamJson = objectMapper.writeValueAsString(my11CircleTeam);
+
+            dreamAvgTeam = statsService.getDream11AverageDreamTeamResponse(2, team1Id, team2Id, 1);
+            dreamAvgTeamJson = objectMapper.writeValueAsString(dreamAvgTeam);
+            my11CircleAvgTeam = statsService.getMy11CircleAverageDreamTeamResponse(2, team1Id, team2Id, 1);
+            my11CircleAvgTeamJson = objectMapper.writeValueAsString(my11CircleAvgTeam);
             performanceData = statsService.getPlayerPerformanceData(2, team1Id, team2Id, 5);
             performanceDataJson = objectMapper.writeValueAsString(performanceData);
             modelAndView.addObject("seasonYear", "2025");
@@ -86,6 +97,8 @@ public class DreamTeamController {
         modelAndView.addObject("oldDreamTeamJson", oldDreamTeamJson);
         modelAndView.addObject("newDreamTeamJson", newDreamTeamJson);
         modelAndView.addObject("my11CirceTeamJson", my11CirceTeamJson);
+        modelAndView.addObject("dreamAvgTeamJson", dreamAvgTeamJson);
+        modelAndView.addObject("my11CircleAvgTeamJson", my11CircleAvgTeamJson);
         modelAndView.addObject("matchDetails", matchDetails);
         modelAndView.addObject("performanceDataJson", performanceDataJson);
         return modelAndView;

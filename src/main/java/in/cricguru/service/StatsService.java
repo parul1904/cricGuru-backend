@@ -33,4 +33,8 @@ public interface StatsService {
 
     List<DreamTeamResponse>  getMy11CircleDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
 
+    List<DreamTeamResponse> getDream11AverageDreamTeamResponse(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
+
+    List<DreamTeamResponse> getMy11CircleAverageDreamTeamResponse(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
+
 }

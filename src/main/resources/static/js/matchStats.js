@@ -1,249 +1,237 @@
-document.addEventListener("DOMContentLoaded", function() {
-  // Hide breadcrumbs on initial load
-  const breadcrumbs = document.querySelector(".breadcrumbs");
-  if (breadcrumbs) {
-    breadcrumbs.style.display = "none";
-  }
+document.addEventListener('DOMContentLoaded', function() {
+    const seasonYear = document.getElementById('seasonYear').value;
+    const dreamTeamData = {
+        old: JSON.parse(oldDreamTeamJson || '[]'),
+        new: JSON.parse(newDreamTeamJson || '[]'),
+        my11: JSON.parse(my11CirceTeamJson || '[]'),
+        dream11Avg: JSON.parse(dreamAvgTeamJson || '[]'),
+        my11Avg: JSON.parse(my11CircleAvgTeamJson || '[]')
+    };
 
-  const dreamTeamData = {
-    old: JSON.parse(oldDreamTeamJson || "[]"),
-    new: JSON.parse(newDreamTeamJson || "[]"),
-    my11: JSON.parse(my11CirceTeamJson || "[]")
-  };
+    // Initialize view with default point system
+    initializeView(seasonYear, dreamTeamData);
 
-  const season = seasonYear;
+    // Point system selection handler for 2024
+    const pointSystemSelect = document.getElementById('pointSystemSelect');
+    if (pointSystemSelect) {
+        pointSystemSelect.addEventListener('change', function() {
+            const selectedSystem = this.value;
+            displayDreamTeam(dreamTeamData[selectedSystem], seasonYear);
+        });
+    }
 
-  // Ensure the cricket field container exists
-  const cricketFieldHtml = `
-    <div id="cricketField" class="cricket-field">
-      <div id="wicketKeeperSection" class="player-section wicket-keeper-section"></div>
-      <div id="battersSection" class="player-section batters-section"></div>
-      <div id="allRoundersSection" class="player-section all-rounders-section"></div>
-      <div id="bowlersSection" class="player-section bowlers-section"></div>
-    </div>
-    <div id="errorMessage" class="alert alert-danger" style="display: none;"></div>
-    <div id="noDataMessage" class="alert alert-info" style="display: none;">No team data available</div>
-  `;
-
-  // Insert the cricket field HTML if it doesn't exist
-  const dreamTeamSection = document.getElementById("dreamTeamSection");
-  if (dreamTeamSection && !document.getElementById("cricketField")) {
-    dreamTeamSection.innerHTML = cricketFieldHtml;
-  }
-
-  initializeView(season, dreamTeamData);
+    // Point system selection handler for 2025
+    const pointSystem2025Select = document.getElementById('pointSystem2025Select');
+    if (pointSystem2025Select) {
+        pointSystem2025Select.addEventListener('change', function() {
+            const selectedSystem = this.value;
+            // Map the selected value to the correct dreamTeamData key
+            let dataKey;
+            switch(selectedSystem) {
+                case 'new':
+                    dataKey = 'new';
+                    break;
+                case 'my11':
+                    dataKey = 'my11';
+                    break;
+                case 'dream11Avg':
+                    dataKey = 'dream11Avg';
+                    break;
+                case 'my11Avg':
+                    dataKey = 'my11Avg';
+                    break;
+                default:
+                    dataKey = 'new';
+            }
+            displayDreamTeam(dreamTeamData[dataKey], seasonYear);
+        });
+    }
 });
 
-function initializeView(season, dreamTeamData) {
-  const dreamTeamBtn = document.getElementById("dreamTeamBtn");
-  const playerStatsBtn = document.getElementById("playerStatsBtn");
-  const dreamTeamDropdown = document.getElementById("dreamTeamDropdown");
-  const totalPointsContainer = document.getElementById("totalPointsContainer");
+function initializeView(seasonYear, dreamTeamData) {
+    const dreamTeamBtn = document.getElementById("dreamTeamBtn");
+    const playerStatsBtn = document.getElementById("playerStatsBtn");
+    const dreamTeamDropdown = document.getElementById("dreamTeamDropdown");
+    const dreamTeam2025Dropdown = document.getElementById("dreamTeam2025Dropdown");
+    const totalPointsContainer = document.getElementById("totalPointsContainer");
 
-  if (season === "2025") {
-    if (totalPointsContainer) totalPointsContainer.style.display = "none";
-    if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
-  }
+    // Initialize with Dream Team view
+    if (seasonYear === "2025") {
+        if (totalPointsContainer) totalPointsContainer.style.display = "none";
+        if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
+        if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "block";
+        displayDreamTeam(dreamTeamData.new, seasonYear);
+    } else {
+        if (dreamTeamDropdown) dreamTeamDropdown.style.display = "block";
+        if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "none";
+        displayDreamTeam(dreamTeamData.old, seasonYear);
+    }
 
-  // Initialize with Dream Team view
-  displayDreamTeam(dreamTeamData.old, season);
+    // Event listeners for view toggle
+    if (dreamTeamBtn) {
+        ['click', 'touchend'].forEach(eventType => {
+            dreamTeamBtn.addEventListener(eventType, function(e) {
+                e.preventDefault();
+                toggleView("dream-team", dreamTeamData, seasonYear);
+            });
+        });
+    }
 
-  // Enhanced event listeners for both desktop and mobile
-  if (dreamTeamBtn) {
-    ['click', 'touchend'].forEach(eventType => {
-      dreamTeamBtn.addEventListener(eventType, function(e) {
-        e.preventDefault();
-        toggleView("dream-team", dreamTeamData, season);
-      });
-    });
-  }
-
-  if (playerStatsBtn) {
-    ['click', 'touchend'].forEach(eventType => {
-      playerStatsBtn.addEventListener(eventType, function(e) {
-        e.preventDefault();
-        toggleView("player-stats", dreamTeamData, season);
-      });
-    });
-  }
-
-  const pointSystemSelect = document.getElementById("pointSystemSelect");
-  if (pointSystemSelect) {
-    pointSystemSelect.addEventListener("change", function() {
-      const selectedSystem = this.value;
-      displayDreamTeam(dreamTeamData[selectedSystem], season);
-    });
-  }
+    if (playerStatsBtn) {
+        ['click', 'touchend'].forEach(eventType => {
+            playerStatsBtn.addEventListener(eventType, function(e) {
+                e.preventDefault();
+                toggleView("player-stats", dreamTeamData, seasonYear);
+            });
+        });
+    }
 }
 
-function toggleView(view, data, season) {
-  const dreamTeamSection = document.getElementById("dreamTeamSection");
-  const playerStatsSection = document.getElementById("playerStatsSection");
-  const dreamTeamBtn = document.getElementById("dreamTeamBtn");
-  const playerStatsBtn = document.getElementById("playerStatsBtn");
-  const dreamTeamDropdown = document.getElementById("dreamTeamDropdown");
-  const breadcrumbs = document.querySelector(".breadcrumbs");
-  const roleTabs = document.querySelectorAll('.role-tab');
+function toggleView(view, dreamTeamData, seasonYear) {
+    const dreamTeamSection = document.getElementById("dreamTeamSection");
+    const playerStatsSection = document.getElementById("playerStatsSection");
+    const dreamTeamBtn = document.getElementById("dreamTeamBtn");
+    const playerStatsBtn = document.getElementById("playerStatsBtn");
+    const dreamTeamDropdown = document.getElementById("dreamTeamDropdown");
+    const dreamTeam2025Dropdown = document.getElementById("dreamTeam2025Dropdown");
+    const roleTabs = document.querySelectorAll('.role-tab');
 
-  // Hide breadcrumbs for all views
-  if (breadcrumbs) {
-    breadcrumbs.style.display = "none";
-  }
-
-  if (view === "player-stats") {
-    // Show player stats view
-    dreamTeamSection.style.display = "none";
-    playerStatsSection.style.display = "block";
-
-    // Update button states
-    dreamTeamBtn.classList.remove("active");
-    playerStatsBtn.classList.add("active");
-
-    // Show role tabs
-    roleTabs.forEach(tab => {
-      tab.style.display = "block";
-    });
-
-    if (dreamTeamDropdown) {
-      dreamTeamDropdown.style.display = "none";
+    if (view === "player-stats") {
+        // Show player stats view
+        dreamTeamSection.style.display = "none";
+        playerStatsSection.style.display = "block";
+        dreamTeamBtn.classList.remove("active");
+        playerStatsBtn.classList.add("active");
+        roleTabs.forEach(tab => {
+            tab.style.display = "block";
+        });
+        if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
+        if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "none";
+    } else {
+        // Show dream team view
+        dreamTeamSection.style.display = "block";
+        playerStatsSection.style.display = "none";
+        dreamTeamBtn.classList.add("active");
+        playerStatsBtn.classList.remove("active");
+        roleTabs.forEach(tab => {
+            tab.style.display = "none";
+        });
+        // Show appropriate dropdown based on season
+        if (seasonYear === "2025") {
+            if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
+            if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "block";
+        } else {
+            if (dreamTeamDropdown) dreamTeamDropdown.style.display = "block";
+            if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "none";
+        }
     }
-
-    // Initialize player stats if not already done
-    if (data && data.performanceDataJson) {
-      initializePlayerStats(data);
-    }
-  } else {
-    // Show dream team view
-    dreamTeamSection.style.display = "block";
-    playerStatsSection.style.display = "none";
-
-    // Update button states
-    dreamTeamBtn.classList.add("active");
-    playerStatsBtn.classList.remove("active");
-
-    // Hide role tabs
-    roleTabs.forEach(tab => {
-      tab.style.display = "none";
-    });
-    
-    if (dreamTeamDropdown && season !== "2025") {
-      dreamTeamDropdown.style.display = "block";
-    }
-  }
 }
 
-function displayDreamTeam(players, season) {
-  if (!Array.isArray(players) || players.length === 0) {
-    showError("No team data available");
-    return;
-  }
-
-  // Show download button when dream team is displayed
-  const downloadButton = document.querySelector('.download-button');
-  if (downloadButton) {
-    downloadButton.style.display = 'flex';
-  }
-
-  // Show cricket field
-  const cricketField = document.getElementById("cricketField");
-  if (cricketField) {
-    cricketField.style.display = "block";
-  }
-
-  // Hide error messages
-  hideMessages();
-
-  // Determine captain and vice-captain based on points
-  const pointSystem = document.getElementById("pointSystemSelect").value;
-  const captain = findCaptain(players, pointSystem);
-  const viceCaptain = findViceCaptain(players, captain, pointSystem);
-
-  // Group players by role
-  const groupedPlayers = groupPlayersByRole(players);
-  
-  // Clear existing players
-  clearPlayerSections();
-
-  // Display players by role
-  Object.entries(groupedPlayers).forEach(([role, rolePlayers]) => {
-    const sectionId = getSectionIdByRole(role);
-    const section = document.getElementById(sectionId);
-    if (section) {
-      rolePlayers.forEach(player => {
-        const playerCard = createPlayerCard(player, season, captain, viceCaptain);
-        section.appendChild(playerCard);
-      });
+function displayDreamTeam(players, seasonYear) {
+    if (!Array.isArray(players) || players.length === 0) {
+        showError("No team data available");
+        return;
     }
-  });
 
-  if (season !== "2025") {
+    // Show download button
+    const downloadButton = document.querySelector('.download-button');
+    if (downloadButton) {
+        downloadButton.style.display = 'flex';
+    }
+
+    // Show cricket field
+    const cricketField = document.getElementById("cricketField");
+    if (cricketField) {
+        cricketField.style.display = "block";
+    }
+
+    // Clear existing players
+    clearPlayerSections();
+
+    let pointSystem = null;
+    // Find captain and vice-captain based on points
+    if(seasonYear==2024){
+        pointSystem = document.getElementById("pointSystemSelect").value;
+    } else {
+        pointSystem = document.getElementById("pointSystem2025Select").value;
+    }
+    const captain = findCaptain(players, pointSystem);
+    const viceCaptain = findViceCaptain(players, captain, pointSystem);
+
+    // Set captain and vice-captain flags
+    if (captain) {
+        captain.isCaptain = true;
+    }
+    if (viceCaptain) {
+        viceCaptain.isViceCaptain = true;
+    }
+
+    // Group players by role
+    const groupedPlayers = groupPlayersByRole(players);
+
+    // Display players by role
+    Object.entries(groupedPlayers).forEach(([role, rolePlayers]) => {
+        const sectionId = getSectionIdByRole(role);
+        const section = document.getElementById(sectionId);
+        if (section) {
+            rolePlayers.forEach(player => {
+                const playerCard = createPlayerCard(player, seasonYear, captain, viceCaptain);
+                section.appendChild(playerCard);
+            });
+        }
+    });
+
+    // Update total points
     updateTotalPoints(players, captain, viceCaptain);
-  }
 }
 
 function createPlayerCard(player, season, captain, viceCaptain) {
-  const isCaptain = captain && player.playerId === captain.playerId;
-  const isViceCaptain = viceCaptain && player.playerId === viceCaptain.playerId;
-  const points = season === "2025" ? "" : calculatePlayerPoints(player, isCaptain, isViceCaptain);
+    const isCaptain = captain && player.playerId === captain.playerId;
+    const isViceCaptain = viceCaptain && player.playerId === viceCaptain.playerId;
+    const points = calculatePlayerPoints(player, isCaptain, isViceCaptain);
 
-  const card = document.createElement("div");
-  card.className = "player-card";
-  card.innerHTML = `
-        <div class="player-image-container ${
-          isCaptain || isViceCaptain ? "player-image-container-captain" : ""
-        }">
+    const card = document.createElement("div");
+    card.className = "player-card";
+    card.innerHTML = `
+        <div class="player-image-container ${isCaptain || isViceCaptain ? "player-image-container-captain" : ""}">
             <div class="player-image-container-img">
-                <img src="${player.playerImgUrl}" crossorigin="anonymous" alt="${
-    player.playerNickName
-  }">
+                <img src="${player.playerImgUrl}" crossorigin="anonymous" alt="${player.playerNickName}">
             </div>
-            ${
-              isCaptain
-                ? '<p class="player-leadership-role player-leadership-role-captain">C</p>'
-                : ""
-            }
-            ${
-              isViceCaptain
-                ? '<p class="player-leadership-role player-leadership-role-vice-captain">VC</p>'
-                : ""
-            }
+            ${isCaptain ? '<p class="player-leadership-role player-leadership-role-captain">C</p>' : ''}
+            ${isViceCaptain ? '<p class="player-leadership-role player-leadership-role-vice-captain">VC</p>' : ''}
         </div>
         <div class="player-info">
-            <div class="player-name ${
-              isCaptain || isViceCaptain ? "player-name-captain" : ""
-            }">${player.playerNickName}</div>
-            ${season !== "2025" ? ` ${points} ` : ''}
+            <div class="player-name ${isCaptain || isViceCaptain ? "player-name-captain" : ""}">${player.playerNickName}</div>
+            ${season !== "2025" ? `<div class="player-points">${points.toFixed(1)}</div>` : ''}
         </div>
     `;
-  return card;
+    return card;
 }
 
 function findCaptain(players, pointSystem) {
-  if (!Array.isArray(players) || players.length === 0) {
-    return null;
-  }
-  return players.reduce((prev, current) => {
-    const prevPoints = getPointsBySystem(prev, pointSystem);
-    const currentPoints = getPointsBySystem(current, pointSystem);
-    return prevPoints > currentPoints ? prev : current;
-  });
+    if (!Array.isArray(players) || players.length === 0) {
+        return null;
+    }
+    return players.reduce((prev, current) => {
+        const prevPoints = getPointsBySystem(prev, pointSystem);
+        const currentPoints = getPointsBySystem(current, pointSystem);
+        return prevPoints > currentPoints ? prev : current;
+    });
 }
 
 function findViceCaptain(players, captain, pointSystem) {
-  if (!Array.isArray(players) || players.length === 0 || !captain) {
-    return null;
-  }
-  const eligiblePlayers = players.filter(
-    (player) => player.playerId !== captain.playerId
-  );
-  if (eligiblePlayers.length === 0) {
-    return null;
-  }
-  return eligiblePlayers.reduce((prev, current) => {
-    const prevPoints = getPointsBySystem(prev, pointSystem);
-    const currentPoints = getPointsBySystem(current, pointSystem);
-    return prevPoints > currentPoints ? prev : current;
-  });
+    if (!Array.isArray(players) || players.length === 0 || !captain) {
+        return null;
+    }
+    const eligiblePlayers = players.filter(player => player.playerId !== captain.playerId);
+    if (eligiblePlayers.length === 0) {
+        return null;
+    }
+    return eligiblePlayers.reduce((prev, current) => {
+        const prevPoints = getPointsBySystem(prev, pointSystem);
+        const currentPoints = getPointsBySystem(current, pointSystem);
+        return prevPoints > currentPoints ? prev : current;
+    });
 }
 
 function getPointsBySystem(player, pointSystem) {
@@ -254,8 +242,12 @@ function getPointsBySystem(player, pointSystem) {
       return player.dream11NewPoints || 0;
     case "my11":
       return player.my11CirclePoints || 0;
+    case "dream11Avg":
+          return player.averageDream11Points || 0;
+    case "my11Avg":
+          return player.averageMy11Points || 0;
     default:
-      return player.dream11OldPoints || 0;
+      return player.dream11NewPoints || 0;
   }
 }
 
@@ -269,7 +261,7 @@ function calculatePlayerPoints(player, isCaptain, isViceCaptain) {
 }
 
 function calculateTotalPoints(players, captain, viceCaptain, pointSystem) {
-  if (!Array.isArray(players) || !captain || !viceCaptain) {
+  if (!Array.isArray(players)) {
     return 0;
   }
   return players.reduce((sum, player) => {
@@ -277,11 +269,11 @@ function calculateTotalPoints(players, captain, viceCaptain, pointSystem) {
     if (typeof basePoints !== "number") {
       return sum;
     }
-    if (player.playerId === captain.playerId) {
-      return sum + 2 * basePoints;
+    if (captain && player.playerId === captain.playerId) {
+      return sum + (2 * basePoints);
     }
-    if (player.playerId === viceCaptain.playerId) {
-      return sum + 1.5 * basePoints;
+    if (viceCaptain && player.playerId === viceCaptain.playerId) {
+      return sum + (1.5 * basePoints);
     }
     return sum + basePoints;
   }, 0);
@@ -305,22 +297,14 @@ function showLoading(show) {
 }
 
 function showError(message) {
-  const errorElement = document.getElementById("errorMessage");
-  const cricketField = document.getElementById("cricketField");
-  const noDataMessage = document.getElementById("noDataMessage");
-
-  if (errorElement) {
-    errorElement.textContent = message;
-    errorElement.style.display = "block";
-  }
-
-  if (cricketField) {
-    cricketField.style.display = "none";
-  }
-
-  if (noDataMessage) {
-    noDataMessage.style.display = "none";
-  }
+    const errorMessage = document.getElementById('errorMessage');
+    if (errorMessage) {
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        setTimeout(() => {
+            errorMessage.style.display = 'none';
+        }, 3000);
+    }
 }
 
 function showNoData() {

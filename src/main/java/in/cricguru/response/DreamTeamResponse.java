@@ -17,4 +17,6 @@ public class DreamTeamResponse {
     private Integer dream11OldPoints;
     private Integer my11CirclePoints;
     private Integer dream11NewPoints;
+    private Double averageDream11Points;
+    private Double averageMy11Points;
 }

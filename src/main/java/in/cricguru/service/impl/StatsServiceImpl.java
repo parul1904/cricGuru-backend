@@ -139,4 +139,20 @@ public class StatsServiceImpl implements StatsService {
         return statsMapper.mapToMy11CirclePointDreamTeamResponse(performanceData);
     }
 
+    @Override
+    public List<DreamTeamResponse> getDream11AverageDreamTeamResponse(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+        List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
+                        Long.valueOf(statsBy)).stream()
+                .collect(Collectors.toUnmodifiableList());
+        return statsMapper.mapToDream11AverageDreamTeamResponse(performanceData);
+    }
+
+    @Override
+    public List<DreamTeamResponse> getMy11CircleAverageDreamTeamResponse(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+        List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
+                        Long.valueOf(statsBy)).stream()
+                .collect(Collectors.toUnmodifiableList());
+        return statsMapper.mapToMy11CircleAverageDreamTeamResponse(performanceData);
+    }
+
 }

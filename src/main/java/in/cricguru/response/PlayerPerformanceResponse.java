@@ -17,12 +17,14 @@ public class PlayerPerformanceResponse {
     private String role;
     private String battingStyle;
     private String bowlingStyle;
-    private Double averagePoints;
+    private Integer dream11Points;
+    private Integer my11Points;
+    private Double averageDream11Points;
+    private Double averageMy11Points;
     private Integer highestPoints;
     private Integer lowestPoints;
     private Integer lastMatchPoints;
     private Integer lastMatchNo;
-    private Double last3MatchAveragePoints;
     private List<MatchPerformance> recentMatches;
 
     @Data

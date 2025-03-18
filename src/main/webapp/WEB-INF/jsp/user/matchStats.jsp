@@ -56,17 +56,27 @@
 <div class="container">
     <div class="navigation-container mb-4">
         <input type="hidden" id="season" value="${season}">
-       <!-- Add this in the view toggle section -->
-       <div class="view-toggle-container no-select">
-           <button id="dreamTeamBtn" class="active" type="button">Dream Team</button>
-           <button id="playerStatsBtn" type="button">Player Stats</button>
-       </div>
+        
+        <!-- View toggle buttons -->
+        <div class="view-toggle-container no-select">
+            <button id="dreamTeamBtn" class="active" type="button">Dream Team</button>
+            <button id="playerStatsBtn" type="button">Player Stats</button>
+        </div>
         
         <div id="dreamTeamDropdown" class="mt-2">
             <select id="pointSystemSelect" class="form-select">
                 <option value="old">Dream11 Old Point System</option>
                 <option value="new">Dream11 New Point System</option>
                 <option value="my11">My11 Circle Point System</option>
+            </select>
+        </div>
+
+        <div id="dreamTeam2025Dropdown" class="mt-2">
+            <select id="pointSystem2025Select" class="form-select">
+                <option value="new">Dream11 Based on Last Match</option>
+                <option value="my11">My11 Circle Based on Last Match</option>
+                <option value="dream11Avg">Dream11 Based on Last 3 Match</option>
+                <option value="my11Avg">My11 Circle Based on Last 3 Match</option>
             </select>
         </div>
     </div>
@@ -164,6 +174,8 @@
     const oldDreamTeamJson = '${oldDreamTeamJson}';
     const newDreamTeamJson = '${newDreamTeamJson}';
     const my11CirceTeamJson = '${my11CirceTeamJson}';
+    const dreamAvgTeamJson = '${dreamAvgTeamJson}';
+    const my11CircleAvgTeamJson = '${my11CircleAvgTeamJson}';
     // Add match details
     const matchDetails = {
         matchNo: "${match.matchNo}"
