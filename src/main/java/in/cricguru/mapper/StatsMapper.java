@@ -131,12 +131,12 @@ public class StatsMapper {
         List<StatsPerMatchResponse> statsResponseList = new ArrayList<>();
         for (Object[] row : result) {
             StatsPerMatchResponse response = new StatsPerMatchResponse();
-           // response.setPlayerId(row[0] != null ? ((Integer) row[0]) : null);
+            // response.setPlayerId(row[0] != null ? ((Integer) row[0]) : null);
             response.setPlayerName(row[1] != null ? ((String) row[1]) : null);
             response.setPlayerImage(row[2] != null ? ((String) row[2]) : null);
-          //  response.setPlayerRole(row[3] != null ? ((String) row[3]) : null);
+            //  response.setPlayerRole(row[3] != null ? ((String) row[3]) : null);
             response.setRunsScored(row[4] != null ? ((Integer) row[4]) : 0);
-         //   response.setBallFaced(row[5] != null ? ((Integer) row[5]) : 0);
+            //   response.setBallFaced(row[5] != null ? ((Integer) row[5]) : 0);
             response.setFours(row[6] != null ? ((Integer) row[6]) : 0);
             response.setSixes(row[7] != null ? ((Integer) row[7]) : 0);
             response.setStrikeRate(row[8] != null ? (Double) row[8] : 0.0);
@@ -149,9 +149,9 @@ public class StatsMapper {
             response.setTotalPointDream11OldSystem(row[15] != null ? ((Integer) row[15]) : 0);
             response.setTotalPointDream11NewSystem(row[16] != null ? ((Integer) row[16]) : 0);
             response.setTotalPointMy11CircleSystem(row[17] != null ? ((Integer) row[17]) : 0);
-           // response.setMatchDate(row[18] != null ? ((java.sql.Date) row[18]).toLocalDate() : null);
-           // response.setTeam1(row[19] != null ? ((String) row[19]) : null);
-           // response.setTeam2(row[20] != null ? ((String) row[20]) : null);
+            // response.setMatchDate(row[18] != null ? ((java.sql.Date) row[18]).toLocalDate() : null);
+            // response.setTeam1(row[19] != null ? ((String) row[19]) : null);
+            // response.setTeam2(row[20] != null ? ((String) row[20]) : null);
             statsResponseList.add(response);
         }
         return statsResponseList;
@@ -254,7 +254,7 @@ public class StatsMapper {
         return fullOvers + (remainingBalls / 10.0); // Represent remaining balls as a decimal
     }
 
-    public List<PlayerPerformanceResponse> mapToPlayerPerformanceResponse(List<Object[]> results) {
+    public List<PlayerPerformanceResponse> mapToPlayerPerformanceResponse(List<Object[]> results, Integer seasonId) {
         List<PlayerPerformanceResponse> responses = new ArrayList<>();
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -273,15 +273,29 @@ public class StatsMapper {
                 response.setLowestPoints(row[8] != null ? ((Number) row[8]).intValue() : null);
                 response.setLastMatchPoints(row[9] != null ? ((Number) row[9]).intValue() : null);
                 response.setLastMatchNo(row[10] != null ? ((Number) row[10]).intValue() : null);
-                String matchDetailsJson = (String) row[11];
-                if (matchDetailsJson != null) {
-                    List<PlayerPerformanceResponse.MatchPerformance> matchPerformances = objectMapper.readValue(
-                        matchDetailsJson,
-                        new TypeReference<List<PlayerPerformanceResponse.MatchPerformance>>() {}
-                    );
-                    response.setRecentMatches(matchPerformances);
+                if(null!=seasonId && seasonId==2){
+                    response.setLast3MatchAveragePoints(row[11] != null ? ((Number) row[11]).doubleValue() : null);
+                    String matchDetailsJson = (String) row[12];
+                    if (matchDetailsJson != null) {
+                        List<PlayerPerformanceResponse.MatchPerformance> matchPerformances = objectMapper.readValue(
+                                matchDetailsJson,
+                                new TypeReference<List<PlayerPerformanceResponse.MatchPerformance>>() {}
+                        );
+                        response.setRecentMatches(matchPerformances);
+                    } else {
+                        response.setRecentMatches(new ArrayList<>());
+                    }
                 } else {
-                    response.setRecentMatches(new ArrayList<>());
+                    String matchDetailsJson = (String) row[11];
+                    if (matchDetailsJson != null) {
+                        List<PlayerPerformanceResponse.MatchPerformance> matchPerformances = objectMapper.readValue(
+                                matchDetailsJson,
+                                new TypeReference<List<PlayerPerformanceResponse.MatchPerformance>>() {}
+                        );
+                        response.setRecentMatches(matchPerformances);
+                    } else {
+                        response.setRecentMatches(new ArrayList<>());
+                    }
                 }
 
                 responses.add(response);
@@ -294,7 +308,7 @@ public class StatsMapper {
 
     public List<PlayerPerformanceResponse> mapToPlayerPerformanceResponseForMatch(List<Object[]> results, Integer matchNo) {
         List<PlayerPerformanceResponse> responses = new ArrayList<>();
-        
+
         for (Object[] row : results) {
             PlayerPerformanceResponse response = new PlayerPerformanceResponse();
             response.setPlayerId((Integer) row[0]);
@@ -303,7 +317,7 @@ public class StatsMapper {
             response.setRole((String) row[3]);
             response.setBattingStyle((String) row[4]);
             response.setBowlingStyle((String) row[5]);
-            
+
             // Create match performance
             PlayerPerformanceResponse.MatchPerformance matchPerformance = new PlayerPerformanceResponse.MatchPerformance();
             matchPerformance.setMatchNo(matchNo);
@@ -321,18 +335,18 @@ public class StatsMapper {
             matchPerformance.setOvers(row[17] != null ? ((Number) row[17]).doubleValue() : 0.0);
             matchPerformance.setRunsConceded(row[18] != null ? ((Number) row[18]).intValue() : 0);
             matchPerformance.setIsPartOfDreamTeam(row[19] != null ? (Boolean) row[19] : false);
-            
+
             List<PlayerPerformanceResponse.MatchPerformance> matchPerformances = new ArrayList<>();
             matchPerformances.add(matchPerformance);
             response.setRecentMatches(matchPerformances);
-            
+
             // Calculate averages and set additional fields
             response.setAveragePoints((double) matchPerformance.getPoints());
             response.setHighestPoints(matchPerformance.getPoints());
             response.setLowestPoints(matchPerformance.getPoints());
             response.setLastMatchPoints(matchPerformance.getPoints());
             response.setLastMatchNo(matchNo);
-            
+
             responses.add(response);
         }
         return responses;
@@ -404,8 +418,8 @@ public class StatsMapper {
             response.setPlayerImgUrl(row[2] != null ? (String) row[2] : null);
             response.setPlayerRole(row[3] != null ? (String) row[3] : null);
 
-            if (row[11] != null) {
-                String matchDetailsJson = (String) row[11];
+            if (row[12] != null) {
+                String matchDetailsJson = (String) row[12];
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.registerModule(new JavaTimeModule());
                 try {

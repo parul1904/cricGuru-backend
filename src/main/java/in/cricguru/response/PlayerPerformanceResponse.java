@@ -22,6 +22,7 @@ public class PlayerPerformanceResponse {
     private Integer lowestPoints;
     private Integer lastMatchPoints;
     private Integer lastMatchNo;
+    private Double last3MatchAveragePoints;
     private List<MatchPerformance> recentMatches;
 
     @Data
