@@ -3,18 +3,23 @@
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
-    background: #fff;
+    background: transparent;
     margin-bottom: 20px;
 }
 
+.compare-card {
+    transition: all 0.3s ease !important;
+    background: transparent !important;
+    margin-bottom: 10px !important;
+}
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /*box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);*/
 }
 
 .card-body {
     text-align: center;
-    padding: 2rem;
+    padding: 1rem;
 }
 
 /* Add hover effect for the select player text */
@@ -30,8 +35,22 @@
     transition: transform 0.3s ease;
 }
 
+#player1Card, #player2Card {
+    width: 50%;
+}
+
 .photo-grid {
-    margin-bottom: 40px;
+    margin-bottom: 20px;
+    flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.compare-col-1, .compare-col-2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
 }
 
 .card:hover {
@@ -39,8 +58,8 @@
 }
 
 .player-image {
-    max-width: 200px;
-    height: 200px;
+    max-width: 100px;
+    height: 100px;
     object-fit: cover;
     border-radius: 50%;
     margin: 20px auto;
@@ -63,7 +82,8 @@
 
 #player1Card,
 #player2Card {
-    min-height: 350px;
+    min-height: 250px;
+    min-width: 100px;
     cursor: pointer;
     display: flex;
     align-items: center;

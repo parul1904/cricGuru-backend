@@ -1,16 +1,19 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const tabs = document.querySelectorAll('.season-tab');
+    const seasonOptions = document.querySelectorAll('.season-option');
     const matchCards = document.querySelectorAll('.match-card');
-    const defaultSeason = document.getElementById('defaultSeason')?.value || '2024';
+    const slider = document.querySelector('.slider');
+    const defaultSeason = document.getElementById('defaultSeason')?.value || '2025';
 
-    // Function to activate a season tab and show its matches
-    function activateSeasonTab(seasonYear) {
-        // Update active tab
-        tabs.forEach(tab => {
-            const isSelected = tab.getAttribute('data-season') === seasonYear;
-            tab.classList.toggle('active', isSelected);
-            tab.classList.toggle('btn-primary', isSelected);
-            tab.classList.toggle('btn-secondary', !isSelected);
+    // Function to activate a season option and show its matches
+    function activateSeasonOption(seasonYear) {
+        // Update active option and slider
+        seasonOptions.forEach(option => {
+            const isSelected = option.getAttribute('data-season') === seasonYear;
+            option.classList.toggle('active', isSelected);
+            
+            if (isSelected) {
+                slider.classList.toggle('right', seasonYear === '2024');
+            }
         });
 
         // Show/hide match cards based on season
@@ -20,13 +23,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Show default season matches
-    activateSeasonTab(defaultSeason);
+    activateSeasonOption(defaultSeason);
 
-    // Handle tab clicks
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
+    // Handle option clicks
+    seasonOptions.forEach(option => {
+        option.addEventListener('click', function() {
             const selectedSeason = this.getAttribute('data-season');
-            activateSeasonTab(selectedSeason);
+            activateSeasonOption(selectedSeason);
         });
     });
 

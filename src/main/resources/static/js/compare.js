@@ -5,6 +5,12 @@ $(document).ready(function () {
   
     // Load players list initially
     loadOptions("players");
+
+    // Add error message container if not present in HTML
+    if ($("#errorMessage").length === 0) {
+        $('<div id="errorMessage" class="alert alert-danger" style="display: none;"></div>')
+            .insertBefore("#player1Placeholder");
+    }
   
     $("#comparePlayerBtn").click(function () {
       compareType = "player";
@@ -34,8 +40,8 @@ $(document).ready(function () {
       compareType = "team";
       $(this).addClass("btn-primary").removeClass("btn-secondary");
       $("#comparePlayerBtn").addClass("btn-secondary").removeClass("btn-primary");
-      $("#player1Placeholder h5").text("Select Team 1");
-      $("#player2Placeholder h5").text("Select Team 2");
+      $("#player1Placeholder h5").text("Team 1");
+      $("#player2Placeholder h5").text("Team 2");
       $("#playerSelect1").empty().append('<option value="">Select Team</option>');
       $("#playerSelect2").empty().append('<option value="">Select Team</option>');
   
@@ -50,31 +56,62 @@ $(document).ready(function () {
     });
   
     function loadOptions(type) {
-      const url =
-        type === "players"
-          ? "http://localhost:8081/players/all"
-          : "http://localhost:8081/teams/all";
-  
+      const url = type === "players" ? "/players/all" : "/teams/all";
+
+      // Show loading state
+      $("#playerSelect1, #playerSelect2").prop('disabled', true);
+      
       $.ajax({
         url: url,
         method: "GET",
         dataType: "json",
         success: function (response) {
+          // Clear existing options except the default one
+          $("#playerSelect1, #playerSelect2").find('option:not(:first)').remove();
+          
+          if (!response || response.length === 0) {
+            showError(`No ${type} found`);
+            return;
+          }
+
           response.forEach((item) => {
             const id = type === "players" ? item.playerId : item.teamId;
             const name = type === "players" ? item.playerName : item.teamName;
-            const imageUrl =
-              type === "players" ? item.playerImgUrl : item.teamLogoUrl;
-  
-            const option = `<option value="${id}" data-image="${imageUrl}">${name}</option>`;
-            $("#playerSelect1").append(option);
-            $("#playerSelect2").append(option);
+            const imageUrl = type === "players" ? item.playerImgUrl : item.teamLogoUrl;
+            
+            // Add fallback for missing image URL
+            const safeImageUrl = imageUrl || '../images/default-player.png';
+
+            const option = `<option value="${id}" data-image="${safeImageUrl}">${name}</option>`;
+            $("#playerSelect1, #playerSelect2").append(option);
           });
         },
         error: function (xhr, status, error) {
+          const errorMsg = `Failed to load ${type}. Please try again.`;
+          showError(errorMsg);
           console.error(`Error loading ${type}:`, error);
         },
+        complete: function() {
+          // Re-enable selects after loading
+          $("#playerSelect1, #playerSelect2").prop('disabled', false);
+        }
       });
+    }
+
+    // Add error display function
+    function showError(message) {
+      const errorDiv = $("#errorMessage");
+      if (errorDiv.length === 0) {
+        // Create error div if it doesn't exist
+        $('<div id="errorMessage" class="alert alert-danger" style="display: none;"></div>')
+          .insertBefore("#player1Placeholder");
+      }
+      
+      $("#errorMessage")
+        .text(message)
+        .fadeIn()
+        .delay(3000)
+        .fadeOut();
     }
   
     // Player 1 select change handler

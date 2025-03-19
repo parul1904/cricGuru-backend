@@ -53,10 +53,11 @@
         </div>
     </div>
 
-    <!-- Season Tabs -->
-    <div class="season-tabs">
-        <button class="season-tab btn btn-secondary" data-season="2024">IPL 2024</button>
-        <button class="season-tab btn btn-secondary" data-season="2025">IPL 2025</button>
+    <!-- Season Selector -->
+    <div class="season-selector">
+        <button class="season-option" data-season="2025">IPL 2025</button>
+        <button class="season-option" data-season="2024">IPL 2024</button>
+        <div class="slider"></div>
     </div>
 
     <!-- Matches Section -->
@@ -78,9 +79,9 @@
                         <div class="team">
                             <img src="${match.team1}" />
                         </div>
-                        <span class="vs-text">VS</span>
+                        <span class="vs-text"><img src="${pageContext.request.contextPath}/images/vs.png" width="75px;" height="75px;" alt="VS Badge"/></span>
                         <div class="team">
-                            <img src="${match.team2}" />
+                            <img src="${match.team2}"/>
                         </div>
                     </div>
 
@@ -127,11 +128,11 @@
 
                     <div class="teams-container">
                         <div class="team">
-                            <img src="${match.team1}" />
+                            <img src="${match.team1}"/>
                         </div>
-                        <span class="vs-text">VS</span>
+                        <span class="vs-text"><img src="${pageContext.request.contextPath}/images/vs.png" alt="VS Badge"/></span>
                         <div class="team">
-                            <img src="${match.team2}" />
+                            <img src="${match.team2}"/>
                         </div>
                     </div>
 

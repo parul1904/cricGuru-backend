@@ -52,7 +52,7 @@
     <!-- End Breadcrumbs -->
 
     <!-- Venue cards container -->
-    <div class="container">
+    <div class="container mt-4">
         <div class="row">
             <c:forEach items="${venues}" var="venue">
                 <div class="col-lg-4 col-md-6 col-12 mb-4">
@@ -61,10 +61,13 @@
                             <div class="venue-image">
                                 <img src="${venue.venueImageUrl}" alt="${venue.venueName}" class="img-fluid">
                             </div>
-                            <div class="venue-info">
-                                <h3>${venue.venueName}</h3>
-                                <p>${venue.city}, ${venue.country}</p>
-                                <p>Capacity: ${venue.capacity}</p>
+                            <div class="venue-info my-2">
+                                <h5 class="venue-name text-center">${venue.venueName}</h5>
+                                <div class="venue-details">
+                                    <p class="venue-city"><i class="fas fa-map-marker-alt me-2"></i>${venue.city}</p>
+                                    <p><i class="fas fa-users me-2"></i>Capacity: ${venue.capacity}</p>
+                                </div>
+
                             </div>
                         </div>
                     </a>

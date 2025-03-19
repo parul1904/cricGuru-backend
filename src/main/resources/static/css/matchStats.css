@@ -320,6 +320,9 @@
 .navigation-container {
     text-align: center;
     padding: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .btn-group {
@@ -332,8 +335,8 @@
 }
 
 #dreamTeamDropdown {
-    max-width: 300px;
-    margin: 0 auto;
+    display: block;
+    width: 270px;
 }
 
 #pointSystemSelect {
@@ -1116,13 +1119,13 @@
     display: flex;
     gap: 10px;
     overflow-x: auto;
-    padding: 10px 15px;
-    margin-bottom: 15px;
+    padding: 5px 10px;
+    margin-bottom: 5px;
     -webkit-overflow-scrolling: touch;
 }
 
 .role-tab {
-    padding: 8px 16px;
+    padding: 4px 8px;
     border: none;
     border-radius: 20px;
     background: #f8f9fa;
@@ -1966,7 +1969,7 @@
 .download-button {
     position: absolute;
     top: 15px; /* Match padding of cricket-field */
-    right: 15px; /* Match padding of cricket-field */
+    right: 190px; /* Match padding of cricket-field */
     z-index: 2; /* Ensure it's above other elements but below modals */
     background-color: #1a237e;
     color: white;
@@ -2004,8 +2007,8 @@
     }
 
     .download-button {
-        top: 5px; /* Match mobile padding */
-        right: 5px; /* Match mobile padding */
+        top: 10px; /* Match mobile padding */
+        right: 10px; /* Match mobile padding */
         width: 32px; /* Slightly smaller on mobile */
         height: 32px;
     }

@@ -40,7 +40,7 @@
                                  class="team-logo">
                             <span class="team-name">${nextMatch.team1Name}</span>
                         </div>
-                        <div class="vs-badge">VS</div>
+                        <div class="vs-badge"><img src="${pageContext.request.contextPath}/images/vs.png" width="75px" height="75px" alt="VS Badge"/></div>
                         <div class="team">
                             <img src="${pageContext.request.contextPath}${nextMatch.team2}" 
                                  alt="${nextMatch.team2Name}" 
@@ -89,7 +89,7 @@
                         <h2 class="animated fadeInUp">Your Ultimate IPL Analysis Platform</h2>
                         <p class="animated fadeInUp">
                             Get real-time match predictions, player statistics, and expert analysis
-                            for IPL 2025. Make informed decisions with our advanced AI-powered insights.
+                            for IPL 2025. Make informed decisions with our advanced Data-Driven Fantasy League insights.
                         </p>
                         <div class="hero-buttons animated fadeInUp">
                             <a href="${pageContext.request.contextPath}/matches/fixture" class="btn btn-primary">View Fixtures</a>
@@ -136,7 +136,7 @@
                                                     <h5 class="team-name">${match.team1Name}</h5>
                                                 </div>
 
-                                                <div class="vs-badge">VS</div>
+                                                <div class="vs-badge"><img src="${pageContext.request.contextPath}/images/vs.png" width="50px" height="50px" alt="VS Badge"/></div>
 
                                                 <!-- Team 2 -->
                                                 <div class="team team-2">
@@ -199,7 +199,7 @@
     </section>
 
     <!-- Contact Form Section -->
-    <section class="contact-section py-5">
+    <section class="contact-section py-5" id="contact-form">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8">

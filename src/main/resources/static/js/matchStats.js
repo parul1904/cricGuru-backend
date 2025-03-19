@@ -1103,6 +1103,7 @@ function createPlayerStatsCard(player) {
                 </div>
             </div>
             <div class="last-matches-section">
+             <p style="font-size:10px; align-content: center">Last 5 matches points</p>
                 <div class="match-points-container">
                     ${generateMatchPointsHtml(last5Matches)}
                 </div>

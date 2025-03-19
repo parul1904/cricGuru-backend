@@ -41,7 +41,7 @@
 <!-- ========================= header end ========================= -->
 
 <div class="container">
-    <div class="navigation-container mb-4">
+    <div class="navigation-container my-2">
         <input type="hidden" id="season" value="${season}">
         
         <!-- View toggle buttons -->

@@ -9,7 +9,7 @@ public interface PlayerService {
 
     PlayerDto createPlayer(PlayerDto player);
 
-    PlayerDto getPlayerById(Long employeeId);
+    PlayerDto getPlayerById(Long playerId);
 
     PlayerDto updatePlayer(Long playerId, PlayerDto playerDto);
 

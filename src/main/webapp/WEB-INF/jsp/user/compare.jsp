@@ -52,23 +52,23 @@
     <!-- End Breadcrumbs -->
 
     <!-- ========================= header end ========================= -->
-    <div class="container mt-5">
+    <div class="container my-3">
         <!-- Comparison Type Buttons -->
-        <div class="row mb-4 justify-content-center">
-            <div class="col-md-6 text-center">
+        <div class="row mb-4">
+            <div class="d-flex justify-content-center align-items-center">
                 <button id="comparePlayerBtn" class="btn btn-primary m-2 active">Player</button>
                 <button id="compareTeamBtn" class="btn btn-secondary m-2">Team</button>
             </div>
         </div>
 
         <!-- Photo Grid Row -->
-        <div class="row photo-grid">
-            <div class="col-md-6">
-                <div class="card" id="player1Card" data-toggle="modal" data-target="#playerModal1">
+        <div class="photo-grid">
+            <div class="compare-col-1">
+                <div class="compare-card" id="player1Card" data-toggle="modal" data-target="#playerModal1">
                     <div class="card-body">
                         <div id="player1Placeholder">
                             <i class="fas fa-plus-circle plus-icon"></i>
-                            <h5>Select Player 1</h5>
+                            <h5>Player 1</h5>
                         </div>
                         <div id="player1Details" style="display: none;">
                             <img id="player1Image" src="" alt="Player 1" class="player-image">
@@ -77,12 +77,12 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="card" id="player2Card" data-toggle="modal" data-target="#playerModal2">
+            <div class="compare-col-2">
+                <div class="compare-card" id="player2Card" data-toggle="modal" data-target="#playerModal2">
                     <div class="card-body">
                         <div id="player2Placeholder">
                             <i class="fas fa-plus-circle plus-icon"></i>
-                            <h5>Select Player 2</h5>
+                            <h5>Player 2</h5>
                         </div>
                         <div id="player2Details" style="display: none;">
                             <img id="player2Image" src="" alt="Player 2" class="player-image">
@@ -98,7 +98,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="playerModalLabel1">Select Player 1</h5>
+                        <h5 class="modal-title" id="playerModalLabel1">Player 1</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -120,7 +120,7 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="playerModalLabel2">Select Player 2</h5>
+                        <h5 class="modal-title" id="playerModalLabel2">Player 2</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>

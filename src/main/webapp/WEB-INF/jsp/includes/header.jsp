@@ -44,7 +44,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link ${pageName == 'contact' ? 'active' : ''}" href="${pageContext.request.contextPath}/contact">
+                            <a class="nav-link ${pageName == 'contact' ? 'active' : ''}" href="${pageContext.request.contextPath}#contact-form">
                                 <i class="fas fa-envelope"></i> Contact
                             </a>
                         </li>
