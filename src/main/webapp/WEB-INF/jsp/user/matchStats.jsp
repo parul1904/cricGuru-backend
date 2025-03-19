@@ -40,19 +40,6 @@
 
 <!-- ========================= header end ========================= -->
 
- <!-- Breadcrumbs -->
- <div class="breadcrumbs" data-stellar-background-ratio="0.5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-12">
-                <div class="breadcrumbs-content left">
-                    <h1 class="page-title">Match Stats - </h1>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="container">
     <div class="navigation-container mb-4">
         <input type="hidden" id="season" value="${season}">
@@ -148,8 +135,10 @@
         <button class="role-tab" data-role="All Rounder">AR</button>
         <button class="role-tab" data-role="Bowler">BOWL</button>
     </div>
-    
-    <div id="playerStatsContainer" class="player-stats-container"></div>
+
+    <div id="playerStatsContainer" class="player-stats-container">
+
+    </div>
 </div>
     </div>
 </div>
@@ -159,9 +148,6 @@
 <script src="${pageContext.request.contextPath}/js/all.js"></script>
 <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/count-up.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/wow.min.js"></script>
-<script src="${pageContext.request.contextPath}/js/tiny-slider.js"></script>
-<script src="${pageContext.request.contextPath}/js/glightbox.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/imagesloaded.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/isotope.min.js"></script>
 <script src="${pageContext.request.contextPath}/js/main.js"></script>
@@ -192,4 +178,4 @@
     });
 </script>
 </body>
-</html></html>
+</html>

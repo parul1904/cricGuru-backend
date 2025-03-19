@@ -1,27 +1,23 @@
 .cricket-field {
     background: radial-gradient(
-        circle at center,
-        #4CAF50 0%,    /* Bright green for pitch area */
-        #4CAF50 30%,   /* Maintain bright green */
-        #388E3C 50%,   /* Slightly darker for inner field */
-        #2E7D32 70%,   /* Darker for outer field */
-        #1B5E20 100%   /* Darkest for boundary area */
+            circle at center,
+            #4CAF50 0%, /* Bright green for pitch area */ #4CAF50 30%, /* Maintain bright green */ #388E3C 50%, /* Slightly darker for inner field */ #2E7D32 70%, /* Darker for outer field */ #1B5E20 100% /* Darkest for boundary area */
     ),
     linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0.1) 25%,
-        transparent 25%,
-        transparent 75%,
-        rgba(255, 255, 255, 0.1) 75%
+            45deg,
+            rgba(255, 255, 255, 0.1) 25%,
+            transparent 25%,
+            transparent 75%,
+            rgba(255, 255, 255, 0.1) 75%
     );
     background-size: 100% 100%, 20px 20px;
-    padding: 15px;
+    padding: 2px;
     border-radius: 15px;
-    margin: 15px auto;
+    margin: 2px auto;
     max-width: 800px;
     width: 90%;
     box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.2),
-                0 4px 8px rgba(0, 0, 0, 0.1);
+    0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: visible; /* Change from hidden to visible to show download button */
 }
@@ -30,11 +26,11 @@
 .cricket-field::before {
     content: '';
     position: absolute;
-    top: 50%;          /* Center vertically */
-    left: 50%;         /* Center horizontally */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
     transform: translate(-50%, -50%); /* Perfect centering */
-    width: 200px;      /* Increased size for desktop */
-    height: 200px;     /* Increased size for desktop */
+    width: 200px; /* Increased size for desktop */
+    height: 200px; /* Increased size for desktop */
     background: url('../images/dreamTeam-bg.png') no-repeat center / contain;
     opacity: 0.2;
     pointer-events: none;
@@ -46,9 +42,9 @@
     .cricket-field::before {
         width: 50px;
         height: 50px;
-        top: 5px;    /* Original mobile positioning */
-        right: 5px;  /* Original mobile positioning */
-        left: auto;  /* Reset left positioning */
+        top: 5px; /* Original mobile positioning */
+        right: 5px; /* Original mobile positioning */
+        left: auto; /* Reset left positioning */
         transform: none; /* Reset transform */
     }
 }
@@ -100,7 +96,7 @@
     position: relative;
     padding: 2px 5px;
     min-height: 100px;
-  /*background: rgba(255, 255, 255, 0.05);*/  /* Subtle white overlay */
+    /*background: rgba(255, 255, 255, 0.05);*/ /* Subtle white overlay */
     border-radius: 10px;
     backdrop-filter: blur(2px);
 }
@@ -117,18 +113,18 @@
 
 .section-background {
     position: absolute;
-    top: 50%;  /* Changed from bottom: 0 to top: 50% */
+    top: 50%; /* Changed from bottom: 0 to top: 50% */
     left: 50%;
-    transform: translate(-50%, -50%);  /* Updated transform for both X and Y centering */
-    font-size: 3.5em;  /* Increased font size */
+    transform: translate(-50%, -50%); /* Updated transform for both X and Y centering */
+    font-size: 3.5em; /* Increased font size */
     font-weight: bold;
-    color: rgba(255, 255, 255, 0.1);  /* Reduced opacity further */
+    color: rgba(255, 255, 255, 0.1); /* Reduced opacity further */
     text-transform: uppercase;
     width: 100%;
     text-align: center;
     pointer-events: none;
     z-index: 1;
-    letter-spacing: 3px;  /* Added letter spacing for better readability */
+    letter-spacing: 3px; /* Added letter spacing for better readability */
 }
 
 .players-container {
@@ -170,14 +166,14 @@
 }
 
 .player-image-container-captain {
-    border: 2px solid gold;  /* Changed from square border to circular */
-    box-shadow: 0 0 5px gold;  /* Added subtle glow effect */
+    border: 2px solid gold; /* Changed from square border to circular */
+    box-shadow: 0 0 5px gold; /* Added subtle glow effect */
 }
 
 .player-image-container-img img {
-    width: 80px;  /* Reduced from 125px */
+    width: 80px; /* Reduced from 125px */
     height: 80px; /* Reduced from 100px */
-    min-width: 80px;  /* Reduced from 125px */
+    min-width: 80px; /* Reduced from 125px */
     min-height: 80px; /* Reduced from 100px */
     object-fit: cover;
     object-position: center top; /* Focus on the top part where faces usually are */
@@ -186,10 +182,8 @@
 
 .player-leadership-role {
     position: absolute;
-    left: -5px;  /* Changed from right to left */
-    top: -5px;   /* Changed from bottom to top */
-    background: #1a237e;
-    color: white;
+    left: -5px; /* Changed from right to left */
+    top: -5px; /* Changed from bottom to top */
     width: 20px;
     height: 20px;
     border-radius: 50%;
@@ -257,7 +251,7 @@
         padding: 5px;
         width: 100%;
     }
-    
+
     .cricket-field::before,
     .cricket-field::after {
         width: 90%;
@@ -285,7 +279,7 @@
         font-size: 1em;
     }
 
-    .player-name, 
+    .player-name,
     .player-points {
         font-size: 0.7em;
     }
@@ -325,7 +319,7 @@
 
 .navigation-container {
     text-align: center;
-    padding: 15px;
+    padding: 2px;
 }
 
 .btn-group {
@@ -393,7 +387,7 @@
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
     }
-    
+
     #playerStatsSection .table th,
     #playerStatsSection .table td {
         white-space: nowrap;
@@ -862,7 +856,7 @@
         max-height: 90vh;
         overflow-y: auto;
     }
-    
+
     .stat-row {
         flex-wrap: wrap;
     }
@@ -875,9 +869,19 @@
     padding: 10px;
     border-bottom: 1px solid #ddd;
     justify-content: center;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    flex-wrap: wrap;
     width: 100%;
     box-sizing: border-box;
+    transition: margin-top 0.3s ease;
+}
+
+.dropdown-container {
+    margin: 10px 0;
+}
+
+/* Hide dropdown container in player stats view */
+.player-stats-section .dropdown-container {
+    display: none;
 }
 
 .role-tab {
@@ -915,58 +919,42 @@
 }
 
 .player-stats-container {
-    padding: 15px;
+    padding: 25px 15px 15px 15px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 .player-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* Show 3 cards per row on desktop */
+    grid-template-columns: repeat(3, 1fr); /* Desktop: 3 cards per row */
     gap: 20px;
     padding: 10px;
 }
 
 .player-stats-card {
-    background: white;
-    border-radius: 12px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    text-align: center;
-    max-width: 300px; /* Set maximum width */
-    margin: 0 auto; /* Center the card in its grid cell */
+    position: relative;
 }
 
 .player-stats-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-.player-basic-details {
+.player-header-section {
     display: flex;
-    gap: 15px;
-    border: 1px solid #dee2e6;
-    padding: 12px;
-    border-radius: 8px;
-    margin-bottom: 15px;
     align-items: center;
+    gap: 15px;
 }
 
-.player-image-container {
-    flex: 0 0 auto;
-    width: 100px;
-    height: 100px;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-.player-image-container img {
-    width: 125px;
-    height: 100px;
+.player-image img {
+    width: 80px;
+    height: 80px;
     object-fit: cover;
-    border-radius: 8px;
+    border-radius: 50%;
 }
 
 .player-info {
@@ -997,22 +985,22 @@
 /* Recent Matches Display */
 .match-points-container {
     display: flex;
-    flex-direction: row;  /* ensure horizontal layout */
+    flex-direction: row; /* ensure horizontal layout */
     gap: 8px;
     justify-content: center; /* Center the points */
     align-items: center;
     margin-top: 8px;
-    flex-wrap: nowrap;  /* prevent wrapping to next line */
+    flex-wrap: nowrap; /* prevent wrapping to next line */
 }
 
 .match-point {
-    width: 35px;
-    height: 35px;
+    width: 25px;
+    height: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    font-size: 0.9rem;
+    font-size: 0.7em;
     font-weight: 600;
     flex-shrink: 0; /* Prevent points from shrinking */
 }
@@ -1052,12 +1040,11 @@
         padding: 10px;
     }
 
-    .player-basic-details {
-        padding: 8px;
+    .player-header-section {
         gap: 10px;
     }
 
-    .player-image-container {
+    .player-image img {
         width: 70px;
         height: 70px;
     }
@@ -1076,9 +1063,9 @@
     }
 
     .match-point {
-        width: 28px;
-        height: 28px;
-        font-size: 0.8rem;
+        width: 25px;
+        height: 25px;
+        font-size: 0.7rem;
     }
 }
 
@@ -1094,7 +1081,7 @@
         padding: 8px;
     }
 
-    .player-image-container {
+    .player-image img {
         width: 60px;
         height: 60px;
     }
@@ -1243,7 +1230,6 @@
     color: #888;
     font-size: 1rem;
     width: 100%; /* Full width */
-    padding: 0 10px; /* Add some padding */
 }
 
 /* Mobile specific adjustments */
@@ -1633,14 +1619,14 @@
     background: white;
     border-radius: 12px;
     padding: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .player-stats-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .player-basic-details {
@@ -1885,7 +1871,7 @@
     body {
         overflow-x: hidden;
     }
-    
+
     .player-stats-section {
         width: 100%;
         overflow-x: hidden;
@@ -1965,8 +1951,8 @@
         display: flex;
         justify-content: center;
         gap: 10px;
-        padding: 10px 0;
-        margin-bottom: 15px;
+        padding: 2px 0;
+        margin-bottom: 2px;
     }
 }
 
@@ -1979,9 +1965,9 @@
 
 .download-button {
     position: absolute;
-    top: 15px;        /* Match padding of cricket-field */
-    right: 15px;      /* Match padding of cricket-field */
-    z-index: 2;       /* Ensure it's above other elements but below modals */
+    top: 15px; /* Match padding of cricket-field */
+    right: 15px; /* Match padding of cricket-field */
+    z-index: 2; /* Ensure it's above other elements but below modals */
     background-color: #1a237e;
     color: white;
     width: 40px;
@@ -1991,14 +1977,14 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
 }
 
 .download-button:hover {
     background-color: #283593;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .download-button i {
@@ -2018,8 +2004,8 @@
     }
 
     .download-button {
-        top: 5px;    /* Match mobile padding */
-        right: 5px;  /* Match mobile padding */
+        top: 5px; /* Match mobile padding */
+        right: 5px; /* Match mobile padding */
         width: 32px; /* Slightly smaller on mobile */
         height: 32px;
     }
@@ -2049,19 +2035,19 @@
     background-position: right 15px center;
     background-size: 15px;
     margin: 0 auto;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 #pointSystem2025Select:hover {
     border-color: #0056b3;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     transform: translateY(-1px);
 }
 
 #pointSystem2025Select:focus {
     outline: none;
     border-color: #0056b3;
-    box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
 }
 
 #dreamTeam2025Dropdown {
@@ -2072,7 +2058,6 @@
 
 /* Add a label above the dropdown */
 #dreamTeam2025Dropdown::before {
-    content: "Select Point System";
     display: block;
     font-size: 14px;
     color: #666;
@@ -2115,4 +2100,253 @@
 
 #dreamTeam2025Dropdown {
     animation: dropdownAppear 0.3s ease-out;
+}
+
+.player-stats-card {
+    position: relative;
+}
+
+.hot-player {
+    border: 2px solid #ff4d4d;
+    box-shadow: 0 0 10px rgba(255, 77, 77, 0.2);
+}
+
+.fire-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: #ff4d4d;
+    font-size: 20px;
+    z-index: 2;
+}
+
+@keyframes flame {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.fire-icon {
+    animation: flame 1.5s infinite;
+}
+
+/* Base styles for player grid */
+.player-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 5px;
+}
+
+.player-stats-card {
+    background: linear-gradient(135deg, #f0f8ff 0%, #e6f3ff 60%, #fff0f3 100%);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.player-card-content {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.player-header-section {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+}
+
+.player-image {
+    flex-shrink: 0;
+}
+
+.player-image img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.player-info-header {
+    flex: 1;
+}
+
+.player-info-header .player-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.player-info-header .player-style {
+    font-size: 11px;
+    color: #888;
+}
+
+.last-matches-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 120px;
+}
+
+.match-points-container {
+    display: flex;
+    gap: 4px;
+}
+
+.match-point {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    border-radius: 4px;
+    background: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.dream-team-points {
+    background: #ffe4e4;
+    color: #ff4444;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+.dnp {
+    background: #eee;
+    color: #999;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 2px;
+}
+
+/* Hot player styles */
+.hot-player {
+    border: 1.5px solid #ff4444;
+}
+
+.fire-icon {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: #ff4444;
+    font-size: 18px;
+}
+
+.text-danger {
+    color: #ff4444;
+}
+
+/* Mobile specific adjustments */
+@media (max-width: 768px) {
+    .player-grid {
+        gap: 8px;
+        padding: 6px;
+    }
+
+    .player-stats-card {
+        margin-bottom: 0;
+    }
+
+    .container {
+        padding: 8px;
+    }
+
+    .role-tabs {
+        padding: 8px;
+        margin-bottom: 8px;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 320px) {
+    .player-stats-card {
+        padding: 8px;
+    }
+
+    .player-image img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .stat-value {
+        font-size: 13px;
+    }
+
+    .match-point {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+    }
+}
+
+/* Add these styles for better tab spacing management */
+.view-controls {
+    margin-bottom: 10px;
+}
+
+#dreamTeamDropdown,
+#dreamTeam2025Dropdown {
+    margin: 10px 0;
+}
+
+/* When player-stats view is active, remove the dropdown margin */
+.player-stats-active #dreamTeamDropdown,
+.player-stats-active #dreamTeam2025Dropdown {
+    display: none;
+    margin: 0;
+}
+
+.role-tabs-container {
+    display: none;
+    margin-top: 10px;
+}
+
+/* When player-stats view is active, adjust role tabs spacing */
+.player-stats-active .role-tabs-container {
+    display: flex;
+    margin-top: 0;
+}
+
+.must-pick-indicator {
+    position: relative;
+    text-align: left;
+    margin-bottom: 1px;
+    padding-left: 1px;
+    font-size: 12px;
+    color: #333;
+}
+
+.must-pick-indicator .fire-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+}
+
+.must-pick-indicator .fire-icon i {
+    color: #ff4444;
+}
+
+/* Ensure proper spacing for the player grid */
+.player-grid {
+    margin-top: 10px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .must-pick-indicator {
+        font-size: 10px;
+        padding-left: 8px;
+    }
 }

@@ -104,7 +104,8 @@ function toggleView(view, dreamTeamData, seasonYear) {
     const playerStatsBtn = document.getElementById("playerStatsBtn");
     const dreamTeamDropdown = document.getElementById("dreamTeamDropdown");
     const dreamTeam2025Dropdown = document.getElementById("dreamTeam2025Dropdown");
-    const roleTabs = document.querySelectorAll('.role-tab');
+    const roleTabs = document.querySelector('.role-tabs');
+    const dropdownContainer = document.querySelector('.dropdown-container');
 
     if (view === "player-stats") {
         // Show player stats view
@@ -112,9 +113,8 @@ function toggleView(view, dreamTeamData, seasonYear) {
         playerStatsSection.style.display = "block";
         dreamTeamBtn.classList.remove("active");
         playerStatsBtn.classList.add("active");
-        roleTabs.forEach(tab => {
-            tab.style.display = "block";
-        });
+        if (dropdownContainer) dropdownContainer.style.display = "none";
+        if (roleTabs) roleTabs.style.marginTop = "0";
         if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
         if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "none";
     } else {
@@ -123,10 +123,10 @@ function toggleView(view, dreamTeamData, seasonYear) {
         playerStatsSection.style.display = "none";
         dreamTeamBtn.classList.add("active");
         playerStatsBtn.classList.remove("active");
-        roleTabs.forEach(tab => {
-            tab.style.display = "none";
-        });
-        // Show appropriate dropdown based on season
+        if (dropdownContainer) dropdownContainer.style.display = "block";
+        if (roleTabs) roleTabs.style.marginTop = "";
+        
+        // Show appropriate dropdown based on season year
         if (seasonYear === "2025") {
             if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
             if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "block";
@@ -397,49 +397,6 @@ if (matchSelect) {
   });
 }
 
-function displayPlayerStats(data) {
-  console.log("Displaying player stats with data:", data);
-
-  if (!data || !data.performanceDataJson) {
-    console.error("Invalid data format:", data);
-    showError("No player data available");
-    return;
-  }
-
-  const players = Array.isArray(data.performanceDataJson) 
-    ? data.performanceDataJson 
-    : data.performanceDataJson;  // Already parsed from JSTL
-  
-  console.log("Processed players:", players);
-
-  const container = document.getElementById('playerStatsContainer');
-  if (!container) {
-    console.error("Container element not found");
-    return;
-  }
-  
-  container.innerHTML = ''; // Clear existing content
-
-  // Group players by role
-  const groupedPlayers = players.reduce((acc, player) => {
-    const role = player.role || 'Unknown';
-    if (!acc[role]) acc[role] = [];
-    acc[role].push(player);
-    return acc;
-  }, {});
-
-  console.log("Grouped players:", groupedPlayers);
-
-  // Create section for each role
-  const roles = ['Wicket Keeper', 'Batter', 'All Rounder', 'Bowler'];
-  roles.forEach(role => {
-    if (groupedPlayers[role] && groupedPlayers[role].length > 0) {
-      const section = createRoleSection(role, groupedPlayers[role]);
-      container.appendChild(section);
-    }
-  });
-}
-
 function createRoleSection(role, players) {
   console.log(`Creating section for role: ${role}`, players);
   
@@ -464,7 +421,7 @@ function createRoleSection(role, players) {
 
 function createPlayerStatsCard(player) {
     const card = document.createElement('div');
-    card.className = 'player-stats-card';
+    const topPlayersAvg = calculateTopPlayersAverage(globalPlayersData || []); // Assuming globalPlayersData is available
 
     // Sort recentMatches in descending order of matchNo
     const recentMatches = (player.recentMatches || []).sort((a, b) => b.matchNo - a.matchNo);
@@ -475,20 +432,21 @@ function createPlayerStatsCard(player) {
     const highestPoints = recentMatches.length > 0
         ? Math.max(...recentMatches.map(match => match.points || 0))
         : 0;
+    
+    const last3MatchesAvg = recentMatches.length > 0
+        ? (recentMatches.slice(0, 3).reduce((sum, match) => sum + (match.points || 0), 0) / 3).toFixed(1)
+        : 0;
+
+    const isHotPlayer = parseFloat(last3MatchesAvg) > parseFloat(topPlayersAvg);
+    console.log(`Player: ${player.playerName}, Last 3 Avg: ${last3MatchesAvg}, Top Players Avg: ${topPlayersAvg}, Is Hot: ${isHotPlayer}`);
+    
+    card.className = `player-stats-card ${isHotPlayer ? 'hot-player' : ''}`;
 
     // Generate match points HTML with DNP for matches not played
-    const matchPointsHtml = Array.from({ length: 5 }).map((_, index) => {
-        const match = last5Matches[index];
-        if (match && match.points !== undefined && match.points !== null) {
-            const isInDreamTeam = match.isPartOfDreamTeam;
-            const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
-            return `<div class="match-point ${pointClass}" title="${match.team1Name || 'Unknown'} vs ${match.team2Name || 'Unknown'}">${match.points}</div>`;
-        } else {
-            return `<div class="match-point dnp" title="Did Not Play">DNP</div>`;
-        }
-    }).join('');
+    const matchPointsHtml = generateMatchPointsHtml(last5Matches);
 
     card.innerHTML = `
+        ${isHotPlayer ? '<div class="fire-icon">🔥</div>' : ''}
         <div class="player-header-section">
             <div class="player-image">
                 <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
@@ -509,8 +467,8 @@ function createPlayerStatsCard(player) {
                 <div class="stat-value">${averagePoints}</div>
             </div>
             <div class="stat-box">
-                <div class="stat-label">Highest</div>
-                <div class="stat-value">${highestPoints}</div>
+                <div class="stat-label">Last 3</div>
+                <div class="stat-value ${isHotPlayer ? 'text-danger' : ''}">${last3MatchesAvg}</div>
             </div>
             <div class="stat-box">
                 <div class="stat-label">Dream Team</div>
@@ -999,9 +957,18 @@ function updateTotalPoints(players, captain, viceCaptain) {
   }
 }
 
-function generateLastFiveMatchesHtml(player) {
-  // Implement last 5 matches points display
-  return '<div class="match-points">Points history here</div>';
+function generateMatchPointsHtml(matches) {
+    return Array.from({ length: 5 }).map((_, index) => {
+        const match = matches[index];
+        if (match && match.points !== undefined && match.points !== null) {
+            const isInDreamTeam = match.isPartOfDreamTeam;
+            const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
+            const tooltipText = `${match.team1Name || 'Unknown'} vs ${match.team2Name || 'Unknown'}`;
+            return `<div class="match-point ${pointClass}" title="${tooltipText}">${match.points}</div>`;
+        } else {
+            return '<div class="match-point dnp" title="Did Not Play">DNP</div>';
+        }
+    }).join('');
 }
 
 
@@ -1044,20 +1011,53 @@ function displayPlayersByRole(selectedRole) {
         return;
     }
 
-    container.innerHTML = ''; // Clear existing content
+    // Clear existing content and add the must-pick indicator
+    container.innerHTML = ``;
 
     // Filter players by selected role
     const playersInRole = globalPlayersData.filter(player => player.role === selectedRole);
 
     if (playersInRole.length === 0) {
-        container.innerHTML = `<div class="no-players-message">No ${selectedRole}s found</div>`;
+        container.innerHTML += `<div class="no-players-message">No ${selectedRole}s found</div>`;
         return;
+    }
+
+    // Calculate top players average
+    const topPlayersAvg = calculateTopPlayersAverage(globalPlayersData || []);
+
+    // Calculate last 3 matches average for all players in this role
+    const playersWithAvg = playersInRole.map(player => {
+        const recentMatches = (player.recentMatches || [])
+            .sort((a, b) => b.matchNo - a.matchNo)
+            .slice(0, 3);
+
+        const last3MatchesAvg = recentMatches.length > 0
+            ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length)
+            : 0;
+
+        return {
+            ...player,
+            last3MatchesAvg,
+            isHotPlayer: last3MatchesAvg > topPlayersAvg
+        };
+    });
+
+    // Find players above average
+    const hotPlayers = playersWithAvg.filter(p => p.isHotPlayer);
+
+    // If no hot players, mark the player with highest last3MatchesAvg as hot
+    if (hotPlayers.length === 0) {
+        const bestPlayer = playersWithAvg.reduce((prev, current) =>
+            (prev.last3MatchesAvg > current.last3MatchesAvg) ? prev : current
+        );
+        bestPlayer.isHotPlayer = true;
     }
 
     const playerGrid = document.createElement('div');
     playerGrid.className = 'player-grid';
 
-    playersInRole.forEach(player => {
+    // Create cards with updated hot player status
+    playersWithAvg.forEach(player => {
         const card = createPlayerStatsCard(player);
         playerGrid.appendChild(card);
     });
@@ -1067,7 +1067,6 @@ function displayPlayersByRole(selectedRole) {
 
 function createPlayerStatsCard(player) {
     const card = document.createElement('div');
-    card.className = 'player-stats-card';
 
     // Sort recentMatches in descending order of matchNo
     const recentMatches = (player.recentMatches || []).sort((a, b) => b.matchNo - a.matchNo);
@@ -1079,34 +1078,34 @@ function createPlayerStatsCard(player) {
         ? Math.max(...recentMatches.map(match => match.points || 0))
         : 0;
 
-    // Generate match points HTML with DNP for matches not played
-    const matchPointsHtml = Array.from({ length: 5 }).map((_, index) => {
-        const match = last5Matches[index];
-        if (match) {
-            const isInDreamTeam = match.isPartOfDreamTeam;
-            const pointClass = isInDreamTeam ? 'dream-team-points' : 'regular-points';
-            return `<div class="match-point ${pointClass}" title="${match.team1Name || 'Unknown'} vs ${match.team2Name || 'Unknown'}">${match.points !== undefined ? match.points : 'DNP'}</div>`;
-        } else {
-            return `<div class="match-point dnp" title="Did Not Play">DNP</div>`;
-        }
-    }).join('');
+    // Use the pre-calculated isHotPlayer status
+    const isHotPlayer = player.isHotPlayer;
+
+    card.className = `player-stats-card ${isHotPlayer ? 'hot-player' : ''}`;
 
     card.innerHTML = `
-        <div class="player-image">
-            <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
-                 onerror="this.src='../images/default-player.png'">
-        </div>
-        <div class="player-basic-info">
-            <h4 class="player-name">${player.playerName}</h4>
-            <div class="points-container">
-                <span class="avg-points">Avg: ${averagePoints}</span>
-                <span class="high-points">High: ${highestPoints}</span>
+        ${isHotPlayer ? '<div class="fire-icon"><i class="fa-solid fa-fire"></i></div>' : ''}
+        
+        <div class="player-card-content">
+            <div class="player-header-section">
+                <div class="player-image">
+                    <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
+                         onerror="this.src='../images/default-player.png'"
+                         style="width: 60px; height: 60px; object-fit: cover;">
+                </div>
+                <div class="player-info-header">
+                    <div class="player-name">${player.playerName}</div>
+                    <div class="player-style">Overall Avg: ${averagePoints}</div>
+                    <div class="player-style">
+                        <span>Last 3 Avg: <strong style="color: ${isHotPlayer ? 'red' : 'black'};">${player.last3MatchesAvg.toFixed(1)}</strong></span>
+                    </div>
+                    <div class="player-style">Highest: ${highestPoints}</div>
+                </div>
             </div>
-        </div>
-        <div class="last-matches">
-            <p>Last 5 matches (Most Recent to Oldest)</p>
-            <div class="match-points-container">
-                ${matchPointsHtml}
+            <div class="last-matches-section">
+                <div class="match-points-container">
+                    ${generateMatchPointsHtml(last5Matches)}
+                </div>
             </div>
         </div>
     `;
@@ -1257,3 +1256,21 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+
+function calculateTopPlayersAverage(players) {
+    if (!players || players.length === 0) return 0;
+
+    // Sort players by averageDream11Points in descending order
+    const sortedPlayers = [...players].sort((a, b) =>
+        (b.averageDream11Points || 0) - (a.averageDream11Points || 0)
+    );
+
+    // Calculate average for top 11 players
+    const top11Players = sortedPlayers.slice(0, 11);
+    const sum = top11Players.reduce((acc, player) =>
+        acc + (player.averageDream11Points || 0), 0
+    );
+console.log('Top 11 players:', sum/top11Players.length);
+    return sum / top11Players.length;
+}
