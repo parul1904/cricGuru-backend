@@ -184,7 +184,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             LEFT JOIN PlayerAvgStats pas ON csp.player_id = pas.player_id
             GROUP BY csp.player_id, csp.nick_name, csp.player_img_url, csp.role, csp.batting_style, csp.bowling_style, lms.last_d11,
             lms.last_match_no, pas.highest_points, pas.lowest_points, pas.avg_last_3_d11, pas.avg_last_3_my11
-            ORDER BY lms.last_match_no DESC, pms.match_no DESC;
+            ORDER BY lms.last_d11 DESC;
             """, nativeQuery = true)
     List<Object[]> getPlayerPerformanceStats(@Param("seasonId") Long seasonId, @Param("team1Id") Long team1Id, @Param("team2Id") Long team2Id, @Param("statsBy") Long statsBy);
 

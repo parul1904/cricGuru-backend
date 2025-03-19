@@ -2028,3 +2028,91 @@
         font-size: 16px;
     }
 }
+
+/* Point System Dropdown Styling */
+#pointSystem2025Select {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 15px;
+    font-size: 16px;
+    border: 2px solid #007bff;
+    border-radius: 8px;
+    background-color: #ffffff;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23007bff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
+    margin: 0 auto;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+#pointSystem2025Select:hover {
+    border-color: #0056b3;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transform: translateY(-1px);
+}
+
+#pointSystem2025Select:focus {
+    outline: none;
+    border-color: #0056b3;
+    box-shadow: 0 0 0 3px rgba(0,123,255,0.25);
+}
+
+#dreamTeam2025Dropdown {
+    position: relative;
+    margin: 15px auto;
+    text-align: center;
+}
+
+/* Add a label above the dropdown */
+#dreamTeam2025Dropdown::before {
+    content: "Select Point System";
+    display: block;
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    #pointSystem2025Select {
+        font-size: 14px;
+        padding: 10px 12px;
+        max-width: 280px;
+        background-position: right 10px center;
+    }
+
+    #dreamTeam2025Dropdown {
+        margin: 10px auto;
+        padding: 0 15px;
+    }
+
+    /* Increase touch target size on mobile */
+    #pointSystem2025Select option {
+        padding: 12px;
+        font-size: 16px;
+    }
+}
+
+/* Animation for the dropdown */
+@keyframes dropdownAppear {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#dreamTeam2025Dropdown {
+    animation: dropdownAppear 0.3s ease-out;
+}

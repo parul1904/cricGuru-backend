@@ -23,27 +23,37 @@ document.addEventListener('DOMContentLoaded', function() {
     // Point system selection handler for 2025
     const pointSystem2025Select = document.getElementById('pointSystem2025Select');
     if (pointSystem2025Select) {
+        // Add visual feedback when dropdown is opened
+        pointSystem2025Select.addEventListener('focus', function() {
+            this.style.borderColor = '#0056b3';
+        });
+
+        // Handle selection change
         pointSystem2025Select.addEventListener('change', function() {
+            // Add visual feedback
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+
             const selectedSystem = this.value;
-            // Map the selected value to the correct dreamTeamData key
-            let dataKey;
+            let teamData;
+            
             switch(selectedSystem) {
-                case 'new':
-                    dataKey = 'new';
-                    break;
-                case 'my11':
-                    dataKey = 'my11';
-                    break;
                 case 'dream11Avg':
-                    dataKey = 'dream11Avg';
+                    teamData = JSON.parse(dreamAvgTeamJson || '[]');
                     break;
                 case 'my11Avg':
-                    dataKey = 'my11Avg';
+                    teamData = JSON.parse(my11CircleAvgTeamJson || '[]');
+                    break;
+                case 'my11':
+                    teamData = JSON.parse(my11CirceTeamJson || '[]');
                     break;
                 default:
-                    dataKey = 'new';
+                    teamData = JSON.parse(newDreamTeamJson || '[]');
             }
-            displayDreamTeam(dreamTeamData[dataKey], seasonYear);
+            
+            displayDreamTeam(teamData, seasonYear);
         });
     }
 });

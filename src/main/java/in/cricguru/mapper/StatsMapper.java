@@ -307,52 +307,6 @@ public class StatsMapper {
         return responses;
     }
 
-    public List<PlayerPerformanceResponse> mapToPlayerPerformanceResponseForMatch(List<Object[]> results, Integer matchNo) {
-        List<PlayerPerformanceResponse> responses = new ArrayList<>();
-
-        for (Object[] row : results) {
-            PlayerPerformanceResponse response = new PlayerPerformanceResponse();
-            response.setPlayerId((Integer) row[0]);
-            response.setPlayerName((String) row[1]);
-            response.setPlayerImageUrl((String) row[2]);
-            response.setRole((String) row[3]);
-            response.setBattingStyle((String) row[4]);
-            response.setBowlingStyle((String) row[5]);
-
-            // Create match performance
-            PlayerPerformanceResponse.MatchPerformance matchPerformance = new PlayerPerformanceResponse.MatchPerformance();
-            matchPerformance.setMatchNo(matchNo);
-            matchPerformance.setMatchDate(((java.sql.Date) row[6]).toLocalDate());
-            matchPerformance.setTeam1Name((String) row[7]);
-            matchPerformance.setTeam1Logo((String) row[8]);
-            matchPerformance.setTeam2Name((String) row[9]);
-            matchPerformance.setTeam2Logo((String) row[10]);
-            matchPerformance.setPoints(row[11] != null ? ((Number) row[11]).intValue() : 0);
-            matchPerformance.setRunsScored(row[12] != null ? ((Number) row[12]).intValue() : 0);
-            matchPerformance.setBallFaced(row[13] != null ? ((Number) row[13]).intValue() : 0);
-            matchPerformance.setFours(row[14] != null ? ((Number) row[14]).intValue() : 0);
-            matchPerformance.setSixes(row[15] != null ? ((Number) row[15]).intValue() : 0);
-            matchPerformance.setWickets(row[16] != null ? ((Number) row[16]).intValue() : 0);
-            matchPerformance.setOvers(row[17] != null ? ((Number) row[17]).doubleValue() : 0.0);
-            matchPerformance.setRunsConceded(row[18] != null ? ((Number) row[18]).intValue() : 0);
-            matchPerformance.setIsPartOfDreamTeam(row[19] != null ? (Boolean) row[19] : false);
-
-            List<PlayerPerformanceResponse.MatchPerformance> matchPerformances = new ArrayList<>();
-            matchPerformances.add(matchPerformance);
-            response.setRecentMatches(matchPerformances);
-
-            // Calculate averages and set additional fields
-            response.setAverageDream11Points((double) matchPerformance.getPoints());
-            response.setHighestPoints(matchPerformance.getPoints());
-            response.setLowestPoints(matchPerformance.getPoints());
-            response.setLastMatchPoints(matchPerformance.getPoints());
-            response.setLastMatchNo(matchNo);
-
-            responses.add(response);
-        }
-        return responses;
-    }
-
     public List<DreamTeamResponse> mapToOldPointDreamTeamResponse(List<Object[]> performanceData) {
         List<DreamTeamResponse> allPlayers = new ArrayList<>();
 
