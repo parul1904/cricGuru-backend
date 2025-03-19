@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Sitemap: https://cricguru.in/sitemap.xml
+
+Disallow: /admin/
+Disallow: /api/
+Disallow: /private/

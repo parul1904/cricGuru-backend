@@ -5,12 +5,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%@ include file="/WEB-INF/jsp/includes/meta-tags.jsp" %>
     <title>CricGuru - Your Ultimate IPL 2025 Analysis Platform</title>
     
     <!-- Favicon -->
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/images/apple-touch-icon.png">
     
     <!-- CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
@@ -18,6 +18,9 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/index.css">
+    
+    <!-- Structured Data -->
+    <%@ include file="/WEB-INF/jsp/includes/structured-data.jsp" %>
 </head>
 <body>
     <!-- Header -->

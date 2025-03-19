@@ -16,15 +16,10 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarMain">
-                    <ul class="navbar-nav ms-auto">
+                    <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link ${pageName == 'home' ? 'active' : ''}" href="${pageContext.request.contextPath}/">
                                 <i class="fas fa-home"></i> Home
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link ${pageName == 'about' ? 'active' : ''}" href="${pageContext.request.contextPath}/about">
-                                <i class="fas fa-info-circle"></i> About
                             </a>
                         </li>
                         <li class="nav-item">
@@ -42,11 +37,42 @@
                                 <i class="fas fa-map-marker-alt"></i> Venue Stats
                             </a>
                         </li>
+                    </ul>
 
-                        <li class="nav-item">
-                            <a class="nav-link ${pageName == 'contact' ? 'active' : ''}" href="${pageContext.request.contextPath}#contact-form">
-                                <i class="fas fa-envelope"></i> Contact
+                    <ul class="navbar-nav">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-info-circle"></i> More
                             </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item ${pageName == 'about' ? 'active' : ''}" href="${pageContext.request.contextPath}/about">
+                                        <i class="fas fa-info-circle"></i> About Us
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item ${pageName == 'guide' ? 'active' : ''}" href="${pageContext.request.contextPath}/guide">
+                                        <i class="fas fa-book"></i> User Guide
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item ${pageName == 'privacy' ? 'active' : ''}" href="${pageContext.request.contextPath}/privacy">
+                                        <i class="fas fa-shield-alt"></i> Privacy Policy
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item ${pageName == 'terms' ? 'active' : ''}" href="${pageContext.request.contextPath}/terms">
+                                        <i class="fas fa-file-contract"></i> Terms of Service
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="#contact-form">
+                                        <i class="fas fa-envelope"></i> Contact Us
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>

@@ -67,6 +67,24 @@ public class CommonController {
         return modelAndView;
     }
 
+    @GetMapping("/guide")
+    public ModelAndView guide() {
+        ModelAndView modelAndView = new ModelAndView("user/guide");
+        return modelAndView;
+    }
+
+    @GetMapping("/privacy")
+    public ModelAndView privacy() {
+        ModelAndView modelAndView = new ModelAndView("user/privacy");
+        return modelAndView;
+    }
+    @GetMapping("/terms")
+    public ModelAndView terms() {
+        ModelAndView modelAndView = new ModelAndView("user/terms");
+        return modelAndView;
+    }
+
+
     @GetMapping("/team")
     public String team(Model model) {
         return "team";
