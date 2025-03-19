@@ -10,7 +10,11 @@ import in.cricguru.service.MatchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.time.LocalDate;
 import org.springframework.data.domain.PageRequest;
@@ -88,5 +92,12 @@ public class MatchServiceImpl implements MatchService {
         return upcomingMatches.stream()
                 .map(matchMapper::mapToMatchResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public MatchResponse nextMatch() {
+        LocalDate now = LocalDate.now();
+        Match nextMatchDetails = matchRepository.nextMatch(now);
+        return matchMapper.mapToMatchResponse(nextMatchDetails);
     }
 }

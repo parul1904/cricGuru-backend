@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.time.LocalDate;
 import org.springframework.data.domain.Pageable;
@@ -52,5 +53,12 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
             "WHERE m.matchDate >= :now " +
             "ORDER BY m.matchDate ASC, m.matchTime ASC")
     List<Match> findUpcomingMatches(@Param("now") LocalDate now, Pageable pageable);
+
+    @Query(value = """
+            SELECT m.* FROM matches m WHERE STR_TO_DATE(CONCAT(m.match_date, ' ', SUBSTRING_INDEX(m.match_time, ' ', 2)), '%Y-%m-%d %h:%i %p')\s
+            >= CONVERT_TZ(:now, @@session.time_zone, '+05:30')
+            ORDER BY m.match_date ASC, STR_TO_DATE(SUBSTRING_INDEX(m.match_time, ' ', 2), '%h:%i %p') ASC LIMIT 1
+            """, nativeQuery = true)
+    Match nextMatch(@Param("now") LocalDate now);
 
 }

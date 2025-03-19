@@ -44,6 +44,9 @@ public class CommonController {
         List<MatchResponse> upcomingMatches = matchService.getUpcomingMatches(3);
         modelAndView.addObject("liveMatches", upcomingMatches);
 
+        MatchResponse nextMatch = matchService.nextMatch();
+        modelAndView.addObject("nextMatch", nextMatch);
+
         // Add stats for counter section
         Map<String, Object> stats = new HashMap<>();
         stats.put("activeUsers", "50K+");

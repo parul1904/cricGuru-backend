@@ -15,9 +15,6 @@
     <!-- CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LineIcons.2.0.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/animate.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/tiny-slider.css" />
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/glightbox.min.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/index.css">
@@ -25,7 +22,50 @@
 <body>
     <!-- Header -->
     <jsp:include page="/WEB-INF/jsp/includes/header.jsp" />
+    <div class="welcome-popup" id="welcomePopup">
+        <div class="popup-content">
+            <span class="close-popup" id="closeWelcomePopup">&times;</span>
+            <div class="popup-header">
+                <h3>Welcome to CricGuru! 🏏</h3>
+            </div>
+            <div class="popup-body">
+                <p>Your ultimate destination for IPL 2025 analysis and predictions.</p>
+                
+                <div class="next-match-container">
+                    <h4>Next Match</h4>
+                    <div class="teams-vs">
+                        <div class="team">
+                            <img src="${pageContext.request.contextPath}${nextMatch.team1}" 
+                                 alt="${nextMatch.team1Name}" 
+                                 class="team-logo">
+                            <span class="team-name">${nextMatch.team1Name}</span>
+                        </div>
+                        <div class="vs-badge">VS</div>
+                        <div class="team">
+                            <img src="${pageContext.request.contextPath}${nextMatch.team2}" 
+                                 alt="${nextMatch.team2Name}" 
+                                 class="team-logo">
+                            <span class="team-name">${nextMatch.team2Name}</span>
+                        </div>
+                    </div>
+                    <div class="match-info">
+                        <p class="match-datetime">
+                            <i class="fas fa-calendar"></i> ${nextMatch.matchDate}
+                            <i class="fas fa-clock ml-2"></i> ${nextMatch.matchTime}
+                        </p>
+                        <p class="match-venue">
+                            <i class="fas fa-map-marker-alt"></i> ${nextMatch.venueName}
+                        </p>
+                    </div>
+                </div>
 
+                <div class="popup-timer">
+                    <span id="popupTimer">10</span>
+                </div>
+                <button class="btn btn-primary mt-3" id="startExploringBtn">Explore Dream Team</button>
+            </div>
+        </div>
+    </div>
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="cricket-illustration">
@@ -227,5 +267,6 @@
        <script src="${pageContext.request.contextPath}/js/tiny-slider.js"></script>
        <script src="${pageContext.request.contextPath}/js/main.js"></script>
        <script src="${pageContext.request.contextPath}/js/index.js"></script>
+       <input type="hidden" id="latestMatchId" value="${nextMatch.matchId}">
 </body>
 </html>
