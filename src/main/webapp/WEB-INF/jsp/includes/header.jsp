@@ -1,6 +1,30 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!-- Basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- Mobile Metas -->
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- Site Metas -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css" />
+<!-- Favicon -->
+<link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon">
+<link rel="apple-touch-icon" href="${pageContext.request.contextPath}/images/apple-touch-icon.png">
+<!-- CSS -->
+<!-- Site Icons -->
+<!-- Bootstrap CSS -->
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LineIcons.2.0.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/glightbox.min.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/reset.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/responsive.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/LineIcons.2.0.css" />
+<link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css" />
+
+<meta name="keywords" content="">
+<meta name="description" content="">
+<meta name="author" content="">
+
 <header class="header-area">
     <div class="main-navbar">
         <div class="container">
@@ -23,6 +47,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link ${pageName == 'home' ? 'active' : ''}" href="${pageContext.request.contextPath}/about">
+                                <i class="fas fa-info"></i> About
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link ${pageName == 'squads' ? 'active' : ''}" href="${pageContext.request.contextPath}/squads">
                                 <i class="fas fa-users"></i> Squad
                             </a>
@@ -39,42 +68,6 @@
                         </li>
                     </ul>
 
-                    <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <i class="fas fa-info-circle"></i> More
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <a class="dropdown-item ${pageName == 'about' ? 'active' : ''}" href="${pageContext.request.contextPath}/about">
-                                        <i class="fas fa-info-circle"></i> About Us
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item ${pageName == 'guide' ? 'active' : ''}" href="${pageContext.request.contextPath}/guide">
-                                        <i class="fas fa-book"></i> User Guide
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item ${pageName == 'privacy' ? 'active' : ''}" href="${pageContext.request.contextPath}/privacy">
-                                        <i class="fas fa-shield-alt"></i> Privacy Policy
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item ${pageName == 'terms' ? 'active' : ''}" href="${pageContext.request.contextPath}/terms">
-                                        <i class="fas fa-file-contract"></i> Terms of Service
-                                    </a>
-                                </li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li>
-                                    <a class="dropdown-item" href="#contact-form">
-                                        <i class="fas fa-envelope"></i> Contact Us
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
                 </div>
             </nav>
         </div>
