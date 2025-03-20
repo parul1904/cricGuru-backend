@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import static in.cricguru.shared.CricGuruConstant.BASE_URL;
 
 @Controller
 public class LoginController {

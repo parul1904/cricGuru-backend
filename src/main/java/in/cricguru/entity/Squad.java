@@ -31,4 +31,7 @@ public class Squad {
     @JoinColumn(name = "player_id", referencedColumnName = "player_id")
     private Player player;
 
+    @Column(name = "playing_11")
+    private Boolean playing11;
+
 }

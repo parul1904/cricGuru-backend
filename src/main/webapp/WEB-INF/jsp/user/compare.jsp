@@ -14,9 +14,9 @@
    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
    <!-- Site Metas -->
    <title>CricGuru</title>
-   <meta name="keywords" content="">
-   <meta name="description" content="">
-   <meta name="author" content="">
+    <meta name="keywords" content="IPL player comparison, cricket stats comparison, team comparison, IPL statistics, player performance analysis, cricket analytics, batting stats, bowling stats, IPL 2025 players, cricket performance metrics">
+    <meta name="description" content="Compare IPL players and teams head-to-head with detailed statistics. Analyze batting and bowling performances, view comprehensive stats comparison, and make informed decisions for fantasy cricket on CricGuru.">
+    <meta name="author" content="Parul Gangwal">
    <!-- Site Icons -->
    <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon" />
    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/images/apple-touch-icon.png">

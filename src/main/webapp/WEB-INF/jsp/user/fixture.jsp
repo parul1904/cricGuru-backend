@@ -14,9 +14,9 @@
                         content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
                     <!-- Site Metas -->
                     <title>CricGuru - Matches</title>
-                    <meta name="keywords" content="">
-                    <meta name="description" content="">
-                    <meta name="author" content="">
+                    <meta name="keywords" content="IPL 2025 schedule, IPL 2024 matches, cricket fixtures, IPL match dates, IPL venues, cricket match timings, IPL teams, cricket match analysis, IPL match predictions, cricket statistics">
+                    <meta name="description" content="View complete IPL 2024 and 2025 match schedules, fixtures, and timings. Get detailed match information including venue details, team lineups, and post-match analysis on CricGuru.">
+                    <meta name="author" content="Parul Gangwal">
                     <!-- Site Icons -->
                     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico"
                         type="image/x-icon" />

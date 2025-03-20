@@ -60,9 +60,9 @@
 
         <div id="dreamTeam2025Dropdown" class="mt-2">
             <select id="pointSystem2025Select" class="form-select">
+                <option value="dream11Avg">Dream11 Based on Last 3 Match</option>
                 <option value="new">Dream11 Based on Last Match</option>
                 <option value="my11">My11 Circle Based on Last Match</option>
-                <option value="dream11Avg">Dream11 Based on Last 3 Match</option>
                 <option value="my11Avg">My11 Circle Based on Last 3 Match</option>
             </select>
         </div>

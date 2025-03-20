@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
             let teamData;
             
             switch(selectedSystem) {
-                case 'dream11Avg':
-                    teamData = JSON.parse(dreamAvgTeamJson || '[]');
+                case 'new':
+                    teamData = JSON.parse(newDreamTeamJson || '[]');
                     break;
                 case 'my11Avg':
                     teamData = JSON.parse(my11CircleAvgTeamJson || '[]');
@@ -50,9 +50,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     teamData = JSON.parse(my11CirceTeamJson || '[]');
                     break;
                 default:
-                    teamData = JSON.parse(newDreamTeamJson || '[]');
+                    teamData = JSON.parse(dreamAvgTeamJson || '[]');
             }
-            
             displayDreamTeam(teamData, seasonYear);
         });
     }

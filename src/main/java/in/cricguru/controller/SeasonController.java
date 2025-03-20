@@ -8,12 +8,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static in.cricguru.shared.CricGuruConstant.BASE_URL;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/seasons")
-@CrossOrigin(origins = BASE_URL)
 public class SeasonController {
 
     private SeasonService seasonService;

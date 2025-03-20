@@ -14,9 +14,9 @@
    <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
    <!-- Site Metas -->
    <title>CricGuru - Venues</title>
-   <meta name="keywords" content="">
-   <meta name="description" content="">
-   <meta name="author" content="">
+    <meta name="keywords" content="IPL venues, cricket stadiums, IPL 2025 grounds, cricket pitch analysis, stadium statistics, IPL match venues, cricket ground conditions">
+    <meta name="description" content="Explore detailed information about IPL venues including pitch reports, weather conditions, and historical statistics. Make informed decisions based on venue-specific cricket analysis.">
+    <meta name="author" content="Parul Gangwal">
    <!-- Site Icons -->
    <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon" />
    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/images/apple-touch-icon.png">

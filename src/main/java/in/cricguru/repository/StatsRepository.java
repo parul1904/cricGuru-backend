@@ -115,7 +115,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             WITH CurrentSquadPlayers AS (
                 SELECT DISTINCT p.player_id, p.nick_name, p.player_img_url, p.role, p.batting_style, p.bowling_style
                 FROM players p
-                JOIN squads sq ON p.player_id = sq.player_id
+                JOIN squads sq ON p.player_id = sq.player_id AND sq.playing_11=1
                 WHERE sq.season_id = :seasonId
                 AND sq.team_id IN (:team1Id, :team2Id)
             ),

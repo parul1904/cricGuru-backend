@@ -33,6 +33,7 @@ public class SquadMapper {
         squadDto.setSeasonId(Math.toIntExact(squad.getSeason().getSeasonId()));
         squadDto.setTeamId(Math.toIntExact(squad.getTeam().getTeamId()));
         squadDto.setPlayerId(Math.toIntExact(squad.getPlayer().getPlayerId()));
+        squadDto.setPlaying11(squad.getPlaying11());
         return squadDto;
     }
 
@@ -45,6 +46,7 @@ public class SquadMapper {
             squadResponse.setPlayerName(squad.getPlayer().getPlayerName());
             squadResponse.setPlayerImage(squad.getPlayer().getPlayerImgUrl());
         }
+        squadResponse.setPlaying11(squad.getPlaying11());
         return squadResponse;
     }
 
@@ -58,6 +60,7 @@ public class SquadMapper {
         squad.setTeam(team);
         Player player = playerRepository.findById(Long.valueOf(squadDto.getPlayerId().toString())).orElseThrow();
         squad.setPlayer(player);
+        squad.setPlaying11(squadDto.getPlaying11());
         return squad;
     }
 

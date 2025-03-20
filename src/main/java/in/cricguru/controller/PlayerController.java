@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static in.cricguru.shared.CricGuruConstant.BASE_URL;
 
 @AllArgsConstructor
 @RestController

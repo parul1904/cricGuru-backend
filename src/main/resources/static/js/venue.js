@@ -14,6 +14,7 @@ $(document).ready(function() {
         const venueId = $(this).data('venue-id');
         console.log('Venue clicked, ID:', venueId);
         // Redirect to venue details page
-        window.location.href = `/venue/details/${venueId}`;
+        //window.location.href = `/venue/details/${venueId}`;
+        window.location.href = `#`;
     });
 });

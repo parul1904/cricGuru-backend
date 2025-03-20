@@ -182,8 +182,8 @@
 
 .player-leadership-role {
     position: absolute;
-    left: -5px; /* Changed from right to left */
-    top: -5px; /* Changed from bottom to top */
+    left: 3px;
+    top: 3px;
     width: 20px;
     height: 20px;
     border-radius: 50%;

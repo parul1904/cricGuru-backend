@@ -13,4 +13,5 @@ public class SquadResponse {
     private String teamLogo;
     private String playerName;
     private String playerImage;
+    private Boolean playing11;
 }

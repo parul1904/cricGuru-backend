@@ -14,4 +14,5 @@ public class SquadDto {
     private Integer seasonId;
     private Integer teamId;
     private Integer playerId;
+    private Boolean playing11;
 }
