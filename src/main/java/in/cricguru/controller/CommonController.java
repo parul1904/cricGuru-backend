@@ -108,7 +108,8 @@ public class CommonController {
 
     @GetMapping("evict-cache")
     @CacheEvict(value = {"seasons", "teams", "venues", "players", "matches", "allMatches",
-    "allPlayer", "allSeasons", "allSquads", "allTeams", "allStats"}, allEntries = true )
+    "allPlayer", "allSeasons", "allSquads", "allTeams", "allStats", "allMatchesBySeason", "allMatches",
+    "squadDetailsByTeam","playerDetailsById"}, allEntries = true )
     public String evictCache() {
         return "Cache evicted";
     }

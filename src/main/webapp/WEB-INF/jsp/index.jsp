@@ -7,18 +7,18 @@
 <head>
     <%@ include file="/WEB-INF/jsp/includes/meta-tags.jsp" %>
     <title>CricGuru - Your Ultimate IPL 2025 Analysis Platform</title>
-    
+
     <!-- Favicon -->
     <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/images/apple-touch-icon.png">
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LineIcons.2.0.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css" />
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/index.css">
-    
+
     <!-- Structured Data -->
     <%@ include file="/WEB-INF/jsp/includes/structured-data.jsp" %>
 </head>
@@ -33,20 +33,20 @@
             </div>
             <div class="popup-body">
                 <p>Your ultimate destination for IPL 2025 analysis and predictions.</p>
-                
+
                 <div class="next-match-container">
                     <h4>Next Match</h4>
                     <div class="teams-vs">
                         <div class="team">
-                            <img src="${pageContext.request.contextPath}${nextMatch.team1}" 
-                                 alt="${nextMatch.team1Name}" 
+                            <img src="${pageContext.request.contextPath}${nextMatch.team1}"
+                                 alt="${nextMatch.team1Name}"
                                  class="team-logo">
                             <span class="team-name">${nextMatch.team1Name}</span>
                         </div>
                         <div class="vs-badge"><img src="${pageContext.request.contextPath}/images/vs.png" width="75px" height="75px" alt="VS Badge"/></div>
                         <div class="team">
-                            <img src="${pageContext.request.contextPath}${nextMatch.team2}" 
-                                 alt="${nextMatch.team2Name}" 
+                            <img src="${pageContext.request.contextPath}${nextMatch.team2}"
+                                 alt="${nextMatch.team2Name}"
                                  class="team-logo">
                             <span class="team-name">${nextMatch.team2Name}</span>
                         </div>
@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="popup-timer">
-                    <span id="popupTimer">10</span>
+                    <span id="popupTimer"></span>
                 </div>
                 <button class="btn btn-primary mt-3" id="startExploringBtn">Explore Dream Team</button>
             </div>
@@ -218,14 +218,14 @@
                                 <div class="col-md-6 form-group">
                                     <div class="input-wrapper">
                                         <i class="fas fa-user input-icon"></i>
-                                        <input type="text" class="form-control custom-input" id="name" name="name" 
+                                        <input type="text" class="form-control custom-input" id="name" name="name"
                                                placeholder="Your Name" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6 form-group">
                                     <div class="input-wrapper">
                                         <i class="fas fa-envelope input-icon"></i>
-                                        <input type="email" class="form-control custom-input" id="email" name="email" 
+                                        <input type="email" class="form-control custom-input" id="email" name="email"
                                                placeholder="Your Email" required>
                                     </div>
                                 </div>
@@ -233,14 +233,14 @@
                             <div class="form-group">
                                 <div class="input-wrapper">
                                     <i class="fas fa-heading input-icon"></i>
-                                    <input type="text" class="form-control custom-input" id="subject" name="subject" 
+                                    <input type="text" class="form-control custom-input" id="subject" name="subject"
                                            placeholder="Subject" required>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="input-wrapper">
                                     <i class="fas fa-comment-alt input-icon"></i>
-                                    <textarea class="form-control custom-input" id="message" name="message" rows="5" 
+                                    <textarea class="form-control custom-input" id="message" name="message" rows="5"
                                               placeholder="Your Message" required></textarea>
                                 </div>
                             </div>

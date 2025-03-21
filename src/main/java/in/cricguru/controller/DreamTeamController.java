@@ -77,6 +77,7 @@ public class DreamTeamController {
             my11CirceTeamJson = objectMapper.writeValueAsString(my11CircleTeam);
             performanceData = statsService.getPlayerPerformanceStats(matchNo);
             performanceDataJson = objectMapper.writeValueAsString(performanceData);
+            modelAndView.addObject("oldDreamTeamJson", oldDreamTeamJson);
             modelAndView.addObject("seasonYear", "2024");
         } else {
             oldDreamTeam = statsService.getOldDreamTeamByMatchNo(2, team1Id, team2Id, 1);
@@ -93,8 +94,9 @@ public class DreamTeamController {
             performanceData = statsService.getPlayerPerformanceData(2, team1Id, team2Id, 5);
             performanceDataJson = objectMapper.writeValueAsString(performanceData);
             modelAndView.addObject("seasonYear", "2025");
+            modelAndView.addObject("oldDreamTeamJson", newDreamTeamJson);
         }
-        modelAndView.addObject("oldDreamTeamJson", oldDreamTeamJson);
+
         modelAndView.addObject("newDreamTeamJson", newDreamTeamJson);
         modelAndView.addObject("my11CirceTeamJson", my11CirceTeamJson);
         modelAndView.addObject("dreamAvgTeamJson", dreamAvgTeamJson);

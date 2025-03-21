@@ -91,5 +91,16 @@
     </div>
 
     <jsp:include page="/WEB-INF/jsp/includes/footer.jsp" />
+    <script src="${pageContext.request.contextPath}/js/all.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/count-up.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/wow.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/tiny-slider.js"></script>
+    <script src="${pageContext.request.contextPath}/js/glightbox.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/imagesloaded.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/isotope.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
 </body>
 </html>

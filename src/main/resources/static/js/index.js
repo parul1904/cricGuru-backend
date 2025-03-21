@@ -35,8 +35,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeButton = document.getElementById('closeWelcomePopup');
     const startExploringBtn = document.getElementById('startExploringBtn');
     const timerDisplay = document.getElementById('popupTimer');
-    let timeLeft = 30;
+    let timeLeft = 15;
     let timerId = null;
+
+    // Create clock timer structure
+    const clockTimer = document.createElement('div');
+    clockTimer.className = 'clock-timer';
+
+    // Replace original timer display with clock
+    timerDisplay.parentNode.replaceChild(clockTimer, timerDisplay);
 
     function showPopup() {
         welcomePopup.style.display = 'block';
@@ -51,14 +58,22 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function startTimer() {
+        timeLeft = 15; // Reset timer
+        updateTimerDisplay();
+        
         timerId = setInterval(() => {
             timeLeft--;
-            timerDisplay.textContent = timeLeft;
+            updateTimerDisplay();
 
             if (timeLeft <= 0) {
                 closePopup();
             }
         }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        //timerText.textContent = timeLeft;
+        //clockTimer.style.setProperty('--rotation', `${(timeLeft / 15) * 360}deg`);
     }
 
     // Show popup when page loads
@@ -70,8 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close popup when Start Exploring button is clicked
     startExploringBtn.addEventListener('click', function() {
         closePopup();
-        // Get the latest match number from the page
-        const matchId = document.getElementById('latestMatchId')?.value || '1'; // Default to match 1 if not found
+        const matchId = document.getElementById('latestMatchId')?.value || '1';
         window.location.href = `/dreamTeam/${matchId}`;
     });
 

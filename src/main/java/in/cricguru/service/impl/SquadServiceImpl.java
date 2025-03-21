@@ -43,6 +43,7 @@ public class SquadServiceImpl implements SquadService {
         return squadMapper.mapToSquadDto(savedSquad);
     }
 
+    @Cacheable(cacheNames="allSquads", key = "#squadId")
     @Override
     public SquadDto getSquadById(Long squadId) {
         Squad squad = squadRepository.findById(squadId)

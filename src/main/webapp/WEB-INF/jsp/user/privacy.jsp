@@ -88,3 +88,40 @@
                 <li>Correct inaccurate data</li>
                 <li>Request deletion of your data</li>
                 <li>Opt-out
+                    of marketing communications</li>
+            </ul>
+
+            <h2>6. Children's Privacy</h2>
+            <p>Our services are not intended for children under 13. We do not knowingly collect personal information from children.</p>
+
+            <h2>7. Changes to Privacy Notice</h2>
+
+            <p>We may update this Privacy Notice from time to time. We will notify you of any changes by updating the date at the top of this page.</p>
+
+            <h2>8. Contact Us</h2>
+
+            <p>If you have any questions or concerns about our Privacy Notice, please contact us at:</p>
+
+            <ul>
+
+                <li>Email: help.cricguru@gmail.com</li>
+                <li>Instagram: @cricguru.in</li>
+            </ul>
+        </div>
+    </div>
+
+    <jsp:include page="/WEB-INF/jsp/includes/footer.jsp" />
+
+    <script src="${pageContext.request.contextPath}/js/all.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/count-up.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/wow.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/tiny-slider.js"></script>
+    <script src="${pageContext.request.contextPath}/js/glightbox.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/imagesloaded.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/isotope.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/main.js"></script>
+    <script src="${pageContext.request.contextPath}/js/jquery.min.js"></script>
+    <script src="${pageContext.request.contextPath}/js/bootstrap.min.js"></script>
+</body>
+</html>

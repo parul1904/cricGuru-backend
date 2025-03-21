@@ -36,6 +36,7 @@ public class PlayerServiceImpl implements PlayerService {
         return PlayerMapper.mapToPlayerDto(savedPlayer);
     }
 
+    @Cacheable(cacheNames="playerDetailsById", key = "#playerId")
     @Override
     public PlayerDto getPlayerById(Long playerId) {
         Player player = playerRepository.findById(playerId)

@@ -147,12 +147,58 @@
     transform: translateY(-5px);
 }
 
+/* Team 1 specific styles */
+.team1-player-card .player-name-container {
+    background: #000000;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 5px;
+}
+
+.team1-player-card .player-name,
+.team1-player-card .player-points {
+    color: #ffffff;
+}
+
+/* Team 2 specific styles */
+.team2-player-card .player-name-container {
+    background: #ffffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    margin-top: 5px;
+    border: 1px solid #000000;
+}
+
+.team2-player-card .player-name,
+.team2-player-card .player-points {
+    color: #000000;
+}
+
+/* Common styles for name container */
+.player-name-container {
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.player-name {
+    font-size: 0.7rem;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.player-points {
+    font-size: 0.8em;
+}
+
+/* Maintain existing image container styles */
 .player-image-container {
     position: relative;
     width: 125px;
     height: 125px;
     margin: 0 auto;
     border-radius: 50%;
+    background: transparent;
 }
 
 .player-image-container-img {
@@ -166,15 +212,19 @@
 }
 
 .player-image-container-captain {
-    border: 2px solid gold; /* Changed from square border to circular */
-    box-shadow: 0 0 5px gold; /* Added subtle glow effect */
+    border: 2px solid gold;
+    box-shadow: 0 0 5px gold;
+}
+
+/* Captain/Vice-captain styles */
+.player-name-captain {
+    font-weight: bold;
 }
 
 .player-image-container-img img {
     width: 80px; /* Reduced from 125px */
     height: 80px; /* Reduced from 100px */
     min-width: 80px; /* Reduced from 125px */
-    min-height: 80px; /* Reduced from 100px */
     object-fit: cover;
     object-position: center top; /* Focus on the top part where faces usually are */
     transform: scale(1.1); /* Slightly scale up to avoid white edges */
@@ -219,7 +269,7 @@
 }
 
 .player-name {
-    font-size: 0.8em;
+    font-size: 0.6rem;
     line-height: 1.1;
     display: inline;
     color: #000;
@@ -1021,13 +1071,13 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .player-name {
-        font-size: 1.0em;
+        font-size: 0.8em;
     }
 }
 
 @media (max-width: 480px) {
     .player-name {
-        font-size: 0.9em;
+        font-size: 0.7em;
     }
 }
 

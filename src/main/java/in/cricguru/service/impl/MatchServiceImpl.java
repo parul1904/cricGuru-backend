@@ -8,6 +8,7 @@ import in.cricguru.mapper.MatchMapper;
 import in.cricguru.repository.MatchRepository;
 import in.cricguru.service.MatchService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -40,6 +41,7 @@ public class MatchServiceImpl implements MatchService {
         return matchMapper.mapToMatchDto(match);
     }
 
+    @Cacheable(cacheNames="allMatches")
     @Override
     public List<MatchResponse> getAllMatches() {
         List<Object[]> result = matchRepository.getAllMatchDetails().stream()
@@ -48,6 +50,7 @@ public class MatchServiceImpl implements MatchService {
         return matchDto;
     }
 
+    @Cacheable(cacheNames="allMatchesBySeason", key = "#seasonId")
     @Override
     public List<MatchResponse> getAllMatchDetailsBySeasonId(Integer seasonId) {
         List<Object[]> result = matchRepository.getAllMatchDetailsBySeason(seasonId).stream()

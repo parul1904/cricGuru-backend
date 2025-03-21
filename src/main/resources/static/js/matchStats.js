@@ -69,7 +69,7 @@ function initializeView(seasonYear, dreamTeamData) {
         if (totalPointsContainer) totalPointsContainer.style.display = "none";
         if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
         if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "block";
-        displayDreamTeam(dreamTeamData.new, seasonYear);
+        displayDreamTeam(dreamTeamData.dream11Avg, seasonYear);
     } else {
         if (dreamTeamDropdown) dreamTeamDropdown.style.display = "block";
         if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "none";
@@ -200,7 +200,9 @@ function createPlayerCard(player, season, captain, viceCaptain) {
     const points = calculatePlayerPoints(player, isCaptain, isViceCaptain);
 
     const card = document.createElement("div");
-    card.className = "player-card";
+    // Add team-specific class to the main card
+    card.className = `player-card ${player.team1 ? 'team1-player-card' : 'team2-player-card'}`;
+    
     card.innerHTML = `
         <div class="player-image-container ${isCaptain || isViceCaptain ? "player-image-container-captain" : ""}">
             <div class="player-image-container-img">
@@ -209,7 +211,7 @@ function createPlayerCard(player, season, captain, viceCaptain) {
             ${isCaptain ? '<p class="player-leadership-role player-leadership-role-captain">C</p>' : ''}
             ${isViceCaptain ? '<p class="player-leadership-role player-leadership-role-vice-captain">VC</p>' : ''}
         </div>
-        <div class="player-info">
+        <div class="player-name-container">
             <div class="player-name ${isCaptain || isViceCaptain ? "player-name-captain" : ""}">${player.playerNickName}</div>
             ${season !== "2025" ? `<div class="player-points">${points.toFixed(1)}</div>` : ''}
         </div>
@@ -409,6 +411,7 @@ function createRoleSection(role, players) {
   const playerGrid = document.createElement('div');
   playerGrid.className = 'player-grid';
 
+
   players.forEach(player => {
     const card = createPlayerStatsCard(player);
     playerGrid.appendChild(card);
@@ -549,7 +552,7 @@ function showPlayerDetailModal(player) {
                   <span class="stat-value">${(player.averagePoints || 0).toFixed(1)}</span>
               </div>
               <div class="stat-box">
-                  <span class="stat-label">Highest Points</span>
+                  <span class="stat-label">Max Points</span>
                   <span class="stat-value">${player.highestPoints || 0}</span>
               </div>
               <div class="stat-box">
@@ -1098,7 +1101,7 @@ function createPlayerStatsCard(player) {
                     <div class="player-style">
                         <span>Last 3 Avg: <strong style="color: ${isHotPlayer ? 'red' : 'black'};">${player.last3MatchesAvg.toFixed(1)}</strong></span>
                     </div>
-                    <div class="player-style">Highest: ${highestPoints}</div>
+                    <div class="player-style">Max Points: ${highestPoints}</div>
                 </div>
             </div>
             <div class="last-matches-section">

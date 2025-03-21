@@ -7,13 +7,34 @@
 %>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-   <link rel="stylesheet" href="${pageContext.request.contextPath}/css/squad.css" />
+<!-- Basic -->
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!-- Mobile Metas -->
+<meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<!-- Site Metas -->
+<title>CricGuru - Squads</title>
+<meta name="keywords" content="IPL Squad, IPL 2025, IPL 2025 teams, CSK, MI, KKR, GT, RR, RCB, SRH, LSG, PBKS, DC">
+<meta name="description" content="Explore detailed information about each player playing in IPL 2025 including his past year performance">
+<meta name="author" content="Parul Gangwal">
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico"
+          type="image/x-icon" />
+    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/images/apple-touch-icon.png">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LineIcons.2.0.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/tiny-slider.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/glightbox.min.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/reset.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/responsive.css" />
+
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/squad.css" />
    <!-- font family -->
    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
    <!-- end font family -->
-   <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
-   <link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+   <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+   <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
 </head>
 <body class="game_info" data-spy="scroll" data-target=".header">
 <!-- ========================= header start ========================= -->
