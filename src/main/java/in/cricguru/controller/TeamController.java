@@ -1,7 +1,10 @@
 package in.cricguru.controller;
 
 import in.cricguru.dto.PlayerDto;
+import in.cricguru.dto.PlayerRoleUpdate;
+import in.cricguru.dto.PlayerSquadDTO;
 import in.cricguru.dto.TeamDto;
+import in.cricguru.entity.Player;
 import in.cricguru.response.StatsPerPlayerResponse;
 import in.cricguru.service.StatsService;
 import in.cricguru.service.TeamService;
@@ -72,5 +75,21 @@ public class TeamController {
     public ResponseEntity<String> deleteTeam(@PathVariable("id") Long teamId){
         teamService.deleteTeam(teamId);
         return ResponseEntity.ok("Team deleted successfully!");
+    }
+
+    @GetMapping("/{teamId}/players")
+    public List<PlayerSquadDTO> getTeamPlayers(@PathVariable Long teamId) {
+        return teamService.getTeamPlayers(teamId);
+    }
+
+    @PostMapping("/update-roles")
+    public ResponseEntity<Map<String, Object>> updatePlayerRoles(@RequestBody List<PlayerRoleUpdate> updates) {
+        try {
+            teamService.updatePlayerRoles(updates);
+            return ResponseEntity.ok(Map.of("success", true));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "error", e.getMessage()));
+        }
     }
 }

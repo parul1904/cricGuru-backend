@@ -100,7 +100,8 @@ public class MatchServiceImpl implements MatchService {
     @Override
     public MatchResponse nextMatch() {
         LocalDate now = LocalDate.now();
-        Match nextMatchDetails = matchRepository.nextMatch(now);
+        //Match nextMatchDetails = matchRepository.nextMatch(now);
+        Match nextMatchDetails = matchRepository.nextMatch();
         return matchMapper.mapToMatchResponse(nextMatchDetails);
     }
 }

@@ -63,7 +63,7 @@
                 <option value="dream11Avg">Dream11 Based on Last 3 Match</option>
                 <option value="new">Dream11 Based on Last Match</option>
                 <option value="my11">My11 Circle Based on Last Match</option>
-                <option value="my11Avg">My11 Circle Based on Last 3 Match</option>
+                <option value="dream11Last5Avg">Dream11 Based on Last 5 Match</option>
             </select>
         </div>
     </div>
@@ -122,6 +122,29 @@
                 </div>
             </div>
         </div>
+
+        <!-- Player Selection Sections -->
+        <div id="playersSelection" class="players-selection-sections">
+            <h3 class="section-heading">Other Option for ::</h3>
+
+            <!-- Captain Section -->
+            <div class="selection-section">
+                <h3 class="section-heading">Captain</h3>
+                <div id="captainContainer" class="selection-grid"></div>
+            </div>
+
+            <!-- Vice Captain Section -->
+            <div class="selection-section">
+                <h3 class="section-heading">Vice Captain</h3>
+                <div id="viceCaptainContainer" class="selection-grid"></div>
+            </div>
+
+            <!-- Playing 15 Section -->
+            <div class="selection-section">
+                <h3 class="section-heading">Playing 15</h3>
+                <div id="playing15Container" class="selection-grid"></div>
+            </div>
+        </div>
     </div>
 
     <div id="playerStatsSection" class="player-stats-section" style="display: none;">
@@ -162,6 +185,8 @@
     const my11CirceTeamJson = '${my11CirceTeamJson}';
     const dreamAvgTeamJson = '${dreamAvgTeamJson}';
     const my11CircleAvgTeamJson = '${my11CircleAvgTeamJson}';
+    const playerSelectionResponsesJson = '${playerSelectionResponsesJson}';
+
     // Add match details
     const matchDetails = {
         matchNo: "${match.matchNo}"

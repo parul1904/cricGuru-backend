@@ -54,11 +54,16 @@ public interface MatchRepository extends JpaRepository<Match, Long> {
             "ORDER BY m.matchDate ASC, m.matchTime ASC")
     List<Match> findUpcomingMatches(@Param("now") LocalDate now, Pageable pageable);
 
-    @Query(value = """
+    /*@Query(value = """
             SELECT m.* FROM matches m WHERE STR_TO_DATE(CONCAT(m.match_date, ' ', SUBSTRING_INDEX(m.match_time, ' ', 2)), '%Y-%m-%d %h:%i %p')\s
             >= CONVERT_TZ(:now, @@session.time_zone, '+05:30')
             ORDER BY m.match_date ASC, STR_TO_DATE(SUBSTRING_INDEX(m.match_time, ' ', 2), '%h:%i %p') ASC LIMIT 1
             """, nativeQuery = true)
-    Match nextMatch(@Param("now") LocalDate now);
+    Match nextMatch(@Param("now") LocalDate now);*/
+
+    @Query(value = """
+            SELECT * FROM cricguru_db.matches WHERE season_id=2 AND match_no >=3 ORDER BY match_no ASC LIMIT 1
+            """, nativeQuery = true)
+    Match nextMatch();
 
 }

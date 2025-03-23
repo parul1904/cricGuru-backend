@@ -106,6 +106,12 @@ public class CommonController {
         return modelAndView;
     }
 
+    @GetMapping("/updatePlaying11")
+    public ModelAndView updatePlaying11() {
+        ModelAndView modelAndView = new ModelAndView("admin/manageTeamRoles");
+        return modelAndView;
+    }
+
     @GetMapping("evict-cache")
     @CacheEvict(value = {"seasons", "teams", "venues", "players", "matches", "allMatches",
     "allPlayer", "allSeasons", "allSquads", "allTeams", "allStats", "allMatchesBySeason", "allMatches",

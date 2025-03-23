@@ -152,7 +152,7 @@ public class StatsServiceImpl implements StatsService {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
                         Long.valueOf(statsBy)).stream()
                 .collect(Collectors.toUnmodifiableList());
-        return statsMapper.mapToMy11CircleAverageDreamTeamResponse(performanceData);
+        return statsMapper.mapToDream11AverageDreamTeamLast5MatchesResponse(performanceData);
     }
 
 }

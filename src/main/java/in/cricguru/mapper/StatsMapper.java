@@ -274,10 +274,11 @@ public class StatsMapper {
                 response.setMy11Points(row[8] != null ? ((Number) row[8]).intValue() : null);
                 response.setAverageMy11Points(row[9] != null ? ((Number) row[9]).doubleValue() : null);
                 response.setHighestPoints(row[10] != null ? ((Number) row[10]).intValue() : 0);
+                response.setAverageDream11Last5MatchPoints(row[13] != null ? ((Number) row[13]).doubleValue() : null);
                 if (null != seasonId && seasonId == 2) {
                     response.setLowestPoints(row[11] != null ? ((Number) row[11]).intValue() : 0);
                     response.setLastMatchNo(row[12] != null ? ((Number) row[12]).intValue() : 0);
-                    String matchDetailsJson = (String) row[13];
+                    String matchDetailsJson = (String) row[17];
                     if (matchDetailsJson != null) {
                         List<PlayerPerformanceResponse.MatchPerformance> matchPerformances = objectMapper.readValue(
                                 matchDetailsJson,
@@ -614,6 +615,62 @@ public class StatsMapper {
                 ));
     }
 
+    public List<DreamTeamResponse> mapToDream11AverageDreamTeamLast5MatchesResponse(List<Object[]> performanceData) {
+        List<DreamTeamResponse> allPlayers = new ArrayList<>();
+        dreamTeamForSeason2(performanceData, allPlayers);
+
+        Map<String, List<DreamTeamResponse>> playersByRole = allPlayers.stream()
+                .collect(Collectors.groupingBy(DreamTeamResponse::getPlayerRole));
+
+        List<DreamTeamResponse> selectedPlayers = new ArrayList<>();
+
+        // Select best player from each required role first
+        for (String role : Arrays.asList("Wicket Keeper", "Batter", "All Rounder", "Bowler")) {
+            List<DreamTeamResponse> rolePlayers = playersByRole.getOrDefault(role, new ArrayList<>());
+            if (!rolePlayers.isEmpty()) {
+                DreamTeamResponse bestPlayer = rolePlayers.stream()
+                        .max((p1, p2) -> {
+                            Double points1 = p1.getAverageDream11Last5MatchPoints() != null ? p1.getAverageDream11Last5MatchPoints() : 0;
+                            Double points2 = p2.getAverageDream11Last5MatchPoints() != null ? p2.getAverageDream11Last5MatchPoints() : 0;
+                            return points1.compareTo(points2);
+                        })
+                        .get();
+                selectedPlayers.add(bestPlayer);
+            }
+        }
+
+        // Add remaining players based on points while respecting role limits
+        List<DreamTeamResponse> remainingPlayers = allPlayers.stream()
+                .filter(p -> !selectedPlayers.contains(p))
+                .sorted((p1, p2) -> {
+                    Double points1 = p1.getAverageDream11Last5MatchPoints() != null ? p1.getAverageDream11Last5MatchPoints() : 0;
+                    Double points2 = p2.getAverageDream11Last5MatchPoints() != null ? p2.getAverageDream11Last5MatchPoints() : 0;
+                    return points2.compareTo(points1);
+                })
+                .collect(Collectors.toList());
+
+        for (DreamTeamResponse player : remainingPlayers) {
+            if (selectedPlayers.size() >= 11) break;
+
+            String role = player.getPlayerRole();
+            long roleCount = selectedPlayers.stream()
+                    .filter(p -> p.getPlayerRole().equals(role))
+                    .count();
+
+            if (roleCount < 8) {
+                selectedPlayers.add(player);
+            }
+        }
+
+        return selectedPlayers.stream()
+                .sorted((p1, p2) -> {
+                    Double points1 = p1.getAverageDream11Last5MatchPoints() != null ? p1.getAverageDream11Last5MatchPoints() : 0;
+                    Double points2 = p2.getAverageDream11Last5MatchPoints() != null ? p2.getAverageDream11Last5MatchPoints() : 0;
+                    return points2.compareTo(points1);
+                })
+                .collect(Collectors.toList());
+    }
+
     private static void dreamTeamForSeason2(List<Object[]> performanceData, List<DreamTeamResponse> allPlayers) {
         for (Object[] row : performanceData) {
             DreamTeamResponse response = new DreamTeamResponse();
@@ -625,8 +682,12 @@ public class StatsMapper {
             response.setAverageDream11Points(row[7] != null ? ((Number) row[7]).doubleValue() : null);
             response.setMy11CirclePoints(row[8] != null ? ((Number) row[8]).intValue() : null);
             response.setAverageMy11Points(row[9] != null ? ((Number) row[9]).doubleValue() : null);
-            if (row[12] != null) {
-                String matchDetailsJson = (String) row[13];
+            response.setAverageDream11Last5MatchPoints(row[13] != null ? ((Number) row[13]).doubleValue() : null);
+            response.setIsCaptain(row[14] != null ? ((Number) row[14]).intValue() == 1 : null);
+            response.setIsViceCaptain(row[15] != null ? ((Number) row[15]).intValue() == 1 : null);
+            response.setPlaying15(row[16] != null ? ((Number) row[16]).intValue() == 1 : null);
+            if (row[17] != null) {
+                String matchDetailsJson = (String) row[17];
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.registerModule(new JavaTimeModule());
                 try {

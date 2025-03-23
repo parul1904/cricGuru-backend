@@ -21,6 +21,7 @@ public class PlayerPerformanceResponse {
     private Integer my11Points;
     private Double averageDream11Points;
     private Double averageMy11Points;
+    private Double averageDream11Last5MatchPoints;
     private Integer highestPoints;
     private Integer lowestPoints;
     private Integer lastMatchPoints;

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import in.cricguru.dto.MatchDto;
 import in.cricguru.response.DreamTeamResponse;
 import in.cricguru.response.PlayerPerformanceResponse;
+import in.cricguru.response.PlayerSelectionResponse;
 import in.cricguru.response.StatsPerMatchResponse;
 import in.cricguru.service.DreamTeamService;
 import in.cricguru.service.MatchService;
@@ -62,10 +63,13 @@ public class DreamTeamController {
 
         List<DreamTeamResponse> dreamAvgTeam = new ArrayList<>();
         String dreamAvgTeamJson = "";
-        List<DreamTeamResponse> my11CircleAvgTeam = new ArrayList<>();
-        String my11CircleAvgTeamJson = "";
+        List<DreamTeamResponse> dreamLast5AvgTeam = new ArrayList<>();
+        String dreamLast5AvgTeamJson = "";
 
-                MatchDto matchDetails = matchService.getMatchById(matchNo);
+        List<PlayerSelectionResponse> playerSelectionResponses = new ArrayList<>();
+        String playerSelectionResponsesJson = "";
+
+        MatchDto matchDetails = matchService.getMatchById(matchNo);
         Integer team1Id = matchDetails.getTeam1Id();
         Integer team2Id = matchDetails.getTeam2Id();
         if (matchNo <= 74) {
@@ -89,10 +93,13 @@ public class DreamTeamController {
 
             dreamAvgTeam = statsService.getDream11AverageDreamTeamResponse(2, team1Id, team2Id, 1);
             dreamAvgTeamJson = objectMapper.writeValueAsString(dreamAvgTeam);
-            my11CircleAvgTeam = statsService.getMy11CircleAverageDreamTeamResponse(2, team1Id, team2Id, 1);
-            my11CircleAvgTeamJson = objectMapper.writeValueAsString(my11CircleAvgTeam);
+            dreamLast5AvgTeam = statsService.getMy11CircleAverageDreamTeamResponse(2, team1Id, team2Id, 1);
+            dreamLast5AvgTeamJson = objectMapper.writeValueAsString(dreamLast5AvgTeam);
             performanceData = statsService.getPlayerPerformanceData(2, team1Id, team2Id, 5);
             performanceDataJson = objectMapper.writeValueAsString(performanceData);
+
+            playerSelectionResponses = dreamTeamService.getPlayerSelectionResponses(team1Id, team2Id);
+            playerSelectionResponsesJson = objectMapper.writeValueAsString(playerSelectionResponses);
             modelAndView.addObject("seasonYear", "2025");
             modelAndView.addObject("oldDreamTeamJson", newDreamTeamJson);
         }
@@ -100,8 +107,8 @@ public class DreamTeamController {
         modelAndView.addObject("newDreamTeamJson", newDreamTeamJson);
         modelAndView.addObject("my11CirceTeamJson", my11CirceTeamJson);
         modelAndView.addObject("dreamAvgTeamJson", dreamAvgTeamJson);
-        modelAndView.addObject("my11CircleAvgTeamJson", my11CircleAvgTeamJson);
         modelAndView.addObject("matchDetails", matchDetails);
+        modelAndView.addObject("playerSelectionResponsesJson", playerSelectionResponsesJson);
         modelAndView.addObject("performanceDataJson", performanceDataJson);
         return modelAndView;
     }

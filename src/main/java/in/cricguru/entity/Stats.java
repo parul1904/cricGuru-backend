@@ -88,4 +88,4 @@ public class Stats {
     @Column(name = "total_point_my11_circle_system")
     private Integer totalPointMy11CircleSystem;
 
-} 
+}

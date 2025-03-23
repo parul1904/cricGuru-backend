@@ -27,11 +27,22 @@ public class Squad {
     @JoinColumn(name = "team_id", referencedColumnName = "team_id")
     private Team team;
 
-    @ManyToOne
-    @JoinColumn(name = "player_id", referencedColumnName = "player_id")
+    @Column(name = "player_id")
+    private Long playerId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "player_id", insertable = false, updatable = false)
     private Player player;
 
     @Column(name = "playing_11")
     private Boolean playing11;
 
+    @Column(name = "is_captain")
+    private Boolean isCaptain;
+
+    @Column(name = "is_vice_captain")
+    private Boolean isViceCaptain;
+
+    @Column(name = "playing_15")
+    private Boolean playing15;
 }

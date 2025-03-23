@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const seasonYear = document.getElementById('seasonYear').value;
     const dreamTeamData = {
         old: JSON.parse(oldDreamTeamJson || '[]'),
@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Point system selection handler for 2024
     const pointSystemSelect = document.getElementById('pointSystemSelect');
     if (pointSystemSelect) {
-        pointSystemSelect.addEventListener('change', function() {
+        pointSystemSelect.addEventListener('change', function () {
             const selectedSystem = this.value;
             displayDreamTeam(dreamTeamData[selectedSystem], seasonYear);
         });
@@ -24,12 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const pointSystem2025Select = document.getElementById('pointSystem2025Select');
     if (pointSystem2025Select) {
         // Add visual feedback when dropdown is opened
-        pointSystem2025Select.addEventListener('focus', function() {
+        pointSystem2025Select.addEventListener('focus', function () {
             this.style.borderColor = '#0056b3';
         });
 
         // Handle selection change
-        pointSystem2025Select.addEventListener('change', function() {
+        pointSystem2025Select.addEventListener('change', function () {
             // Add visual feedback
             this.style.transform = 'scale(0.98)';
             setTimeout(() => {
@@ -38,8 +38,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             const selectedSystem = this.value;
             let teamData;
-            
-            switch(selectedSystem) {
+
+            switch (selectedSystem) {
                 case 'new':
                     teamData = JSON.parse(newDreamTeamJson || '[]');
                     break;
@@ -79,7 +79,7 @@ function initializeView(seasonYear, dreamTeamData) {
     // Event listeners for view toggle
     if (dreamTeamBtn) {
         ['click', 'touchend'].forEach(eventType => {
-            dreamTeamBtn.addEventListener(eventType, function(e) {
+            dreamTeamBtn.addEventListener(eventType, function (e) {
                 e.preventDefault();
                 toggleView("dream-team", dreamTeamData, seasonYear);
             });
@@ -88,7 +88,7 @@ function initializeView(seasonYear, dreamTeamData) {
 
     if (playerStatsBtn) {
         ['click', 'touchend'].forEach(eventType => {
-            playerStatsBtn.addEventListener(eventType, function(e) {
+            playerStatsBtn.addEventListener(eventType, function (e) {
                 e.preventDefault();
                 toggleView("player-stats", dreamTeamData, seasonYear);
             });
@@ -124,7 +124,7 @@ function toggleView(view, dreamTeamData, seasonYear) {
         playerStatsBtn.classList.remove("active");
         if (dropdownContainer) dropdownContainer.style.display = "block";
         if (roleTabs) roleTabs.style.marginTop = "";
-        
+
         // Show appropriate dropdown based on season year
         if (seasonYear === "2025") {
             if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
@@ -159,7 +159,7 @@ function displayDreamTeam(players, seasonYear) {
 
     let pointSystem = null;
     // Find captain and vice-captain based on points
-    if(seasonYear==2024){
+    if (seasonYear == 2024) {
         pointSystem = document.getElementById("pointSystemSelect").value;
     } else {
         pointSystem = document.getElementById("pointSystem2025Select").value;
@@ -202,7 +202,7 @@ function createPlayerCard(player, season, captain, viceCaptain) {
     const card = document.createElement("div");
     // Add team-specific class to the main card
     card.className = `player-card ${player.team1 ? 'team1-player-card' : 'team2-player-card'}`;
-    
+
     card.innerHTML = `
         <div class="player-image-container ${isCaptain || isViceCaptain ? "player-image-container-captain" : ""}">
             <div class="player-image-container-img">
@@ -246,65 +246,65 @@ function findViceCaptain(players, captain, pointSystem) {
 }
 
 function getPointsBySystem(player, pointSystem) {
-  switch (pointSystem) {
-    case "old":
-      return player.dream11OldPoints || 0;
-    case "new":
-      return player.dream11NewPoints || 0;
-    case "my11":
-      return player.my11CirclePoints || 0;
-    case "dream11Avg":
-          return player.averageDream11Points || 0;
-    case "my11Avg":
-          return player.averageMy11Points || 0;
-    default:
-      return player.dream11NewPoints || 0;
-  }
+    switch (pointSystem) {
+        case "old":
+            return player.dream11OldPoints || 0;
+        case "new":
+            return player.dream11NewPoints || 0;
+        case "my11":
+            return player.my11CirclePoints || 0;
+        case "dream11Avg":
+            return player.averageDream11Points || 0;
+        case "my11Avg":
+            return player.averageMy11Points || 0;
+        default:
+            return player.dream11NewPoints || 0;
+    }
 }
 
 function calculatePlayerPoints(player, isCaptain, isViceCaptain) {
-  const pointSystem = document.getElementById("pointSystemSelect").value;
-  const basePoints = getPointsBySystem(player, pointSystem);
+    const pointSystem = document.getElementById("pointSystemSelect").value;
+    const basePoints = getPointsBySystem(player, pointSystem);
 
-  if (isCaptain) return 2 * basePoints;
-  if (isViceCaptain) return 1.5 * basePoints;
-  return basePoints;
+    if (isCaptain) return 2 * basePoints;
+    if (isViceCaptain) return 1.5 * basePoints;
+    return basePoints;
 }
 
 function calculateTotalPoints(players, captain, viceCaptain, pointSystem) {
-  if (!Array.isArray(players)) {
-    return 0;
-  }
-  return players.reduce((sum, player) => {
-    const basePoints = getPointsBySystem(player, pointSystem);
-    if (typeof basePoints !== "number") {
-      return sum;
+    if (!Array.isArray(players)) {
+        return 0;
     }
-    if (captain && player.playerId === captain.playerId) {
-      return sum + (2 * basePoints);
-    }
-    if (viceCaptain && player.playerId === viceCaptain.playerId) {
-      return sum + (1.5 * basePoints);
-    }
-    return sum + basePoints;
-  }, 0);
+    return players.reduce((sum, player) => {
+        const basePoints = getPointsBySystem(player, pointSystem);
+        if (typeof basePoints !== "number") {
+            return sum;
+        }
+        if (captain && player.playerId === captain.playerId) {
+            return sum + (2 * basePoints);
+        }
+        if (viceCaptain && player.playerId === viceCaptain.playerId) {
+            return sum + (1.5 * basePoints);
+        }
+        return sum + basePoints;
+    }, 0);
 }
 
 function getSectionIdByRole(role) {
-  const roleMap = {
-    "Wicket Keeper": "wicketKeeperSection",
-    Batter: "battersSection",
-    "All Rounder": "allRoundersSection",
-    Bowler: "bowlersSection",
-  };
-  return roleMap[role] || "battersSection";
+    const roleMap = {
+        "Wicket Keeper": "wicketKeeperSection",
+        Batter: "battersSection",
+        "All Rounder": "allRoundersSection",
+        Bowler: "bowlersSection",
+    };
+    return roleMap[role] || "battersSection";
 }
 
 function showLoading(show) {
-  const spinner = document.getElementById("loadingSpinner");
-  if (spinner) {
-    spinner.style.display = show ? "block" : "none";
-  }
+    const spinner = document.getElementById("loadingSpinner");
+    if (spinner) {
+        spinner.style.display = show ? "block" : "none";
+    }
 }
 
 function showError(message) {
@@ -319,106 +319,106 @@ function showError(message) {
 }
 
 function showNoData() {
-  const noDataMessage = document.getElementById("noDataMessage");
-  const cricketField = document.getElementById("cricketField");
-  const errorElement = document.getElementById("errorMessage");
+    const noDataMessage = document.getElementById("noDataMessage");
+    const cricketField = document.getElementById("cricketField");
+    const errorElement = document.getElementById("errorMessage");
 
-  if (noDataMessage) {
-    noDataMessage.style.display = "block";
-  }
+    if (noDataMessage) {
+        noDataMessage.style.display = "block";
+    }
 
-  if (cricketField) {
-    cricketField.style.display = "none";
-  }
+    if (cricketField) {
+        cricketField.style.display = "none";
+    }
 
-  if (errorElement) {
-    errorElement.style.display = "none";
-  }
+    if (errorElement) {
+        errorElement.style.display = "none";
+    }
 }
 
 function hideMessages() {
-  const errorElement = document.getElementById("errorMessage");
-  const noDataMessage = document.getElementById("noDataMessage");
+    const errorElement = document.getElementById("errorMessage");
+    const noDataMessage = document.getElementById("noDataMessage");
 
-  if (errorElement) {
-    errorElement.style.display = "none";
-  }
+    if (errorElement) {
+        errorElement.style.display = "none";
+    }
 
-  if (noDataMessage) {
-    noDataMessage.style.display = "none";
-  }
+    if (noDataMessage) {
+        noDataMessage.style.display = "none";
+    }
 }
 
 function resetTeamDisplay() {
-  const cricketField = document.getElementById("cricketField");
-  if (cricketField) {
-    cricketField.style.display = "none";
-  }
-  hideMessages();
+    const cricketField = document.getElementById("cricketField");
+    if (cricketField) {
+        cricketField.style.display = "none";
+    }
+    hideMessages();
 }
 
 function handleMatchSelection(matchId) {
-  if (!matchId) {
-    showError("Invalid match ID");
-    return;
-  }
+    if (!matchId) {
+        showError("Invalid match ID");
+        return;
+    }
 
-  showLoading(true);
-  fetch(`/dreamTeam/${matchId}`)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      showLoading(false);
-      if (data && Array.isArray(data)) {
-        displayTeam(data);
-      } else {
-        showError("Invalid data format received");
-      }
-    })
-    .catch((error) => {
-      showLoading(false);
-      showError("Failed to load team data");
-      console.error("Error:", error);
-    });
+    showLoading(true);
+    fetch(`/dreamTeam/${matchId}`)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then((data) => {
+            showLoading(false);
+            if (data && Array.isArray(data)) {
+                displayTeam(data);
+            } else {
+                showError("Invalid data format received");
+            }
+        })
+        .catch((error) => {
+            showLoading(false);
+            showError("Failed to load team data");
+            console.error("Error:", error);
+        });
 }
 
 const matchSelect = document.getElementById("matchSelect");
 if (matchSelect) {
-  matchSelect.addEventListener("change", (e) => {
-    const matchId = e.target.value;
-    if (matchId) {
-      handleMatchSelection(matchId);
-    } else {
-      resetTeamDisplay();
-    }
-  });
+    matchSelect.addEventListener("change", (e) => {
+        const matchId = e.target.value;
+        if (matchId) {
+            handleMatchSelection(matchId);
+        } else {
+            resetTeamDisplay();
+        }
+    });
 }
 
 function createRoleSection(role, players) {
-  console.log(`Creating section for role: ${role}`, players);
-  
-  const section = document.createElement('div');
-  section.className = 'role-section';
-  
-  const header = document.createElement('h3');
-  header.textContent = role;
-  section.appendChild(header);
+    console.log(`Creating section for role: ${role}`, players);
 
-  const playerGrid = document.createElement('div');
-  playerGrid.className = 'player-grid';
+    const section = document.createElement('div');
+    section.className = 'role-section';
+
+    const header = document.createElement('h3');
+    header.textContent = role;
+    section.appendChild(header);
+
+    const playerGrid = document.createElement('div');
+    playerGrid.className = 'player-grid';
 
 
-  players.forEach(player => {
-    const card = createPlayerStatsCard(player);
-    playerGrid.appendChild(card);
-  });
+    players.forEach(player => {
+        const card = createPlayerStatsCard(player);
+        playerGrid.appendChild(card);
+    });
 
-  section.appendChild(playerGrid);
-  return section;
+    section.appendChild(playerGrid);
+    return section;
 }
 
 function createPlayerStatsCard(player) {
@@ -434,14 +434,14 @@ function createPlayerStatsCard(player) {
     const highestPoints = recentMatches.length > 0
         ? Math.max(...recentMatches.map(match => match.points || 0))
         : 0;
-    
+
     const last3MatchesAvg = recentMatches.length > 0
         ? (recentMatches.slice(0, 3).reduce((sum, match) => sum + (match.points || 0), 0) / 3).toFixed(1)
         : 0;
 
     const isHotPlayer = parseFloat(last3MatchesAvg) > parseFloat(topPlayersAvg);
     console.log(`Player: ${player.playerName}, Last 3 Avg: ${last3MatchesAvg}, Top Players Avg: ${topPlayersAvg}, Is Hot: ${isHotPlayer}`);
-    
+
     card.className = `player-stats-card ${isHotPlayer ? 'hot-player' : ''}`;
 
     // Generate match points HTML with DNP for matches not played
@@ -490,28 +490,28 @@ function createPlayerStatsCard(player) {
 }
 
 function showPlayerDetailModal(player) {
-  const modal = document.createElement('div');
-  modal.className = 'player-modal';
+    const modal = document.createElement('div');
+    modal.className = 'player-modal';
 
-  const recentMatches = player.recentMatches || [];
-  const matchesHtml = recentMatches.map(match => {
-      // Format date to be more compact
-      const matchDate = new Date(match.matchDate).toLocaleDateString(undefined, {
-          month: 'numeric',
-          day: 'numeric'
-      });
+    const recentMatches = player.recentMatches || [];
+    const matchesHtml = recentMatches.map(match => {
+        // Format date to be more compact
+        const matchDate = new Date(match.matchDate).toLocaleDateString(undefined, {
+            month: 'numeric',
+            day: 'numeric'
+        });
 
-      // Shorten team names
-      const team1Short = match.team1Name.split(' ').pop();
-      const team2Short = match.team2Name.split(' ').pop();
+        // Shorten team names
+        const team1Short = match.team1Name.split(' ').pop();
+        const team2Short = match.team2Name.split(' ').pop();
 
-      // Format batting score more compactly
-      const battingScore = `${match.runsScored || 0}(${match.ballFaced || 0})`;
+        // Format batting score more compactly
+        const battingScore = `${match.runsScored || 0}(${match.ballFaced || 0})`;
 
-      // Format bowling figures more compactly
-      const bowlingFigures = `${match.wickets || 0}-${match.runsConceded || 0}`;
+        // Format bowling figures more compactly
+        const bowlingFigures = `${match.wickets || 0}-${match.runsConceded || 0}`;
 
-      return `
+        return `
           <tr class="${match.isPartOfDreamTeam ? 'dream-team-match' : ''}">
               <td>${matchDate}</td>
               <td>${team1Short} v ${team2Short}</td>
@@ -521,12 +521,12 @@ function showPlayerDetailModal(player) {
               <td>${match.isPartOfDreamTeam ? '<span class="dream-team-badge">DT</span>' : ''}</td>
           </tr>
       `;
-  }).join('');
+    }).join('');
 
-  const performanceChartId = `performanceChart_${player.playerId}_${Date.now()}`;
-  const pointsDistributionId = `distributionChart_${player.playerId}_${Date.now()}`;
+    const performanceChartId = `performanceChart_${player.playerId}_${Date.now()}`;
+    const pointsDistributionId = `distributionChart_${player.playerId}_${Date.now()}`;
 
-  modal.innerHTML = `
+    modal.innerHTML = `
       <div class="modal-content">
           <button class="close-modal">&times;</button>
           <!-- Player header section -->
@@ -597,96 +597,96 @@ function showPlayerDetailModal(player) {
       </div>
   `;
 
-  document.body.appendChild(modal);
+    document.body.appendChild(modal);
 
-  // Initialize charts
-  initializePerformanceChart(performanceChartId, player);
-  initializeDistributionChart(pointsDistributionId, player);
+    // Initialize charts
+    initializePerformanceChart(performanceChartId, player);
+    initializeDistributionChart(pointsDistributionId, player);
 
-  // Close modal functionality
-  const closeBtn = modal.querySelector('.close-modal');
+    // Close modal functionality
+    const closeBtn = modal.querySelector('.close-modal');
 
-  // Close on button click
-  closeBtn.addEventListener('click', () => {
-    modal.remove();
-  });
+    // Close on button click
+    closeBtn.addEventListener('click', () => {
+        modal.remove();
+    });
 
-  // Close on clicking outside the modal
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.remove();
-    }
-  });
+    // Close on clicking outside the modal
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.remove();
+        }
+    });
 
-  // Close on Escape key press
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      modal.remove();
-    }
-  });
+    // Close on Escape key press
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') {
+            modal.remove();
+        }
+    });
 
-  // Store player data for potential updates
-  modal.playerData = player;
+    // Store player data for potential updates
+    modal.playerData = player;
 }
 
 function initializePerformanceChart(chartId, player) {
-  const ctx = document.getElementById(chartId).getContext('2d');
+    const ctx = document.getElementById(chartId).getContext('2d');
 
-  // Remove any dynamic height/width styling from the canvas
-  ctx.canvas.style.removeProperty('height');
-  ctx.canvas.style.removeProperty('width');
+    // Remove any dynamic height/width styling from the canvas
+    ctx.canvas.style.removeProperty('height');
+    ctx.canvas.style.removeProperty('width');
 
-  const matches = player.recentMatches || [];
-  const isMobile = window.innerWidth <= 768;
+    const matches = player.recentMatches || [];
+    const isMobile = window.innerWidth <= 768;
 
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: matches.map(m => {
-        const date = new Date(m.matchDate);
-        return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().slice(-2)}`;
-      }),
-      datasets: [{
-        label: 'Match Points',
-        data: matches.map(m => m.points),
-        borderColor: '#1976d2',
-        backgroundColor: 'rgba(25, 118, 210, 0.1)',
-        fill: true,
-        tension: 0.4,
-        pointBackgroundColor: matches.map(m =>
-          m.isPartOfDreamTeam ? '#1976d2' : '#64b5f6'
-        ),
-        pointRadius: 5
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: false
-        }
-      },
-      scales: {
-        x: {
-          ticks: {
-            maxRotation: isMobile ? 45 : 0,
-            font: {
-              size: isMobile ? 10 : 12
-            }
-          }
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: matches.map(m => {
+                const date = new Date(m.matchDate);
+                return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear().toString().slice(-2)}`;
+            }),
+            datasets: [{
+                label: 'Match Points',
+                data: matches.map(m => m.points),
+                borderColor: '#1976d2',
+                backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: matches.map(m =>
+                    m.isPartOfDreamTeam ? '#1976d2' : '#64b5f6'
+                ),
+                pointRadius: 5
+            }]
         },
-        y: {
-          beginAtZero: true,
-          ticks: {
-            font: {
-              size: isMobile ? 10 : 12
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        maxRotation: isMobile ? 45 : 0,
+                        font: {
+                            size: isMobile ? 10 : 12
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        font: {
+                            size: isMobile ? 10 : 12
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  });
+    });
 }
 
 function initializeDistributionChart(chartId, player) {
@@ -772,7 +772,7 @@ function initializeDistributionChart(chartId, player) {
                 legend: {
                     position: window.innerWidth <= 768 ? 'bottom' : 'right',
                     labels: {
-                        font: { size: window.innerWidth <= 768 ? 11 : 12 }
+                        font: {size: window.innerWidth <= 768 ? 11 : 12}
                     }
                 },
                 tooltip: {
@@ -916,51 +916,52 @@ function calculateFieldingPoints(match) {
 
     return points;
 }
+
 // Helper functions
 function groupPlayersByRole(players) {
-  if (!Array.isArray(players)) return {};
+    if (!Array.isArray(players)) return {};
 
-  return players.reduce((groups, player) => {
-    const role = player.playerRole || 'Batter';
-    if (!groups[role]) {
-      groups[role] = [];
-    }
-    groups[role].push(player);
-    return groups;
-  }, {});
+    return players.reduce((groups, player) => {
+        const role = player.playerRole || 'Batter';
+        if (!groups[role]) {
+            groups[role] = [];
+        }
+        groups[role].push(player);
+        return groups;
+    }, {});
 }
 
 function clearPlayerSections() {
-  const sections = [
-    'wicketKeeperSection',
-    'battersSection',
-    'allRoundersSection',
-    'bowlersSection'
-  ];
+    const sections = [
+        'wicketKeeperSection',
+        'battersSection',
+        'allRoundersSection',
+        'bowlersSection'
+    ];
 
-  sections.forEach(sectionId => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.innerHTML = '';
-    }
-  });
+    sections.forEach(sectionId => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+            section.innerHTML = '';
+        }
+    });
 }
 
 function showError(message) {
-  // Implement error display logic
+    // Implement error display logic
 }
 
 function updateTotalPoints(players, captain, viceCaptain) {
-  const pointSystem = document.getElementById("pointSystemSelect").value;
-  const totalPoints = calculateTotalPoints(players, captain, viceCaptain, pointSystem);
-  const totalPointsElement = document.getElementById("totalPoints");
-  if (totalPointsElement) {
-    totalPointsElement.textContent = totalPoints.toFixed(2);
-  }
+    const pointSystem = document.getElementById("pointSystemSelect").value;
+    const totalPoints = calculateTotalPoints(players, captain, viceCaptain, pointSystem);
+    const totalPointsElement = document.getElementById("totalPoints");
+    if (totalPointsElement) {
+        totalPointsElement.textContent = totalPoints.toFixed(2);
+    }
 }
 
 function generateMatchPointsHtml(matches) {
-    return Array.from({ length: 5 }).map((_, index) => {
+    return Array.from({length: 5}).map((_, index) => {
         const match = matches[index];
         if (match && match.points !== undefined && match.points !== null) {
             const isInDreamTeam = match.isPartOfDreamTeam;
@@ -1126,7 +1127,7 @@ window.addEventListener('resize', () => {
         if (modal && modal.playerData) {
             const performanceChartId = modal.querySelector('canvas:first-of-type').id;
             const distributionChartId = modal.querySelector('canvas:last-of-type').id;
-            
+
             // Reinitialize charts
             initializePerformanceChart(performanceChartId, modal.playerData);
             initializeDistributionChart(distributionChartId, modal.playerData);
@@ -1143,7 +1144,7 @@ window.addEventListener('resize', () => {
 function downloadDreamTeamImage() {
     const dreamTeamElement = document.getElementById('dreamTeamSection');
     const downloadButton = document.querySelector('.download-button');
-    
+
     // Temporarily hide the download button
     if (downloadButton) {
         downloadButton.style.display = 'none';
@@ -1158,11 +1159,11 @@ function downloadDreamTeamImage() {
     // First, ensure all images are loaded
     const imagePromises = [];
     const images = dreamTeamElement.getElementsByTagName('img');
-    
+
     for (let img of images) {
         const newImg = new Image();
         newImg.crossOrigin = "anonymous";
-        
+
         const promise = new Promise((resolve, reject) => {
             newImg.onload = () => {
                 img.src = newImg.src;
@@ -1173,12 +1174,12 @@ function downloadDreamTeamImage() {
                 resolve();
             };
         });
-        
+
         const timestamp = new Date().getTime();
-        newImg.src = img.src.includes('?') ? 
-            `${img.src}&t=${timestamp}` : 
+        newImg.src = img.src.includes('?') ?
+            `${img.src}&t=${timestamp}` :
             `${img.src}?t=${timestamp}`;
-            
+
         imagePromises.push(promise);
     }
 
@@ -1190,7 +1191,7 @@ function downloadDreamTeamImage() {
                 allowTaint: true,
                 backgroundColor: '#ffffff',
                 logging: false,
-                onclone: function(clonedDoc) {
+                onclone: function (clonedDoc) {
                     const clonedImages = clonedDoc.getElementsByTagName('img');
                     for (let img of clonedImages) {
                         img.crossOrigin = "anonymous";
@@ -1203,7 +1204,7 @@ function downloadDreamTeamImage() {
         .then(canvas => {
             // Remove loading indicator from body
             document.body.removeChild(loadingIndicator);
-            
+
             // Show download button again
             if (downloadButton) {
                 downloadButton.style.display = 'flex';
@@ -1218,19 +1219,19 @@ function downloadDreamTeamImage() {
             const link = document.createElement('a');
             link.download = filename;
             link.href = canvas.toDataURL('image/png', 1.0);
-            
+
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         })
         .catch(error => {
             console.error('Error generating image:', error);
-            
+
             // Remove loading indicator from body
             if (document.body.contains(loadingIndicator)) {
                 document.body.removeChild(loadingIndicator);
             }
-            
+
             // Show download button again
             if (downloadButton) {
                 downloadButton.style.display = 'flex';
@@ -1274,6 +1275,131 @@ function calculateTopPlayersAverage(players) {
     const sum = top11Players.reduce((acc, player) =>
         acc + (player.averageDream11Points || 0), 0
     );
-console.log('Top 11 players:', sum/top11Players.length);
+    console.log('Top 11 players:', sum / top11Players.length);
     return sum / top11Players.length;
 }
+
+function organizePlayersByRole(players) {
+    const captains = players.filter(p => p.isCaptain);
+    const viceCaptains = players.filter(p => p.isViceCaptain);
+    const playing15 = players.filter(p => p.playing15 && !p.isCaptain && !p.isViceCaptain);
+
+    return {
+        captains,
+        viceCaptains,
+        playing15,
+        allPlayers: players.filter(p => !p.isStaff)
+    };
+}
+
+function displayPlayerSelection(playerSelectionData) {
+    // Parse the JSON if it's a string
+    const players = typeof playerSelectionData === 'string' ? JSON.parse(playerSelectionData) : playerSelectionData;
+    
+    // Group players by their roles (captain, vice-captain, playing15)
+    const groupedPlayers = organizePlayersByRole(players);
+    
+    // Function to create player card
+    function createPlayerSelectionCard(player) {
+        return `
+            <div class="selection-player-card">
+                <div class="selection-player-image">
+                    <img src="${player.playerImgUrl}" alt="${player.playerNickName}" 
+                         onerror="this.src='../images/default-player.png'">
+                </div>
+                <div class="selection-player-name">${player.playerNickName}</div>
+            </div>
+        `;
+    }
+
+    // Display captains
+    const captainContainer = document.getElementById('captainContainer');
+    if (captainContainer) {
+        captainContainer.innerHTML = groupedPlayers.captains
+            .map(player => createPlayerSelectionCard(player))
+            .join('');
+    }
+
+    // Display vice-captains
+    const viceCaptainContainer = document.getElementById('viceCaptainContainer');
+    if (viceCaptainContainer) {
+        viceCaptainContainer.innerHTML = groupedPlayers.viceCaptains
+            .map(player => createPlayerSelectionCard(player))
+            .join('');
+    }
+
+    // Display playing 15
+    const playing15Container = document.getElementById('playing15Container');
+    if (playing15Container) {
+        playing15Container.innerHTML = groupedPlayers.playing15
+            .map(player => createPlayerSelectionCard(player))
+            .join('');
+    }
+
+    // Show the players selection section
+    const playersSelection = document.getElementById('playersSelection');
+    if (playersSelection) {
+        playersSelection.style.display = 'block';
+    }
+}
+
+// Add this CSS to your existing styles
+const playerStyle = document.createElement('style');
+playerStyle.textContent = `
+    .selection-player-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px;
+        margin: 5px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        background: white;
+    }
+
+    .selection-player-image {
+        margin-bottom: 8px;
+    }
+
+    .selection-player-image img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .selection-player-name {
+        text-align: center;
+        font-size: 14px;
+        color: #333;
+        font-weight: 500;
+    }
+
+    .selection-players {
+        max-height: 400px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .selection-column {
+        flex: 1;
+        margin: 0 10px;
+        background: #f5f5f5;
+        border-radius: 8px;
+        padding: 10px;
+    }
+
+    .selection-column h4 {
+        text-align: center;
+        margin-bottom: 15px;
+        color: #333;
+    }
+`;
+document.head.appendChild(playerStyle);
+
+// Assuming playerSelectionResponsesJson is available in your scope
+document.addEventListener('DOMContentLoaded', function() {
+    if (typeof playerSelectionResponsesJson !== 'undefined') {
+        displayPlayerSelection(playerSelectionResponsesJson);
+    }
+});

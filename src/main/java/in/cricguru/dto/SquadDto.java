@@ -15,4 +15,7 @@ public class SquadDto {
     private Integer teamId;
     private Integer playerId;
     private Boolean playing11;
+    private Boolean isCaptain;
+    private Boolean isViceCaptain;
+    private Boolean playing15;
 }

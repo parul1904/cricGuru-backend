@@ -5,6 +5,7 @@ import in.cricguru.response.MatchBetweenResponse;
 import in.cricguru.response.PlayerPerformanceResponse;
 import in.cricguru.response.PlayerPerformanceResponse.MatchPerformance;
 
+import in.cricguru.response.PlayerSelectionResponse;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -126,5 +127,93 @@ public class DreamTeamMapper {
         response.setDream11NewPoints(player.getLastMatchPoints());
         
         return response;
+    }
+
+    public List<PlayerSelectionResponse> mapToPlayerSelectionResponse(List<Object[]> dbResults) {
+        List<PlayerSelectionResponse> captains = new ArrayList<>();
+        List<PlayerSelectionResponse> viceCaptains = new ArrayList<>();
+        List<PlayerSelectionResponse> otherPlayers = new ArrayList<>();
+        
+        // Get the first element which contains all players
+        if (dbResults == null || dbResults.isEmpty()) {
+            return new ArrayList<>();
+        }
+        
+        Object[] playersList = dbResults.get(0);
+        
+        // Iterate over each player in the list
+        for (Object playerData : playersList) {
+            try {
+                Object[] result;
+                if (playerData instanceof Object[]) {
+                    result = (Object[]) playerData;
+                } else {
+                    continue;
+                }
+                
+                PlayerSelectionResponse response = new PlayerSelectionResponse();
+                
+                // Basic player info
+                response.setPlayerId(safelyConvertToInteger(result[0]));
+                response.setPlayerNickName(safelyConvertToString(result[1]));
+                response.setPlayerImgUrl(safelyConvertToString(result[2]));
+                response.setPlayerRole(safelyConvertToString(result[3]));
+                
+                // Captain/Vice-Captain status
+                Boolean isCaptain = safelyConvertToBoolean(result[4]);
+                Boolean isViceCaptain = safelyConvertToBoolean(result[5]);
+                Boolean isPlaying15 = safelyConvertToBoolean(result[6]);
+                
+                response.setIsCaptain(isCaptain);
+                response.setIsViceCaptain(isViceCaptain);
+                response.setPlaying15(isPlaying15);
+                
+                // Add to appropriate list
+                if (Boolean.TRUE.equals(isCaptain)) {
+                    captains.add(response);
+                } else if (Boolean.TRUE.equals(isViceCaptain)) {
+                    viceCaptains.add(response);
+                } else {
+                    otherPlayers.add(response);
+                }
+                
+            } catch (Exception e) {
+                System.err.println("Error mapping player: " + e.getMessage() + 
+                                 ". Data: " + java.util.Arrays.toString((Object[]) playerData));
+            }
+        }
+        
+        // Combine all lists, with captains first, then vice-captains, then others
+        List<PlayerSelectionResponse> allPlayers = new ArrayList<>();
+        allPlayers.addAll(captains);
+        allPlayers.addAll(viceCaptains);
+        allPlayers.addAll(otherPlayers);
+        
+        return allPlayers;
+    }
+
+    private Integer safelyConvertToInteger(Object value) {
+        if (value == null) return null;
+        if (value instanceof Integer) return (Integer) value;
+        if (value instanceof String) {
+            try {
+                return Integer.parseInt((String) value);
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
+    private String safelyConvertToString(Object value) {
+        return value != null ? value.toString() : null;
+    }
+
+    private Boolean safelyConvertToBoolean(Object value) {
+        if (value == null) return false;
+        if (value instanceof Boolean) return (Boolean) value;
+        if (value.toString().equalsIgnoreCase("true")) return true;
+        if (value.toString().equalsIgnoreCase("1")) return true;
+        return false;
     }
 }
