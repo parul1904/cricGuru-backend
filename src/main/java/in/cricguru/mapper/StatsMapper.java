@@ -274,10 +274,10 @@ public class StatsMapper {
                 response.setMy11Points(row[8] != null ? ((Number) row[8]).intValue() : null);
                 response.setAverageMy11Points(row[9] != null ? ((Number) row[9]).doubleValue() : null);
                 response.setHighestPoints(row[10] != null ? ((Number) row[10]).intValue() : 0);
-                response.setAverageDream11Last5MatchPoints(row[13] != null ? ((Number) row[13]).doubleValue() : null);
                 if (null != seasonId && seasonId == 2) {
                     response.setLowestPoints(row[11] != null ? ((Number) row[11]).intValue() : 0);
                     response.setLastMatchNo(row[12] != null ? ((Number) row[12]).intValue() : 0);
+                    response.setAverageDream11Last5MatchPoints(row[13] != null ? ((Number) row[13]).doubleValue() : null);
                     String matchDetailsJson = (String) row[17];
                     if (matchDetailsJson != null) {
                         List<PlayerPerformanceResponse.MatchPerformance> matchPerformances = objectMapper.readValue(

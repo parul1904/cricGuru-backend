@@ -56,7 +56,7 @@
     <!-- Season Selector -->
     <div class="season-selector">
         <button class="season-option" data-season="2025">IPL 2025</button>
-        <button class="season-option" data-season="2024">IPL 2024</button>
+        <button class="season-option" data-season="2024" disabled>IPL 2024</button>
         <div class="slider"></div>
     </div>
 
