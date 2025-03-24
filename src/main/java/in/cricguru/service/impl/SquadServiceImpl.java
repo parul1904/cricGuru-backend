@@ -3,6 +3,7 @@ package in.cricguru.service.impl;
 import in.cricguru.dto.SquadDto;
 import in.cricguru.response.SquadResponse;
 import in.cricguru.response.SquadTeamResponse;
+import in.cricguru.dto.DreamPlayerTeamDto;
 import in.cricguru.entity.Squad;
 import in.cricguru.exception.ResourceNotFoundException;
 import in.cricguru.mapper.SquadMapper;
@@ -80,4 +81,20 @@ public class SquadServiceImpl implements SquadService {
         List<Object[]> squadDetails = squadRepository.findSquadDetailsByTeam(Math.toIntExact(teamId));
        return squadMapper.mapToSquadTeamResponse(squadDetails);
     }
+
+    @Override
+    public List<DreamPlayerTeamDto> getSquadPlayersByTeams(  Long team1Id, Long team2Id) {
+        List<Object[]> results = squadRepository.findSquadPlayersByTeams( team1Id, team2Id);
+        return results.stream()
+            .map(result -> new DreamPlayerTeamDto(
+                ((Number) result[0]).longValue(),  // player_id
+                (String) result[1],                // player_name
+                (String) result[2],                // role
+                ((Number) result[3]).longValue(),  // team_id
+                (String) result[4]                 // team_short_name
+            ))
+            .collect(Collectors.toList());
+    }
+
+
 }

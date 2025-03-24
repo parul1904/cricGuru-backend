@@ -42,10 +42,10 @@ public class TeamMapper {
             PlayerSquadDTO response = new PlayerSquadDTO();
             response.setPlayerId(Long.valueOf((Integer) row[0]));
             response.setPlayerName((String) row[1]);
-            response.setIsPlaying11((Boolean) row[2]);
-            response.setIsCaptain((Boolean) row[3]);
-            response.setIsViceCaptain((Boolean) row[4]);
-            response.setIsPlaying15((Boolean) row[5]);
+            response.setIsPlaying11((Boolean) row[3]);
+            response.setIsCaptain((Boolean) row[4]);
+            response.setIsViceCaptain((Boolean) row[5]);
+            response.setIsPlaying15((Boolean) row[6]);
             playerSquadDTOs.add(response);
         }
         return playerSquadDTOs;

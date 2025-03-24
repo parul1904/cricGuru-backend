@@ -80,7 +80,7 @@ public class SquadMapper {
 
         squadDetails.forEach(squadDetail -> {
             Map<String, Object> playerDetailsMap = new HashMap<>();
-            Player player = playerRepository.findById(Long.valueOf((Integer) squadDetail[3])).orElseThrow();
+            Player player = playerRepository.findById(Long.valueOf((Integer) squadDetail[0])).orElseThrow();
             playerDetailsMap.put("playerId", player.getPlayerId());
             playerDetailsMap.put("playerImage", player.getPlayerImgUrl());
             playerDetailsMap.put("playerNickName", player.getNickName());

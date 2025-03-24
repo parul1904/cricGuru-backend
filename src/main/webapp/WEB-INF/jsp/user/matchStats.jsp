@@ -54,16 +54,14 @@
             <select id="pointSystemSelect" class="form-select">
                 <option value="old">Dream11 Old Point System</option>
                 <option value="new">Dream11 New Point System</option>
-                <option value="my11">My11 Circle Point System</option>
             </select>
         </div>
 
         <div id="dreamTeam2025Dropdown" class="mt-2">
             <select id="pointSystem2025Select" class="form-select">
-                <option value="dream11Avg">Dream11 Based on Last 3 Match</option>
+                <option value="last5Avg">Dream11 Based on Last 5 Match</option>
+                <option value="last3Avg">Dream11 Based on Last 3 Match</option>
                 <option value="new">Dream11 Based on Last Match</option>
-                <option value="my11">My11 Circle Based on Last Match</option>
-                <option value="dream11Last5Avg">Dream11 Based on Last 5 Match</option>
             </select>
         </div>
     </div>
@@ -159,9 +157,15 @@
         <button class="role-tab" data-role="Bowler">BOWL</button>
     </div>
 
+    <div style="margin-top: 10px; padding-left: 10px">
+        <p>🔥 <b>Must Pick</b></p>
+        <p><b>All the numbers denoted are in terms of points.</b></p>
+    </div>
     <div id="playerStatsContainer" class="player-stats-container">
 
     </div>
+
+
 </div>
     </div>
 </div>
@@ -181,10 +185,9 @@
 <script type="text/javascript">
     const seasonYear = "${seasonYear}";
     const oldDreamTeamJson = '${oldDreamTeamJson}';
-    const newDreamTeamJson = '${newDreamTeamJson}';
-    const my11CirceTeamJson = '${my11CirceTeamJson}';
-    const dreamAvgTeamJson = '${dreamAvgTeamJson}';
-    const my11CircleAvgTeamJson = '${my11CircleAvgTeamJson}';
+    const lastMatchDreamTeamJson = '${lastMatchDreamTeamJson}';
+    const last3MatchDreamTeamJson = '${last3MatchDreamTeamJson}';
+    const last5MatchDreamTeamJson = '${last5MatchDreamTeamJson}';
     const playerSelectionResponsesJson = '${playerSelectionResponsesJson}';
 
     // Add match details

@@ -29,12 +29,12 @@ public interface StatsService {
 
     List<DreamTeamResponse>  getOldDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
 
-    List<DreamTeamResponse>  getNewDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
+    List<DreamTeamResponse>  lastMatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
 
     List<DreamTeamResponse>  getMy11CircleDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
 
-    List<DreamTeamResponse> getDream11AverageDreamTeamResponse(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
+    List<DreamTeamResponse> last3MatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
 
-    List<DreamTeamResponse> getMy11CircleAverageDreamTeamResponse(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
+    List<DreamTeamResponse> last5MatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
 
 }

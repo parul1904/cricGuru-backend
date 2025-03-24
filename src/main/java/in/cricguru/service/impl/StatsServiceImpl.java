@@ -124,7 +124,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<DreamTeamResponse> getNewDreamTeamByMatchNo(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+    public List<DreamTeamResponse> lastMatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
                         Long.valueOf(statsBy)).stream()
                 .collect(Collectors.toUnmodifiableList());
@@ -140,7 +140,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<DreamTeamResponse> getDream11AverageDreamTeamResponse(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+    public List<DreamTeamResponse> last3MatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
                         Long.valueOf(statsBy)).stream()
                 .collect(Collectors.toUnmodifiableList());
@@ -148,7 +148,7 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<DreamTeamResponse> getMy11CircleAverageDreamTeamResponse(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+    public List<DreamTeamResponse> last5MatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
                         Long.valueOf(statsBy)).stream()
                 .collect(Collectors.toUnmodifiableList());

@@ -5,12 +5,10 @@ import lombok.*;
 
 import java.time.LocalDate;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "matches")
+@Getter
+@Setter
 public class Match {
 
     @Id

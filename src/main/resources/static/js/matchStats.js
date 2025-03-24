@@ -2,10 +2,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const seasonYear = document.getElementById('seasonYear').value;
     const dreamTeamData = {
         old: JSON.parse(oldDreamTeamJson || '[]'),
-        new: JSON.parse(newDreamTeamJson || '[]'),
-        my11: JSON.parse(my11CirceTeamJson || '[]'),
-        dream11Avg: JSON.parse(dreamAvgTeamJson || '[]'),
-        my11Avg: JSON.parse(my11CircleAvgTeamJson || '[]')
+        new: JSON.parse(lastMatchDreamTeamJson || '[]'),
+        last3Avg: JSON.parse(last3MatchDreamTeamJson || '[]'),
+        last5Avg: JSON.parse(last5MatchDreamTeamJson || '[]')
     };
 
     // Initialize view with default point system
@@ -40,17 +39,20 @@ document.addEventListener('DOMContentLoaded', function () {
             let teamData;
 
             switch (selectedSystem) {
+                case 'old':
+                    teamData = JSON.parse(oldDreamTeamJson || '[]');
+                    break;
                 case 'new':
-                    teamData = JSON.parse(newDreamTeamJson || '[]');
+                    teamData = JSON.parse(lastMatchDreamTeamJson || '[]');
                     break;
-                case 'my11Avg':
-                    teamData = JSON.parse(my11CircleAvgTeamJson || '[]');
+                case 'last3Avg':
+                    teamData = JSON.parse(last3MatchDreamTeamJson || '[]');
                     break;
-                case 'my11':
-                    teamData = JSON.parse(my11CirceTeamJson || '[]');
+                case 'last5Avg':
+                    teamData = JSON.parse(last5MatchDreamTeamJson || '[]');
                     break;
                 default:
-                    teamData = JSON.parse(dreamAvgTeamJson || '[]');
+                    teamData = JSON.parse(last5MatchDreamTeamJson || '[]');
             }
             displayDreamTeam(teamData, seasonYear);
         });
@@ -69,7 +71,7 @@ function initializeView(seasonYear, dreamTeamData) {
         if (totalPointsContainer) totalPointsContainer.style.display = "none";
         if (dreamTeamDropdown) dreamTeamDropdown.style.display = "none";
         if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "block";
-        displayDreamTeam(dreamTeamData.dream11Avg, seasonYear);
+        displayDreamTeam(dreamTeamData.last5Avg, seasonYear);
     } else {
         if (dreamTeamDropdown) dreamTeamDropdown.style.display = "block";
         if (dreamTeam2025Dropdown) dreamTeam2025Dropdown.style.display = "none";
@@ -159,7 +161,7 @@ function displayDreamTeam(players, seasonYear) {
 
     let pointSystem = null;
     // Find captain and vice-captain based on points
-    if (seasonYear == 2024) {
+    if (seasonYear === 2024) {
         pointSystem = document.getElementById("pointSystemSelect").value;
     } else {
         pointSystem = document.getElementById("pointSystem2025Select").value;
@@ -251,12 +253,10 @@ function getPointsBySystem(player, pointSystem) {
             return player.dream11OldPoints || 0;
         case "new":
             return player.dream11NewPoints || 0;
-        case "my11":
-            return player.my11CirclePoints || 0;
-        case "dream11Avg":
+        case "last5Avg":
+            return player.averageDream11Last5MatchPoints || 0;
+        case "last3Avg":
             return player.averageDream11Points || 0;
-        case "my11Avg":
-            return player.averageMy11Points || 0;
         default:
             return player.dream11NewPoints || 0;
     }
