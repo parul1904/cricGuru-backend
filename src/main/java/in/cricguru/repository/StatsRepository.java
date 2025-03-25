@@ -43,8 +43,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             SUM(ms.fours) AS total_fours, SUM(ms.sixes) AS total_sixes, AVG(ms.strike_rate) AS total_strike_rate,\s
             SUM(CASE WHEN ms.runs_scored >= 50 AND ms.runs_scored < 100 THEN 1 ELSE 0 END) AS fifties, SUM(CASE WHEN ms.runs_scored >= 100 THEN 1 ELSE 0 END) AS hundreds,\s
             SUM(ms.catch_taken) AS total_catches, SUM(ms.stumping) AS total_stumping, SUM(CASE WHEN ms.overs > 0 THEN 1 ELSE 0 END) AS bowling_innings_played,\s
-            SUM(FLOOR(ms.overs)) + FLOOR(SUM(ms.overs % 1 * 10) / 6) AS total_overs, (SELECT SUM(COALESCE(ms.total_wickets, 0)) + SUM(COALESCE(ms.direct_runout, 0)) 
-            + SUM(COALESCE(ms.in_direct_runout, 0) / 2)) AS total_wickets, SUM(ms.runs_conceded) AS total_runs_conceded,\s
+            SUM(FLOOR(ms.overs)) + FLOOR(SUM(ms.overs % 1 * 10) / 6) AS total_overs, (SELECT SUM(COALESCE(ms.total_wickets, 0))) AS total_wickets, SUM(ms.runs_conceded) AS total_runs_conceded,\s
             SUM(ms.dots) AS total_dots, SUM(ms.maiden) AS total_maidens, SUM(ms.runs_conceded) / NULLIF(SUM(ms.total_wickets), 0) AS bowling_average,\s
             SUM(ms.runs_conceded) / NULLIF((SUM(FLOOR(ms.overs)) + SUM(ms.overs % 1 * 10) / 6), 0) AS economy_rate,
             (SELECT COUNT(*) FROM match_stats ms WHERE ms.player_id = :playerId) AS total_matches

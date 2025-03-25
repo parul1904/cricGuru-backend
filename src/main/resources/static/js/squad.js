@@ -19,6 +19,12 @@ $(document).ready(function() {
                     '</div>';
                 $('#teamDetails').html(teamDetailsHtml).show();
 
+                // Reset all category buttons to inactive state
+                $('.category-button').removeClass('active');
+                
+                // Ensure "All" category button is active
+                $('.category-button[data-category="All"]').addClass('active');
+
                 // Categorize players
                 var categories = {
                     All: [],
@@ -61,10 +67,11 @@ $(document).ready(function() {
                             (player.playerCountry !== 'India' ? '<i class="fa fa-plane top-right-icon"></i>' : '') +
                             '</div>' +
                             '<div class="">' +
-                            '<h4>' + player.playerName + '</h4>' +
+                            '<p style="text-align:center">' + '<strong>' + player.playerName + '</strong>' +
+                            '</p>' +
                             '<p>' +
-                            '<img src="../images/others/' + player.playerRole + '.png" style="width:50px; height:40px; padding:5px; float:left;" alt="' + player.playerRole + '">' +
-                            '<img src="../images/others/' + player.playerCountry + '.png" style="width:50px; height:40px; padding:5px; float:right;" alt="' + player.playerCountry + '">' +
+                            '<img src="../images/others/' + player.playerRole + '.png" style="width:35px; height:25px; padding:5px; float:left;" alt="' + player.playerRole + '">' +
+                            '<img src="../images/others/' + player.playerCountry + '.png" style="width:35px; height:25px; padding:5px; float:right;" alt="' + player.playerCountry + '">' +
                             '</p>' +
                             '</div></div></div>';
                         $('#squadContainer').append(squadMember);

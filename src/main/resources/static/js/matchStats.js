@@ -1014,8 +1014,8 @@ function displayPlayersByRole(selectedRole) {
         return;
     }
 
-    // Clear existing content and add the must-pick indicator
-    container.innerHTML = ``;
+    // Clear existing content
+    container.innerHTML = '';
 
     // Filter players by selected role
     const playersInRole = globalPlayersData.filter(player => player.role === selectedRole);
@@ -1056,11 +1056,21 @@ function displayPlayersByRole(selectedRole) {
         bestPlayer.isHotPlayer = true;
     }
 
+    // Sort players: hot players first, then by last3MatchesAvg
+    const sortedPlayers = playersWithAvg.sort((a, b) => {
+        // First sort by hot player status
+        if (a.isHotPlayer && !b.isHotPlayer) return -1;
+        if (!a.isHotPlayer && b.isHotPlayer) return 1;
+        
+        // If both are hot or both are not hot, sort by average points
+        return b.last3MatchesAvg - a.last3MatchesAvg;
+    });
+
     const playerGrid = document.createElement('div');
     playerGrid.className = 'player-grid';
 
     // Create cards with updated hot player status
-    playersWithAvg.forEach(player => {
+    sortedPlayers.forEach(player => {
         const card = createPlayerStatsCard(player);
         playerGrid.appendChild(card);
     });
