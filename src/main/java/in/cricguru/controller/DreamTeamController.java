@@ -18,8 +18,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/dreamTeam")
@@ -63,6 +65,8 @@ public class DreamTeamController {
         String last3MatchDreamTeamJson = "";
         List<DreamTeamResponse> last5MatchDreamTeam = new ArrayList<>();
         String last5MatchDreamTeamJson = "";
+        List<DreamTeamResponse> actualDreamTeam = new ArrayList<>();
+        String actualDreamTeamJson = "";
 
         List<PlayerSelectionResponse> playerSelectionResponses = new ArrayList<>();
         String playerSelectionResponsesJson = "";
@@ -95,6 +99,17 @@ public class DreamTeamController {
             playerSelectionResponsesJson = objectMapper.writeValueAsString(playerSelectionResponses);
             modelAndView.addObject("seasonYear", "2025");
         }
+
+         actualDreamTeam = dreamTeamService.getActualDreamTeamByMatchNo(matchNo);
+        actualDreamTeamJson = objectMapper.writeValueAsString(actualDreamTeam);
+        
+        List<Integer> matchesWithDreamTeam = dreamTeamService.getMatchesWithDreamTeam();
+        // Convert the List to JSON string for JSP
+        String matchesWithDreamTeamJson = objectMapper.writeValueAsString(matchesWithDreamTeam);
+        
+        modelAndView.addObject("matchesWithDreamTeam", matchesWithDreamTeamJson);
+        modelAndView.addObject("actualDreamTeamJson", actualDreamTeamJson);
+        modelAndView.addObject("match", Map.of("matchNo", matchNo));
 
         modelAndView.addObject("lastMatchDreamTeamJson", lastMatchDreamTeamJson);
         modelAndView.addObject("last3MatchDreamTeamJson", last3MatchDreamTeamJson);

@@ -14,4 +14,8 @@ public interface DreamTeamService {
     List<DreamTeamResponse> getMy11CircleDreamTeamByMatchNo(Integer matchNo);
 
     List<PlayerSelectionResponse> getPlayerSelectionResponses(Integer team1Id, Integer team2Id);
+
+    List<Integer> getMatchesWithDreamTeam();
+
+    List<DreamTeamResponse> getActualDreamTeamByMatchNo(Integer matchNo);
 }

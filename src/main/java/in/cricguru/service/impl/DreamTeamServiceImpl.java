@@ -1,6 +1,7 @@
 package in.cricguru.service.impl;
 
 import in.cricguru.mapper.DreamTeamMapper;
+import in.cricguru.repository.DreamPlayerTeamRepository;
 import in.cricguru.repository.StatsRepository;
 import in.cricguru.response.DreamTeamResponse;
 import in.cricguru.response.PlayerPerformanceResponse;
@@ -17,11 +18,13 @@ public class DreamTeamServiceImpl implements DreamTeamService {
 
     private final DreamTeamMapper dreamTeamMapper;
     private final StatsRepository statsRepository;
+    private final DreamPlayerTeamRepository dreamPlayerTeamRepository;
 
     public DreamTeamServiceImpl(DreamTeamMapper dreamTeamMapper,
-                                StatsRepository statsRepository) {
+                                StatsRepository statsRepository, DreamPlayerTeamRepository dreamPlayerTeamRepository) {
         this.dreamTeamMapper = dreamTeamMapper;
         this.statsRepository = statsRepository;
+        this.dreamPlayerTeamRepository = dreamPlayerTeamRepository;
     }
 
     @Override
@@ -50,5 +53,17 @@ public class DreamTeamServiceImpl implements DreamTeamService {
         List<Object[]> dbResults = statsRepository.getPlayerSelectionResponses(Long.valueOf(team1Id), Long.valueOf(team2Id)).stream()
                 .collect(Collectors.toList());
         return dreamTeamMapper.mapToPlayerSelectionResponse(dbResults);
+    }
+
+    @Override
+    public List<DreamTeamResponse> getActualDreamTeamByMatchNo(Integer matchNo) {
+
+        List<Object[]> dbResults = dreamPlayerTeamRepository.findActualDreamTeamByMatchNo(matchNo);
+        return dreamTeamMapper.mapToActualDreamTeamResponse(dbResults);
+    }
+
+    @Override
+    public List<Integer> getMatchesWithDreamTeam() {
+        return dreamPlayerTeamRepository.findMatchesWithDreamTeam();
     }
 }

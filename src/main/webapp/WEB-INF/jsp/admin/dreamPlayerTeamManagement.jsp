@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/reset.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/responsive.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/dreamPlayerTeamManagement.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dreamPlayerTeamManagement.css">
 </head>
 <body>
     <div class="container mt-4">
@@ -65,6 +65,6 @@
     <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
     
     <!-- Custom JS -->
-    <script src="${pageContext.request.contextPath}/js/dreamPlayerTeamManagement.js"></script>
+    <script src="${pageContext.request.contextPath}/static/js/dreamPlayerTeamManagement.js"></script>
 </body>
 </html>

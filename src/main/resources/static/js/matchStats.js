@@ -4,7 +4,8 @@ document.addEventListener('DOMContentLoaded', function () {
         old: JSON.parse(oldDreamTeamJson || '[]'),
         new: JSON.parse(lastMatchDreamTeamJson || '[]'),
         last3Avg: JSON.parse(last3MatchDreamTeamJson || '[]'),
-        last5Avg: JSON.parse(last5MatchDreamTeamJson || '[]')
+        last5Avg: JSON.parse(last5MatchDreamTeamJson || '[]'),
+        actual: JSON.parse(actualDreamTeamJson || '[]')
     };
 
     // Initialize view with default point system
@@ -27,6 +28,27 @@ document.addEventListener('DOMContentLoaded', function () {
             this.style.borderColor = '#0056b3';
         });
 
+        // Check if actual dream team exists for this match
+        const matchNo = document.getElementById('matchNo').value;
+        const matchesWithDreamTeam = JSON.parse(document.getElementById('matchesWithDreamTeam').value || '[]');
+        const hasActualDreamTeam = matchesWithDreamTeam.includes(parseInt(matchNo));
+        
+        // Find or create the actual dream team option
+        let actualOption = pointSystem2025Select.querySelector('option[value="actual"]');
+        if (!actualOption) {
+            actualOption = document.createElement('option');
+            actualOption.value = 'actual';
+            pointSystem2025Select.appendChild(actualOption);
+        }
+        
+        // Set appropriate text based on dream team availability
+        actualOption.textContent = hasActualDreamTeam 
+            ? 'Actual Dream11 Team'
+            : 'Dream Team will appear after the match finishes';
+        
+        // Disable the option if no dream team exists
+        actualOption.disabled = !hasActualDreamTeam;
+
         // Handle selection change
         pointSystem2025Select.addEventListener('change', function () {
             // Add visual feedback
@@ -39,20 +61,20 @@ document.addEventListener('DOMContentLoaded', function () {
             let teamData;
 
             switch (selectedSystem) {
-                case 'old':
-                    teamData = JSON.parse(oldDreamTeamJson || '[]');
+                case 'actual':
+                    teamData = dreamTeamData.actual;
                     break;
                 case 'new':
-                    teamData = JSON.parse(lastMatchDreamTeamJson || '[]');
+                    teamData = dreamTeamData.new;
                     break;
                 case 'last3Avg':
-                    teamData = JSON.parse(last3MatchDreamTeamJson || '[]');
+                    teamData = dreamTeamData.last3Avg;
                     break;
                 case 'last5Avg':
-                    teamData = JSON.parse(last5MatchDreamTeamJson || '[]');
+                    teamData = dreamTeamData.last5Avg;
                     break;
                 default:
-                    teamData = JSON.parse(last5MatchDreamTeamJson || '[]');
+                    teamData = dreamTeamData.last5Avg;
             }
             displayDreamTeam(teamData, seasonYear);
         });

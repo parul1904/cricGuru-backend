@@ -216,4 +216,17 @@ public class DreamTeamMapper {
         if (value.toString().equalsIgnoreCase("1")) return true;
         return false;
     }
+
+    public List<DreamTeamResponse> mapToActualDreamTeamResponse(List<Object[]> result) {
+        List<DreamTeamResponse> dreamTeamResponses = new ArrayList<>();
+        for (Object[] row : result) {
+            DreamTeamResponse response = new DreamTeamResponse();
+            response.setPlayerId((Integer) row[0]);
+            response.setPlayerNickName((String) row[1]);
+            response.setPlayerRole((String) row[2]);
+            response.setPlayerImgUrl((String) row[3]);
+            dreamTeamResponses.add(response);
+        }
+        return dreamTeamResponses;
+    }
 }

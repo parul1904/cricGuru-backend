@@ -58,12 +58,23 @@
         </div>
 
         <div id="dreamTeam2025Dropdown" class="mt-2">
-            <select id="pointSystem2025Select" class="form-select">
-                <option value="last5Avg">Dream11 Based on Last 5 Match</option>
-                <option value="last3Avg">Dream11 Based on Last 3 Match</option>
+            <input type="hidden" id="matchesWithDreamTeam" value='${matchesWithDreamTeam}' />
+            <input type="hidden" id="actualDreamTeamJson" value='${actualDreamTeamJson}' />
+            <input type="hidden" id="matchNo" value="${match.matchNo}" />
+
+            <select id="pointSystem2025Select" class="form-select mb-3">
+                <option value="last5Avg">Dream11 Based on Last 5 Matches</option>
+                <option value="last3Avg">Dream11 Based on Last 3 Matches</option>
                 <option value="new">Dream11 Based on Last Match</option>
             </select>
         </div>
+
+        <style>
+            #pointSystem2025Select option:disabled {
+                color: #6c757d;
+                font-style: italic;
+            }
+        </style>
     </div>
     
     <input type="hidden" id="performanceDataJson" value='${performanceDataJson}'>
@@ -188,6 +199,8 @@
     const lastMatchDreamTeamJson = '${lastMatchDreamTeamJson}';
     const last3MatchDreamTeamJson = '${last3MatchDreamTeamJson}';
     const last5MatchDreamTeamJson = '${last5MatchDreamTeamJson}';
+    const actualDreamTeamJson = '${actualDreamTeamJson}';
+    const matchesWithDreamTeam = '${matchesWithDreamTeam}';
     const playerSelectionResponsesJson = '${playerSelectionResponsesJson}';
 
     // Add match details
