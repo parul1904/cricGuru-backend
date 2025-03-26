@@ -8,10 +8,12 @@ import lombok.AllArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlayerRoleUpdate {
-    private Long playerId;
-    private Integer teamNumber;
+    private Integer matchId;
+    private Integer playerId;
     private Boolean isPlaying11;
+    private Boolean isPlaying15;
     private Boolean isCaptain;
     private Boolean isViceCaptain;
-    private Boolean isPlaying15;
+    private Boolean isDreamTeam;
+    private Double selectionPercentage;
 }

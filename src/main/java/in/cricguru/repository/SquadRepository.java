@@ -54,12 +54,11 @@ public interface SquadRepository extends JpaRepository<Squad, Long> {
     );
 
     @Query(value = """
-    SELECT p.player_id, p.player_name, p.role, t.team_id, t.team_short_name
-    FROM cricguru_db.squads s
-    JOIN cricguru_db.players p ON p.player_id = s.player_id
-    JOIN cricguru_db.teams t ON t.team_id = s.team_id
-    WHERE s.season_id = 2
-    AND s.team_id IN (:team1Id, :team2Id)
+            SELECT p.player_id, p.player_name, p.role, t.team_id, t.team_short_name, d.playing_11, d.playing_15, d.is_captain,
+                d.is_vice_captain, d.dream_team, d.selection_percentage
+                FROM dream_player_team d LEFT JOIN players p ON p.player_id = d.player_id
+                LEFT JOIN cricguru_db.squads s ON s.player_id = p.player_id LEFT JOIN cricguru_db.teams t ON t.team_id = s.team_id
+                WHERE s.season_id = 2 AND s.team_id IN (:team1Id, :team2Id)
     """, nativeQuery = true)
     List<Object[]> findSquadPlayersByTeams(@Param("team1Id") Long team1Id, @Param("team2Id") Long team2Id);
 }

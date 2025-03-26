@@ -1,5 +1,6 @@
 package in.cricguru.mapper;
 
+import in.cricguru.dto.DreamPlayerTeamDto;
 import in.cricguru.dto.SquadDto;
 import in.cricguru.response.SquadResponse;
 import in.cricguru.response.SquadTeamResponse;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class SquadMapper {
@@ -94,5 +96,23 @@ public class SquadMapper {
         squadTeamResponse.setTeamDetails(teamMap);
         squadTeamResponse.setPlayerDetails(playerDetailsList);
         return squadTeamResponse;
+    }
+
+    public List<DreamPlayerTeamDto> mapToSquadPlayerTeams(List<Object[]> results) {
+        return results.stream()
+                .map(result -> DreamPlayerTeamDto.builder()
+                        .playerId(((Number) result[0]).longValue())      // player_id
+                        .playerName((String) result[1])                  // player_name
+                        .playerRole((String) result[2])                  // role
+                        .teamId(((Number) result[3]).longValue())        // team_id
+                        .teamShortName((String) result[4])              // team_short_name
+                        .playing11((Boolean) result[5])                  // playing_11
+                        .playing15((Boolean) result[6])                  // playing_15
+                        .isCaptain((Boolean) result[7])                 // is_captain
+                        .isViceCaptain((Boolean) result[8])             // is_vice_captain
+                        .dreamTeam((Boolean) result[9])                 // dream_team
+                        .selectionPercentage((Double) result[10])   // selection_percentage
+                        .build())
+                .collect(Collectors.toList());
     }
 }

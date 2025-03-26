@@ -101,7 +101,7 @@ public class TeamServiceImpl implements TeamService {
             for (PlayerRoleUpdate update : updates) {
                 // Only pass the fields that were actually changed
                 squadRepository.updatePlayerRole(
-                    update.getPlayerId(),
+                        Long.valueOf(update.getPlayerId()),
                     2L, // seasonId
                     update.getIsPlaying11(),  // Will be null if not changed
                     update.getIsCaptain(),    // Will be null if not changed

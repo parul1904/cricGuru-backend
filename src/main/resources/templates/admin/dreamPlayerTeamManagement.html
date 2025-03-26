@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dream Player Team Management</title>
+    <!-- Include your CSS and JS files -->
+</head>
+<body>
+    <!-- Alert container for notifications -->
+    <div id="alertContainer"></div>
+
+    <!-- Loading spinner -->
+    <div id="loadingSpinner" style="display: none;">
+        <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <!-- Match selection -->
+    <div class="form-group">
+        <label for="matchSelect">Select Match:</label>
+        <select id="matchSelect" class="form-control" required>
+            <option value="">Select a match...</option>
+            <option th:each="match : ${matches}" 
+                    th:value="${match.matchNo}" 
+                    th:text="${match.description}">
+            </option>
+        </select>
+    </div>
+
+    <!-- Players table -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Player Name</th>
+                <th>Team</th>
+                <th>Playing 11</th>
+                <th>Playing 15</th>
+                <th>Captain</th>
+                <th>Vice Captain</th>
+                <th>Dream Team</th>
+            </tr>
+        </thead>
+        <tbody id="playersTableBody">
+            <!-- Each row must have data-player-id attribute -->
+            <tr th:each="player : ${players}" th:data-player-id="${player.id}" 
+                th:data-team-id="${player.teamId}">
+                <td class="player-name" th:text="${player.name}"></td>
+                <td class="team-short-name" th:text="${player.teamShortName}"></td>
+                <td>
+                    <input type="checkbox" th:name="'playing11_' + ${player.id}" />
+                </td>
+                <td>
+                    <input type="checkbox" th:name="'playing15_' + ${player.id}" />
+                </td>
+                <td>
+                    <input type="checkbox" th:name="'captain_' + ${player.id}" />
+                </td>
+                <td>
+                    <input type="checkbox" th:name="'viceCaptain_' + ${player.id}" />
+                </td>
+                <td>
+                    <input type="checkbox" th:name="'dreamTeam_' + ${player.id}" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button onclick="saveDreamPlayerTeam()" class="btn btn-primary">Save</button>
+</body>
+</html>

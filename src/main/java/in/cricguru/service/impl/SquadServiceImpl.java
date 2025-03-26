@@ -83,17 +83,9 @@ public class SquadServiceImpl implements SquadService {
     }
 
     @Override
-    public List<DreamPlayerTeamDto> getSquadPlayersByTeams(  Long team1Id, Long team2Id) {
-        List<Object[]> results = squadRepository.findSquadPlayersByTeams( team1Id, team2Id);
-        return results.stream()
-            .map(result -> new DreamPlayerTeamDto(
-                ((Number) result[0]).longValue(),  // player_id
-                (String) result[1],                // player_name
-                (String) result[2],                // role
-                ((Number) result[3]).longValue(),  // team_id
-                (String) result[4]                 // team_short_name
-            ))
-            .collect(Collectors.toList());
+    public List<DreamPlayerTeamDto> getSquadPlayersByTeams(Long team1Id, Long team2Id) {
+        List<Object[]> results = squadRepository.findSquadPlayersByTeams(team1Id, team2Id);
+        return squadMapper.mapToSquadPlayerTeams(results);
     }
 
 

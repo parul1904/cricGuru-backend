@@ -1,70 +1,130 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dream Player Team Management</title>
-
-    <!-- Site Icons -->
-    <link rel="shortcut icon" href="${pageContext.request.contextPath}/images/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="${pageContext.request.contextPath}/images/apple-touch-icon.png">
     
-    <!-- jQuery (must be first) -->
+    <!-- CSS -->
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bootstrap-4@4/bootstrap-4.css">
+    
+    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- DataTables CSS -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
-    
-    <!-- Custom CSS -->
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/LineIcons.2.0.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/reset.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/responsive.css">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/static/css/dreamPlayerTeamManagement.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // Verify SweetAlert2 is loaded
+        if (typeof Swal === 'undefined') {
+            console.error('SweetAlert2 failed to load!');
+        }
+    </script>
+    <script src="${pageContext.request.contextPath}/js/dreamPlayerTeamManagement.js"></script>
 </head>
 <body>
+    <!-- Include Header -->
+    <jsp:include page="/WEB-INF/jsp/includes/header.jsp" />
+
     <div class="container mt-4">
-        <h2>Dream Player Team Management</h2>
-        
-        <!-- Match Selection -->
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <label for="matchSelect" class="form-label">Select Match</label>
-                <select class="form-select" id="matchSelect">
-                    <option value="">Select a match</option>
-                </select>
-            </div>
-        </div>
+        <!-- Alert container for notifications -->
+        <div id="alertContainer"></div>
 
-        <!-- Players Table Container -->
-        <div id="playersTableContainer" style="display: none;">
-            <!-- Your table content here -->
-        </div>
-
-        <!-- Loading Spinner -->
+        <!-- Loading spinner -->
         <div id="loadingSpinner" style="display: none;">
-            <div class="spinner-border text-primary" role="status">
+            <div class="spinner-border" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
         </div>
+
+        <!-- Match selection -->
+        <div class="form-group mb-4">
+            <label for="matchSelect">Select Match:</label>
+            <select id="matchSelect" class="form-control" required>
+                <option value="">Select a match...</option>
+                <c:forEach items="${matches}" var="match">
+                    <option value="${match.matchNo}">${match.description}</option>
+                </c:forEach>
+            </select>
+        </div>
+
+        <!-- Players table -->
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Player Name</th>
+                        <th>Team</th>
+                        <th>Role</th>
+                        <th>Playing 11</th>
+                        <th>Playing 15</th>
+                        <th>Captain</th>
+                        <th>Vice Captain</th>
+                        <th>Dream Team</th>
+                        <th>% Selection</th>
+                    </tr>
+                </thead>
+                <tbody id="playersTableBody">
+                    <c:forEach items="${players}" var="player">
+                        <tr data-player-id="${player.playerId}">
+                            <td>${player.playerName}</td>
+                            <td>${player.teamShortName}</td>
+                            <td>${player.playerRole}</td>
+                            <td>
+                                <input type="checkbox" class="form-check-input" 
+                                       name="playing11_${player.playerId}"
+                                       <c:if test="${player.playing11}">checked</c:if>>
+                            </td>
+                            <td>
+                                <input type="checkbox" class="form-check-input" 
+                                       name="playing15_${player.playerId}"
+                                       <c:if test="${player.playing15}">checked</c:if>>
+                            </td>
+                            <td>
+                                <input type="checkbox" class="form-check-input" 
+                                       name="captain_${player.playerId}"
+                                       <c:if test="${player.captain}">checked</c:if>>
+                            </td>
+                            <td>
+                                <input type="checkbox" class="form-check-input" 
+                                       name="viceCaptain_${player.playerId}"
+                                       <c:if test="${player.viceCaptain}">checked</c:if>>
+                            </td>
+                            <td>
+                                <input type="checkbox" class="form-check-input" 
+                                       name="dreamTeam_${player.playerId}"
+                                       <c:if test="${player.dreamTeam}">checked</c:if>>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"
+                                       name="selectionPercentage_${player.playerId}"
+                                       value="${player.selectionPercentage}"/>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <button id="saveChangesBtn" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Changes
+            </button>
+        </div>
     </div>
 
-    <!-- Bootstrap JS -->
+    <!-- Include Footer -->
+    <jsp:include page="/WEB-INF/jsp/includes/footer.jsp" />
+
+    <!-- Scripts - Make sure these are at the end of body -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- DataTables JS -->
-    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
-    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
-    
-    <!-- Custom JS -->
-    <script src="${pageContext.request.contextPath}/static/js/dreamPlayerTeamManagement.js"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="${pageContext.request.contextPath}/js/dreamPlayerTeamManagement.js"></script>
+    <script src="${pageContext.request.contextPath}/js/dreamTeam.js"></script>
+    <!-- Add this at the bottom of body for debugging -->
 </body>
 </html>

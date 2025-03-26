@@ -27,17 +27,11 @@ public class DreamPlayerTeam {
     @JoinColumn(name = "player_id")
     private Player player;
 
-    @Column(name = "dream_team", columnDefinition = "TINYINT(1)")
-    private Boolean dreamTeam;
+    @Column(name = "playing_11", columnDefinition = "TINYINT(1)")
+    private Boolean playing11;
 
-    @Column(name = "last_match", columnDefinition = "TINYINT(1)")
-    private Boolean lastMatch;
-
-    @Column(name = "last_3_match", columnDefinition = "TINYINT(1)")
-    private Boolean last3Match;
-
-    @Column(name = "last_5_match", columnDefinition = "TINYINT(1)")
-    private Boolean last5Match;
+    @Column(name = "playing_15", columnDefinition = "TINYINT(1)")
+    private Boolean playing15;
 
     @Column(name = "is_captain", columnDefinition = "TINYINT(1)")
     private Boolean isCaptain;
@@ -45,6 +39,9 @@ public class DreamPlayerTeam {
     @Column(name = "is_vice_captain", columnDefinition = "TINYINT(1)")
     private Boolean isViceCaptain;
 
-    @Column(name = "playing_15", columnDefinition = "TINYINT(1)")
-    private Boolean playing15;
+    @Column(name = "dream_team", columnDefinition = "TINYINT(1)")
+    private Boolean dreamTeam;
+
+    @Column(name = "selection_percentage", columnDefinition = "DOUBLE")
+    private Double selectionPercentage;
 }
