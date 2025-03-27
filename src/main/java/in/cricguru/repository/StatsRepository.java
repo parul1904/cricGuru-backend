@@ -132,8 +132,18 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                                                LastMatchStats AS (
                                                    SELECT player_id, total_point_dream11_new_system as last_d11, total_point_my11_circle_system as last_my11, match_no as last_match_no
                                                    FROM (
-                                                       SELECT player_id, total_point_dream11_new_system, total_point_my11_circle_system, match_no, ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY match_no DESC) as rn
-                                                       FROM match_stats
+                                                       SELECT 
+                                                           ms.player_id, 
+                                                           ms.total_point_dream11_new_system, 
+                                                           ms.total_point_my11_circle_system, 
+                                                           ms.match_no,
+                                                           ROW_NUMBER() OVER (
+                                                               PARTITION BY ms.player_id 
+                                                               ORDER BY ms.season_id DESC, ms.match_no DESC
+                                                           ) as rn
+                                                       FROM match_stats ms
+                                                       JOIN matches m ON ms.match_no = m.match_no
+                                                       JOIN seasons s ON ms.season_id = s.season_id
                                                    ) ranked
                                                    WHERE rn = 1
                                                ),
@@ -250,6 +260,17 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                 JOIN match_stats ms ON p.player_id = ms.player_id
                 WHERE ms.match_no = :matchNo
             ),
+            PreviousMatches AS (
+                SELECT ms.*, m.match_date, m.team1_id, m.team2_id,
+                       ROW_NUMBER() OVER (
+                           PARTITION BY ms.player_id 
+                           ORDER BY s.season_id DESC, m.match_date DESC, m.match_id DESC
+                       ) as match_rank
+                FROM match_stats ms
+                JOIN matches m ON ms.match_no = m.match_id
+                JOIN seasons s ON ms.season_id = s.season_id
+                WHERE m.match_id < :matchNo
+            ),
             DreamTeamRanks AS (
                 SELECT match_no, player_id,
                 CASE
@@ -260,35 +281,64 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                 FROM match_stats
             ),
             LastMatchStats AS (
-                SELECT player_id, total_point_dream11_new_system as last_match_points, match_no as last_match_no
-                FROM (
-                    SELECT player_id, total_point_dream11_new_system, match_no,
-                    ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY match_no DESC) as rn
-                    FROM match_stats
-                ) ranked WHERE rn = 1
+                SELECT 
+                    player_id, 
+                    total_point_dream11_new_system as last_match_points,
+                    match_no as last_match_no
+                FROM PreviousMatches
+                WHERE match_rank = 1
             ),
             PlayerMatchStats AS (
-                SELECT ms.player_id, ms.match_no, m.match_date,
-                    t1.team_short_name as team1_name, t1.team_logo_url as team1_logo,
-                    t2.team_short_name as team2_name, t2.team_logo_url as team2_logo,
-                    ms.total_point_dream11_new_system as points, ms.runs_scored, ms.ball_faced,
-                    ms.fours, ms.sixes, ms.catch_taken, ms.stumping, ms.direct_runout, ms.in_direct_runout, 
-                    ms.total_wickets, ms.overs, ms.runs_conceded, dt.is_in_dream_team,
-                    ROW_NUMBER() OVER (PARTITION BY ms.player_id ORDER BY ms.match_no DESC) as match_rank,
-                    AVG(ms.total_point_dream11_new_system) OVER (PARTITION BY ms.player_id) as avg_points,
-                    MAX(ms.total_point_dream11_new_system) OVER (PARTITION BY ms.player_id) as highest_points,
-                    MIN(ms.total_point_dream11_new_system) OVER (PARTITION BY ms.player_id) as lowest_points
-                FROM match_stats ms
-                JOIN matches m ON ms.match_no = m.match_id
+                SELECT 
+                    pm.player_id,
+                    pm.match_no,
+                    m.match_date,
+                    t1.team_short_name as team1_name,
+                    t1.team_logo_url as team1_logo,
+                    t2.team_short_name as team2_name,
+                    t2.team_logo_url as team2_logo,
+                    pm.total_point_dream11_new_system as points,
+                    pm.runs_scored,
+                    pm.ball_faced,
+                    pm.fours,
+                    pm.sixes,
+                    pm.catch_taken,
+                    pm.stumping,
+                    pm.direct_runout,
+                    pm.in_direct_runout,
+                    pm.total_wickets,
+                    pm.overs,
+                    pm.runs_conceded,
+                    dt.is_in_dream_team,
+                    match_rank,
+                    AVG(pm.total_point_dream11_new_system) OVER (PARTITION BY pm.player_id) as avg_points,
+                    MAX(pm.total_point_dream11_new_system) OVER (PARTITION BY pm.player_id) as highest_points,
+                    MIN(pm.total_point_dream11_new_system) OVER (PARTITION BY pm.player_id) as lowest_points,
+                    AVG(CASE WHEN match_rank <= 3 THEN pm.total_point_dream11_new_system END) 
+                        OVER (PARTITION BY pm.player_id) as avg_last_3,
+                    AVG(CASE WHEN match_rank <= 5 THEN pm.total_point_dream11_new_system END) 
+                        OVER (PARTITION BY pm.player_id) as avg_last_5
+                FROM PreviousMatches pm
+                JOIN matches m ON pm.match_no = m.match_id
                 JOIN teams t1 ON m.team1_id = t1.team_id
                 JOIN teams t2 ON m.team2_id = t2.team_id
-                LEFT JOIN DreamTeamRanks dt ON ms.match_no = dt.match_no AND ms.player_id = dt.player_id
+                LEFT JOIN DreamTeamRanks dt ON pm.match_no = dt.match_no AND pm.player_id = dt.player_id
+                WHERE match_rank <= 5
             )
             SELECT 
-                mp.player_id, mp.nick_name, mp.player_img_url, mp.role,
-                mp.batting_style, mp.bowling_style,
-                pms.avg_points, pms.highest_points, pms.lowest_points,
-                lms.last_match_points, lms.last_match_no,
+                mp.player_id,
+                mp.nick_name,
+                mp.player_img_url,
+                mp.role,
+                mp.batting_style,
+                mp.bowling_style,
+                COALESCE(pms.avg_points, 0) as avg_points,
+                COALESCE(pms.highest_points, 0) as highest_points,
+                COALESCE(pms.lowest_points, 0) as lowest_points,
+                COALESCE(lms.last_match_points, 0) as last_match_points,
+                lms.last_match_no,
+                COALESCE(pms.avg_last_3, 0) as avg_last_3,
+                COALESCE(pms.avg_last_5, 0) as avg_last_5,
                 JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'matchNo', pms.match_no,
@@ -313,14 +363,23 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                     )
                 ) as match_details
             FROM MatchPlayers mp
-            LEFT JOIN PlayerMatchStats pms ON mp.player_id = pms.player_id AND pms.match_rank <= 5
+            LEFT JOIN PlayerMatchStats pms ON mp.player_id = pms.player_id
             LEFT JOIN LastMatchStats lms ON mp.player_id = lms.player_id
             GROUP BY 
-                mp.player_id, mp.nick_name, mp.player_img_url, mp.role,
-                mp.batting_style, mp.bowling_style,
-                pms.avg_points, pms.highest_points, pms.lowest_points,
-                lms.last_match_points, lms.last_match_no
-            ORDER BY lms.last_match_no DESC, pms.match_no DESC
+                mp.player_id,
+                mp.nick_name,
+                mp.player_img_url,
+                mp.role,
+                mp.batting_style,
+                mp.bowling_style,
+                pms.avg_points,
+                pms.highest_points,
+                pms.lowest_points,
+                lms.last_match_points,
+                lms.last_match_no,
+                pms.avg_last_3,
+                pms.avg_last_5
+            ORDER BY lms.last_match_no DESC NULLS LAST, pms.match_no DESC NULLS LAST
             """, nativeQuery = true)
     List<Object[]> getPlayerPerformanceStats(@Param("matchNo") Long matchNo);
 
