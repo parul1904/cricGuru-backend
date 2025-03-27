@@ -243,7 +243,8 @@ function createPlayerCard(player, season, captain, viceCaptain) {
         </div>
         <div class="player-name-container">
             <div class="player-name ${isCaptain || isViceCaptain ? "player-name-captain" : ""}">${player.playerNickName}</div>
-            ${season !== "2025" ? `<div class="player-points">${points.toFixed(1)}</div>` : ''}
+            ${season !== "2025" || (season === "2025" && document.getElementById("pointSystem2025Select")?.value === "actual") ? 
+                `<div class="player-points">${points.toFixed(1)}</div>` : ''}
         </div>
     `;
     return card;

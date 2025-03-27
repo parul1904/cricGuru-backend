@@ -234,6 +234,7 @@ public class DreamTeamMapper {
             response.setPlayerNickName((String) row[1]);
             response.setPlayerRole((String) row[2]);
             response.setPlayerImgUrl((String) row[3]);
+            response.setDream11NewPoints((Integer) row[4]);
             dreamTeamResponses.add(response);
         }
         return dreamTeamResponses;

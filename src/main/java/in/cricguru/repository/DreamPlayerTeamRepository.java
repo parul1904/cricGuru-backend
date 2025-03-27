@@ -13,10 +13,15 @@ import java.util.List;
 public interface DreamPlayerTeamRepository extends JpaRepository<DreamPlayerTeam, DreamPlayerTeamId> {
     
     @Query(value = """
-            SELECT p.player_id, p.player_name, p.role, p.player_img_url
-            FROM dream_player_team dpt
-            LEFT JOIN players p ON dpt.player_id = p.player_id
-            WHERE dpt.match_no = :matchNo and dream_team=1;
+             SELECT p.player_id, p.player_name, p.role, p.player_img_url, ms.total_point_dream11_new_system
+                        FROM dream_player_team dpt
+                        LEFT JOIN players p ON dpt.player_id = p.player_id
+                        LEFT JOIN match_stats ms ON dpt.player_id = ms.player_id\s
+                            AND ms.match_no = dpt.match_no
+                            AND ms.season_id = dpt.season_id
+                        WHERE dpt.match_no = :matchNo
+                            AND dpt.dream_team = 1
+                        ORDER BY ms.total_point_dream11_new_system DESC
             """, nativeQuery = true)
     List<Object[]> findActualDreamTeamByMatchNo(@Param("matchNo") Integer matchNo);
 

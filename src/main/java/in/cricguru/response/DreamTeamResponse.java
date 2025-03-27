@@ -20,6 +20,7 @@ public class DreamTeamResponse {
     private Double averageDream11Points;
     private Double averageMy11Points;
     private Double averageDream11Last5MatchPoints;
+    private Double totalPointDream11NewSystem;
     private Boolean isCaptain;
     private Boolean isViceCaptain;
     private Boolean playing11;
