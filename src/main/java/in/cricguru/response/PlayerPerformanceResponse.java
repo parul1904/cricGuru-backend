@@ -32,7 +32,7 @@ public class PlayerPerformanceResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class MatchPerformance {
-        private Integer matchNo;
+        private Integer matchId;
         private LocalDate matchDate;
         private String team1Name;
         private String team1Logo;

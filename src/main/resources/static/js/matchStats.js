@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Check if actual dream team exists for this match
-        const matchNo = document.getElementById('matchNo').value;
+        const matchId = document.getElementById('matchId').value;
         const matchesWithDreamTeam = JSON.parse(document.getElementById('matchesWithDreamTeam').value || '[]');
-        const hasActualDreamTeam = matchesWithDreamTeam.includes(parseInt(matchNo));
+        const hasActualDreamTeam = matchesWithDreamTeam.includes(parseInt(matchId));
         
         // Find or create the actual dream team option
         let actualOption = pointSystem2025Select.querySelector('option[value="actual"]');
@@ -243,7 +243,7 @@ function createPlayerCard(player, season, captain, viceCaptain) {
         </div>
         <div class="player-name-container">
             <div class="player-name ${isCaptain || isViceCaptain ? "player-name-captain" : ""}">${player.playerNickName}</div>
-            ${season !== "2025" || (season === "2025" && document.getElementById("pointSystem2025Select")?.value === "actual") ? 
+            ${season !== "2025"  ? 
                 `<div class="player-points">${points.toFixed(1)}</div>` : ''}
         </div>
     `;
@@ -454,8 +454,8 @@ function createPlayerStatsCard(player) {
     const card = document.createElement('div');
     const topPlayersAvg = calculateTopPlayersAverage(globalPlayersData || []); // Assuming globalPlayersData is available
 
-    // Sort recentMatches in descending order of matchNo
-    const recentMatches = (player.recentMatches || []).sort((a, b) => b.matchNo - a.matchNo);
+    // Sort recentMatches in descending order of matchId
+    const recentMatches = (player.recentMatches || []).sort((a, b) => new Date(b.matchDate) - new Date(a.matchDate));
     const last5Matches = recentMatches.slice(0, 5);
     const averagePoints = recentMatches.length > 0
         ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)
@@ -521,35 +521,45 @@ function showPlayerDetailModal(player) {
     const modal = document.createElement('div');
     modal.className = 'player-modal';
 
-    const recentMatches = player.recentMatches || [];
-    const matchesHtml = recentMatches.map(match => {
-        // Format date to be more compact
-        const matchDate = new Date(match.matchDate).toLocaleDateString(undefined, {
-            month: 'numeric',
-            day: 'numeric'
-        });
+    // Calculate average points from recent matches
+    const recentMatches = (player.recentMatches || []).sort((a, b) => new Date(b.matchDate) - new Date(a.matchDate));
+    const averagePoints = recentMatches.length > 0
+        ? (recentMatches.reduce((sum, match) => sum + (match.dream11NewPoints || match.points || 0), 0) / recentMatches.length).toFixed(1)
+        : '0.0';
+    const matchesHtml = recentMatches
+        .sort((a, b) => new Date(b.matchDate) - new Date(a.matchDate))
+        .map(match => {
+            // Format date to be more compact
+            const matchDate = new Date(match.matchDate).toLocaleDateString(undefined, {
+                month: 'numeric',
+                day: 'numeric'
+            });
 
-        // Shorten team names
-        const team1Short = match.team1Name.split(' ').pop();
-        const team2Short = match.team2Name.split(' ').pop();
+            // Shorten team names
+            const team1Short = match.team1Name.split(' ').pop();
+            const team2Short = match.team2Name.split(' ').pop();
 
-        // Format batting score more compactly
-        const battingScore = `${match.runsScored || 0}(${match.ballFaced || 0})`;
+            // Format batting score more compactly
+            const battingScore = `${match.runsScored || 0}(${match.ballFaced || 0})`;
 
-        // Format bowling figures more compactly
-        const bowlingFigures = `${match.wickets || 0}-${match.runsConceded || 0}`;
-
-        return `
-          <tr class="${match.isPartOfDreamTeam ? 'dream-team-match' : ''}">
-              <td>${matchDate}</td>
-              <td>${team1Short} v ${team2Short}</td>
-              <td>${match.points || 0}</td>
-              <td>${battingScore}</td>
-              <td>${bowlingFigures}</td>
-              <td>${match.isPartOfDreamTeam ? '<span class="dream-team-badge">DT</span>' : ''}</td>
-          </tr>
-      `;
-    }).join('');
+            // Format bowling figures more compactly
+            const bowlingFigures = `${match.wickets || 0}-${match.runsConceded || 0}`;
+            const formattedMatchDate = new Date(match.matchDate).toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: '2-digit',
+                year: '2-digit'
+            }).replace(/\//g, '-');
+            return `
+              <tr class="${match.isPartOfDreamTeam ? 'dream-team-match' : ''}">
+                  <td>${formattedMatchDate}</td>
+                  <td>${team1Short} v ${team2Short}</td>
+                  <td>${match.dream11NewPoints || match.points || 0}</td>
+                  <td>${battingScore}</td>
+                  <td>${bowlingFigures}</td>
+                  <td>${match.isPartOfDreamTeam ? '<span class="dream-team-badge">DT</span>' : ''}</td>
+              </tr>
+          `;
+        }).join('');
 
     const performanceChartId = `performanceChart_${player.playerId}_${Date.now()}`;
     const pointsDistributionId = `distributionChart_${player.playerId}_${Date.now()}`;
@@ -576,7 +586,7 @@ function showPlayerDetailModal(player) {
           <div class="player-stats-summary">
               <div class="stat-box">
                   <span class="stat-label">Average Points</span>
-                  <span class="stat-value">${(player.averagePoints || 0).toFixed(1)}</span>
+                  <span class="stat-value">${(player.averageDream11Points || 0).toFixed(1)}</span>
               </div>
               <div class="stat-box">
                   <span class="stat-label">Max Points</span>
@@ -1058,7 +1068,7 @@ function displayPlayersByRole(selectedRole) {
     // Calculate last 3 matches average for all players in this role
     const playersWithAvg = playersInRole.map(player => {
         const recentMatches = (player.recentMatches || [])
-            .sort((a, b) => b.matchNo - a.matchNo)
+            .sort((a, b) => b.matchId - a.matchId)
             .slice(0, 3);
 
         const last3MatchesAvg = recentMatches.length > 0
@@ -1088,14 +1098,14 @@ function displayPlayersByRole(selectedRole) {
         // First sort by hot player status
         if (a.isHotPlayer && !b.isHotPlayer) return -1;
         if (!a.isHotPlayer && b.isHotPlayer) return 1;
-        
+
         // If both are hot or both are not hot, sort by average points
         return b.last3MatchesAvg - a.last3MatchesAvg;
     });
 
     const playerGrid = document.createElement('div');
     playerGrid.className = 'player-grid';
-
+    console.log(`sortedPlayers size is::: `, sortedPlayers.length);
     // Create cards with updated hot player status
     sortedPlayers.forEach(player => {
         const card = createPlayerStatsCard(player);
@@ -1108,8 +1118,8 @@ function displayPlayersByRole(selectedRole) {
 function createPlayerStatsCard(player) {
     const card = document.createElement('div');
 
-    // Sort recentMatches in descending order of matchNo
-    const recentMatches = (player.recentMatches || []).sort((a, b) => b.matchNo - a.matchNo);
+    // Sort recentMatches in descending order of matchId
+    const recentMatches = (player.recentMatches || []).sort((a, b) => new Date(b.matchDate) - new Date(a.matchDate));
     const last5Matches = recentMatches.slice(0, 5);
     const averagePoints = recentMatches.length > 0
         ? (recentMatches.reduce((sum, match) => sum + (match.points || 0), 0) / recentMatches.length).toFixed(1)

@@ -113,145 +113,149 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
 
     @Query(value = """
             WITH CurrentSquadPlayers AS (
-                                                   SELECT DISTINCT p.player_id, p.nick_name, p.player_img_url, p.role, p.batting_style, p.bowling_style
-                                                   FROM players p
-                                                   JOIN dream_player_team dpt ON p.player_id = dpt.player_id
-                                                   JOIN matches m ON dpt.match_no = m.match_no
-                                                   WHERE dpt.season_id = :seasonId
-                                                   AND (m.team1_id = :team1Id OR m.team2_id = :team2Id)
-                                               ),
-                                               DreamTeamRanks AS (
-                                                   SELECT match_no, player_id,
-                                                          CASE
-                                                              WHEN ROW_NUMBER() OVER (PARTITION BY match_no ORDER BY total_point_dream11_new_system DESC) <= 11
-                                                              THEN true
-                                                              ELSE false
-                                                          END as is_in_dream_team
-                                                   FROM match_stats
-                                               ),
-                                               LastMatchStats AS (
-                                                   SELECT player_id, total_point_dream11_new_system as last_d11, total_point_my11_circle_system as last_my11, match_no as last_match_no
-                                                   FROM (
-                                                       SELECT 
-                                                           ms.player_id, 
-                                                           ms.total_point_dream11_new_system, 
-                                                           ms.total_point_my11_circle_system, 
-                                                           ms.match_no,
-                                                           ROW_NUMBER() OVER (
-                                                               PARTITION BY ms.player_id 
-                                                               ORDER BY ms.season_id DESC, ms.match_no DESC
-                                                           ) as rn
-                                                       FROM match_stats ms
-                                                       JOIN matches m ON ms.match_no = m.match_no
-                                                       JOIN seasons s ON ms.season_id = s.season_id
-                                                   ) ranked
-                                                   WHERE rn = 1
-                                               ),
-                                               PlayerMatchStats AS (
-                                                   SELECT ms.player_id, ms.match_no, m.match_date, t1.team_short_name as team1_name, t1.team_logo_url as team1_logo,
-                                                          t2.team_short_name as team2_name, t2.team_logo_url as team2_logo, ms.total_point_dream11_new_system as points, ms.runs_scored, ms.ball_faced,
-                                                          ms.fours, ms.sixes, ms.catch_taken, ms.stumping, ms.direct_runout, ms.in_direct_runout, ms.total_wickets, ms.overs, ms.runs_conceded, dt.is_in_dream_team,
-                                                          ms.total_point_dream11_old_system, ms.total_point_my11_circle_system, ms.total_point_dream11_new_system,
-                                                          ROW_NUMBER() OVER (PARTITION BY ms.player_id ORDER BY ms.match_no DESC) as match_rank
-                                                   FROM match_stats ms
-                                                   JOIN matches m ON ms.match_no = m.match_no
-                                                   JOIN seasons s ON ms.season_id=s.season_id
-                                                   JOIN teams t1 ON m.team1_id = t1.team_id
-                                                   JOIN teams t2 ON m.team2_id = t2.team_id
-                                                   LEFT JOIN DreamTeamRanks dt ON ms.match_no = dt.match_no AND ms.player_id = dt.player_id
-                                               ),
-                                               PlayerAvgStats AS (
-                                                   SELECT pms.player_id,
-                                                          MAX(pms.total_point_dream11_new_system) AS highest_points,
-                                                          MIN(pms.total_point_dream11_new_system) AS lowest_points,
-                                                          AVG(CASE WHEN pms.match_rank <= 3 THEN pms.total_point_dream11_new_system ELSE NULL END) AS avg_last_3_d11,
-                                                          AVG(CASE WHEN pms.match_rank <= 3 THEN pms.total_point_my11_circle_system ELSE NULL END) AS avg_last_3_my11,
-                                                          AVG(CASE WHEN pms.match_rank <= 5 THEN pms.total_point_dream11_new_system ELSE NULL END) AS avg_last_5_d11
-                                                   FROM PlayerMatchStats pms
-                                                   GROUP BY pms.player_id
-                                               ),
-                                               RankedPlayers AS (
-                                                   SELECT csp.player_id,
-                                                          csp.nick_name,
-                                                          csp.player_img_url,
-                                                          csp.role,
-                                                          csp.batting_style,
-                                                          csp.bowling_style,
-                                                          lms.last_d11,
-                                                          pas.avg_last_3_d11,
-                                                          lms.last_my11,
-                                                          pas.avg_last_3_my11,
-                                                          pas.highest_points,
-                                                          pas.lowest_points,
-                                                          lms.last_match_no,
-                                                          pas.avg_last_5_d11,
-                                                          COALESCE(MAX(CASE WHEN dpt.is_captain = 1 THEN 1 ELSE 0 END), 0) AS is_captain,
-                                                          COALESCE(MAX(CASE WHEN dpt.is_vice_captain = 1 THEN 1 ELSE 0 END), 0) AS is_vice_captain,
-                                                          COALESCE(MAX(CASE WHEN dpt.playing_11 = 1 THEN 1 ELSE 0 END), 0) AS playing_11,
-                                                          COALESCE(MAX(CASE WHEN dpt.playing_15 = 1 THEN 1 ELSE 0 END), 0) AS playing_15,
-                                                          JSON_ARRAYAGG(
-                                                              JSON_OBJECT(
-                                                                  'matchNo', pms.match_no,
-                                                                  'matchDate', pms.match_date,
-                                                                  'team1Name', pms.team1_name,
-                                                                  'team1Logo', pms.team1_logo,
-                                                                  'team2Name', pms.team2_name,
-                                                                  'team2Logo', pms.team2_logo,
-                                                                  'points', pms.points,
-                                                                  'runsScored', pms.runs_scored,
-                                                                  'ballFaced', pms.ball_faced,
-                                                                  'fours', pms.fours,
-                                                                  'sixes', pms.sixes,
-                                                                  'catches', pms.catch_taken,
-                                                                  'stumpings', pms.stumping,
-                                                                  'runOutDirect', pms.direct_runout,
-                                                                  'runOutInDirect', pms.in_direct_runout,
-                                                                  'wickets', pms.total_wickets,
-                                                                  'overs', pms.overs,
-                                                                  'runsConceded', pms.runs_conceded,
-                                                                  'isPartOfDreamTeam', pms.is_in_dream_team,
-                                                                  'dream11OldPoints', pms.total_point_dream11_old_system,
-                                                                  'my11CirclePoints', pms.total_point_my11_circle_system,
-                                                                  'dream11NewPoints', pms.total_point_dream11_new_system
-                                                              )
-                                                          ) as match_details,
-                                                          ROW_NUMBER() OVER (PARTITION BY csp.role ORDER BY lms.last_d11 DESC) as rn
-                                                   FROM CurrentSquadPlayers csp
-                                                   LEFT JOIN PlayerMatchStats pms ON csp.player_id = pms.player_id AND pms.match_rank <= 5
-                                                   LEFT JOIN LastMatchStats lms ON csp.player_id = lms.player_id
-                                                   LEFT JOIN PlayerAvgStats pas ON csp.player_id = pas.player_id
-                                                   LEFT JOIN dream_player_team dpt ON csp.player_id = dpt.player_id\s
-                                                   LEFT JOIN matches m ON dpt.match_no = m.match_no
-                                                   LEFT JOIN seasons s ON dpt.season_id=s.season_id
-                                                   WHERE dpt.season_id = :seasonId
-                                                   AND (dpt.match_no = :matchNo)
-                                                   GROUP BY\s
-                                                       csp.player_id, csp.nick_name, csp.player_img_url, csp.role,\s
-                                                       csp.batting_style, csp.bowling_style, lms.last_d11,
-                                                       lms.last_match_no, pas.highest_points, pas.lowest_points,\s
-                                                       pas.avg_last_3_d11, pas.avg_last_3_my11, pas.avg_last_5_d11
-                                               ),
-                                               FinalResult AS (
-                                                   SELECT *
-                                                   FROM RankedPlayers
-                                                   WHERE player_id IN (
-                                                       SELECT player_id
-                                                       FROM (
-                                                           SELECT player_id, role, MIN(rn) as min_rn
-                                                           FROM RankedPlayers
-                                                           GROUP BY role
-                                                       ) AS MinPerRole
-                                                       UNION
-                                                       SELECT player_id
-                                                       FROM RankedPlayers
-                                                       WHERE rn <= 8
-                                                   )
-                                               )
-                                               SELECT *
-                                               FROM FinalResult
-                                               ORDER BY last_d11 DESC;
+                            SELECT DISTINCT p.player_id, p.nick_name, p.player_img_url, p.role, p.batting_style, p.bowling_style
+                            FROM players p
+                            JOIN dream_player_team dpt ON p.player_id = dpt.player_id
+                            JOIN matches m ON dpt.match_no = m.match_id
+                            WHERE dpt.season_id = :seasonId
+                            AND (m.team1_id = :team1Id OR m.team2_id = :team2Id)
+                        ),
+                        DreamTeamRanks AS (
+                            SELECT match_no, player_id,
+                                CASE
+                                    WHEN ROW_NUMBER() OVER (PARTITION BY match_no ORDER BY total_point_dream11_new_system DESC) <= 11
+                                    THEN true
+                                    ELSE false
+                                END as is_in_dream_team
+                            FROM match_stats
+                        ),
+                        LastMatchStats AS (
+                            SELECT player_id, total_point_dream11_new_system as last_d11, total_point_my11_circle_system as last_my11, match_no as last_match_no
+                            FROM (
+                                SELECT
+                                    ms.player_id,
+                                    ms.total_point_dream11_new_system,
+                                    ms.total_point_my11_circle_system,
+                                    ms.match_no,
+                                    ROW_NUMBER() OVER (
+                                        PARTITION BY ms.player_id
+                                        ORDER BY ms.season_id DESC, ms.match_no DESC
+                                    ) as rn
+                                FROM match_stats ms
+                                JOIN matches m ON ms.match_no = m.match_id
+                                JOIN seasons s ON ms.season_id = s.season_id
+                            ) ranked
+                            WHERE rn = 1
+                        ),
+                        PlayerMatchStats AS (
+                            SELECT ms.player_id, ms.match_no, m.match_date, t1.team_short_name as team1_name, t1.team_logo_url as team1_logo,
+                                   t2.team_short_name as team2_name, t2.team_logo_url as team2_logo, ms.total_point_dream11_new_system as points, ms.runs_scored, ms.ball_faced,
+                                   ms.fours, ms.sixes, ms.catch_taken, ms.stumping, ms.direct_runout, ms.in_direct_runout, ms.total_wickets, ms.overs, ms.runs_conceded, dt.is_in_dream_team,
+                                   ms.total_point_dream11_old_system, ms.total_point_my11_circle_system, ms.total_point_dream11_new_system
+                            FROM match_stats ms
+                            JOIN matches m ON ms.match_no = m.match_id
+                            JOIN seasons s ON ms.season_id=s.season_id
+                            JOIN teams t1 ON m.team1_id = t1.team_id
+                            JOIN teams t2 ON m.team2_id = t2.team_id
+                            LEFT JOIN DreamTeamRanks dt ON ms.match_no = dt.match_no AND ms.player_id = dt.player_id
+                        ),
+                        PlayerAvgStats AS (
+                            SELECT
+                                                      pms.player_id,
+                                                      MAX(pms.total_point_dream11_new_system) AS highest_points,
+                                                      MIN(pms.total_point_dream11_new_system) AS lowest_points,
+                                                      AVG(CASE WHEN seq_num_3 <= 3 THEN pms.total_point_dream11_new_system ELSE NULL END) AS avg_last_3_d11,
+                                                      AVG(CASE WHEN seq_num_3 <= 3 THEN pms.total_point_my11_circle_system ELSE NULL END) AS avg_last_3_my11,
+                                                      AVG(CASE WHEN seq_num_5 <= 5 THEN pms.total_point_dream11_new_system ELSE NULL END) AS avg_last_5_d11
+                                                  FROM (
+                                                      SELECT
+                                                          pms.*,
+                                                          ROW_NUMBER() OVER (PARTITION BY pms.player_id ORDER BY pms.match_no DESC) AS seq_num_3,
+                                                          ROW_NUMBER() OVER (PARTITION BY pms.player_id ORDER BY pms.match_no DESC) AS seq_num_5
+                                                      FROM PlayerMatchStats pms
+                                                  ) pms
+                                                  GROUP BY pms.player_id
+                        ),  
+                        RankedPlayers AS (
+                            SELECT csp.player_id,
+                                   csp.nick_name,
+                                   csp.player_img_url,
+                                   csp.role,
+                                   csp.batting_style,
+                                   csp.bowling_style,
+                                   lms.last_d11,
+                                   pas.avg_last_3_d11,
+                                   lms.last_my11,
+                                   pas.avg_last_3_my11,
+                                   pas.highest_points,
+                                   pas.lowest_points,
+                                   lms.last_match_no,
+                                   pas.avg_last_5_d11,
+                                   COALESCE(MAX(CASE WHEN dpt.is_captain = 1 THEN 1 ELSE 0 END), 0) AS is_captain,
+                                   COALESCE(MAX(CASE WHEN dpt.is_vice_captain = 1 THEN 1 ELSE 0 END), 0) AS is_vice_captain,
+                                   COALESCE(MAX(CASE WHEN dpt.playing_11 = 1 THEN 1 ELSE 0 END), 0) AS playing_11,
+                                   COALESCE(MAX(CASE WHEN dpt.playing_15 = 1 THEN 1 ELSE 0 END), 0) AS playing_15,
+                                   (SELECT JSON_ARRAYAGG(j) FROM (SELECT JSON_OBJECT(
+                                           'matchId', pms2.match_no,
+                                           'matchDate', pms2.match_date,
+                                           'team1Name', pms2.team1_name,
+                                           'team1Logo', pms2.team1_logo,
+                                           'team2Name', pms2.team2_name,
+                                           'team2Logo', pms2.team2_logo,
+                                           'points', pms2.points,
+                                           'runsScored', pms2.runs_scored,
+                                           'ballFaced', pms2.ball_faced,
+                                           'fours', pms2.fours,
+                                           'sixes', pms2.sixes,
+                                           'catches', pms2.catch_taken,
+                                           'stumpings', pms2.stumping,
+                                           'runOutDirect', pms2.direct_runout,
+                                           'runOutInDirect', pms2.in_direct_runout,
+                                           'wickets', pms2.total_wickets,
+                                           'overs', pms2.overs,
+                                           'runsConceded', pms2.runs_conceded,
+                                           'isPartOfDreamTeam', pms2.is_in_dream_team,
+                                           'dream11OldPoints', pms2.total_point_dream11_old_system,
+                                           'my11CirclePoints', pms2.total_point_my11_circle_system,
+                                           'dream11NewPoints', pms2.total_point_dream11_new_system
+                                       ) AS j from PlayerMatchStats pms2 WHERE pms2.player_id = csp.player_id AND pms2.match_no IN (SELECT match_no FROM (SELECT match_no, ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY match_no DESC) as rn FROM PlayerMatchStats) tmp WHERE rn <= 5) GROUP BY pms2.match_no) AS sub) as match_details,
+                                   ROW_NUMBER() OVER (PARTITION BY csp.role ORDER BY lms.last_d11 DESC) as rn
+                           FROM
+                                CurrentSquadPlayers csp
+                            LEFT JOIN PlayerMatchStats pms ON csp.player_id = pms.player_id AND pms.match_no IN (SELECT match_no FROM (SELECT match_no, ROW_NUMBER() OVER (PARTITION BY player_id ORDER BY match_no DESC) as rn FROM PlayerMatchStats) tmp WHERE rn <= 5)
+                            LEFT JOIN LastMatchStats lms ON csp.player_id = lms.player_id
+                            LEFT JOIN PlayerAvgStats pas ON csp.player_id = pas.player_id
+                            LEFT JOIN dream_player_team dpt ON csp.player_id = dpt.player_id
+                            LEFT JOIN matches m ON dpt.match_no = m.match_id
+                            LEFT JOIN seasons s ON dpt.season_id=s.season_id
+                            WHERE dpt.season_id = :seasonId
+                            AND (dpt.match_no = :matchId)
+                            GROUP BY
+                                csp.player_id, csp.nick_name, csp.player_img_url, csp.role,
+                                csp.batting_style, csp.bowling_style, lms.last_d11,
+                                lms.last_match_no, pas.highest_points, pas.lowest_points,
+                                pas.avg_last_3_d11, pas.avg_last_3_my11, pas.avg_last_5_d11
+                        ),
+                        FinalResult AS (
+                            SELECT *
+                            FROM RankedPlayers
+                            WHERE player_id IN (
+                                SELECT player_id
+                                FROM (
+                                    SELECT player_id, role, MIN(rn) as min_rn
+                                    FROM RankedPlayers
+                                    GROUP BY role
+                                ) AS MinPerRole
+                                UNION
+                                SELECT player_id
+                                FROM RankedPlayers
+                            )
+                        )
+                        SELECT *
+                        FROM FinalResult
+                        ORDER BY last_d11 DESC;
             """, nativeQuery = true)
-    List<Object[]> getPlayerPerformanceStats(@Param("seasonId") Long seasonId, @Param("team1Id") Long team1Id, @Param("team2Id") Long team2Id, @Param("matchNo") Long matchNo);
+    List<Object[]> getPlayerPerformanceStats(@Param("seasonId") Long seasonId, @Param("team1Id") Long team1Id, @Param("team2Id") Long team2Id, @Param("matchId") Long matchId);
 
     @Query(value = """
             WITH MatchPlayers AS (

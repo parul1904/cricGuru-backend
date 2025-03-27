@@ -60,7 +60,7 @@
         <div id="dreamTeam2025Dropdown" class="mt-2">
             <input type="hidden" id="matchesWithDreamTeam" value='${matchesWithDreamTeam}' />
             <input type="hidden" id="actualDreamTeamJson" value='${actualDreamTeamJson}' />
-            <input type="hidden" id="matchNo" value="${match.matchNo}" />
+            <input type="hidden" id="matchId" value="${match.matchId}" />
 
             <select id="pointSystem2025Select" class="form-select mb-3">
                 <option value="last5Avg">Dream11 Based on Last 5 Matches</option>

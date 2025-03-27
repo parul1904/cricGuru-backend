@@ -353,9 +353,7 @@ public class StatsMapper {
                     .filter(p -> p.getPlayerRole().equals(role))
                     .count();
 
-            if (roleCount < 8) {
                 selectedPlayers.add(player);
-            }
         }
 
         return selectedPlayers.stream()
@@ -425,10 +423,7 @@ public class StatsMapper {
                     .filter(p -> p.getPlayerRole().equals(role))
                     .count();
 
-            // Ensure we don't exceed 8 players per role
-            if (roleCount < 8) {
                 selectedPlayers.add(player);
-            }
         }
 
         // Final sort by points
@@ -483,9 +478,7 @@ public class StatsMapper {
                     .filter(p -> p.getPlayerRole().equals(role))
                     .count();
 
-            if (roleCount < 8) {
                 selectedPlayers.add(player);
-            }
         }
 
         return selectedPlayers.stream()
@@ -539,9 +532,7 @@ public class StatsMapper {
                     .filter(p -> p.getPlayerRole().equals(role))
                     .count();
 
-            if (roleCount < 8) {
                 selectedPlayers.add(player);
-            }
         }
 
         return selectedPlayers.stream()
@@ -657,9 +648,7 @@ public class StatsMapper {
                     .filter(p -> p.getPlayerRole().equals(role))
                     .count();
 
-            if (roleCount < 8) {
                 selectedPlayers.add(player);
-            }
         }
 
         return selectedPlayers.stream()
