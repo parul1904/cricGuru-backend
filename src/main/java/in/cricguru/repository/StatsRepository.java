@@ -117,7 +117,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                                        FROM players p
                                        JOIN dream_player_team dpt ON p.player_id = dpt.player_id
                                        JOIN matches m ON dpt.match_no = m.match_id
-                                       WHERE dpt.season_id = 2
+                                       WHERE dpt.season_id = :seasonId
                                        AND (m.team1_id = :team1Id OR m.team2_id = :team2Id)
                                    ),
                                    DreamTeamRanks AS (
@@ -211,7 +211,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                                        LEFT JOIN PlayerAvgStats pas ON csp.player_id = pas.player_id
                                        LEFT JOIN dream_player_team dpt ON csp.player_id = dpt.player_id 
                                        LEFT JOIN matches m ON dpt.match_no = m.match_id
-                                       WHERE dpt.season_id = 2 
+                                       WHERE dpt.season_id = :seasonId 
                                        AND (dpt.match_no = :matchNo)
                                        GROUP BY 
                                            csp.player_id, csp.nick_name, csp.player_img_url, csp.role, 

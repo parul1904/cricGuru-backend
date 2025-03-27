@@ -103,4 +103,13 @@ public class MatchServiceImpl implements MatchService {
         Match nextMatchDetails = matchRepository.nextMatch(now);
         return matchMapper.mapToMatchResponse(nextMatchDetails);
     }
+
+    @Override
+    public MatchDto getMatchBySeasonAndMatchNo(Integer seasonId, Integer matchNo) {
+        Match match = matchRepository.findBySeasonIdAndMatchNo(seasonId, matchNo)
+                .orElseThrow(() -> new RuntimeException(
+                    String.format("Match not found with seasonId: %d and matchNo: %d", seasonId, matchNo)
+                ));
+        return matchMapper.mapToMatchDto(match);
+    }
 }

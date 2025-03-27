@@ -227,10 +227,16 @@ function createPlayerCard(player, season, captain, viceCaptain) {
     // Add team-specific class to the main card
     card.className = `player-card ${player.team1 ? 'team1-player-card' : 'team2-player-card'}`;
 
+    // Ensure image URL is absolute
+    const playerImageUrl = player.playerImgUrl && !player.playerImgUrl.startsWith('http') ?
+        new URL(player.playerImgUrl, window.location.origin).href :
+        player.playerImgUrl || '/images/default-player.png';
+
     card.innerHTML = `
         <div class="player-image-container ${isCaptain || isViceCaptain ? "player-image-container-captain" : ""}">
             <div class="player-image-container-img">
-                <img src="${player.playerImgUrl}" crossorigin="anonymous" alt="${player.playerNickName}">
+                <img src="${playerImageUrl}" crossorigin="anonymous" alt="${player.playerNickName}" 
+                     onerror="this.src='/images/default-player.png'">
             </div>
             ${isCaptain ? '<p class="player-leadership-role player-leadership-role-captain">C</p>' : ''}
             ${isViceCaptain ? '<p class="player-leadership-role player-leadership-role-vice-captain">VC</p>' : ''}
@@ -474,7 +480,6 @@ function createPlayerStatsCard(player) {
         <div class="player-header-section">
             <div class="player-image">
                 <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
-                     onerror="this.src='../images/default-player.png'"
                      style="width: 80px; height: 80px; object-fit: cover;">
             </div>
             <div class="player-info-header">
@@ -555,8 +560,7 @@ function showPlayerDetailModal(player) {
           <div class="player-basic-details">
               <div class="player-image-container">
                   <img src="${player.playerImageUrl || player.playerImgUrl}"
-                       alt="${player.playerName}"
-                       onerror="this.src='../images/default-player.png'">
+                       alt="${player.playerName}">
               </div>
               <div class="player-info">
                   <h3>${player.playerName}</h3>
@@ -1125,7 +1129,6 @@ function createPlayerStatsCard(player) {
             <div class="player-header-section">
                 <div class="player-image">
                     <img src="${player.playerImageUrl || player.playerImgUrl}" alt="${player.playerName}"
-                         onerror="this.src='../images/default-player.png'"
                          style="width: 60px; height: 60px; object-fit: cover;">
                 </div>
                 <div class="player-info-header">
@@ -1182,13 +1185,13 @@ function downloadDreamTeamImage() {
         downloadButton.style.display = 'none';
     }
 
-    // Create loading indicator outside the dreamTeamElement
+    // Create loading indicator
     const loadingIndicator = document.createElement('div');
     loadingIndicator.className = 'download-loading';
     loadingIndicator.innerHTML = '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Converting...</span></div>';
     document.body.appendChild(loadingIndicator);
 
-    // First, ensure all images are loaded
+    // Handle image loading with absolute paths
     const imagePromises = [];
     const images = dreamTeamElement.getElementsByTagName('img');
 
@@ -1198,19 +1201,28 @@ function downloadDreamTeamImage() {
 
         const promise = new Promise((resolve, reject) => {
             newImg.onload = () => {
+                // Ensure the original image uses the loaded absolute path
                 img.src = newImg.src;
                 resolve();
             };
             newImg.onerror = () => {
-                newImg.src = '../images/default-player.png';
+                // Use absolute path for default image
+                const defaultImagePath = '/images/default-player.png';
+                newImg.src = defaultImagePath;
+                img.src = defaultImagePath;
                 resolve();
             };
         });
 
-        const timestamp = new Date().getTime();
-        newImg.src = img.src.includes('?') ?
-            `${img.src}&t=${timestamp}` :
-            `${img.src}?t=${timestamp}`;
+        // Convert relative paths to absolute paths
+        const imgSrc = img.src;
+        if (!imgSrc.startsWith('http') && !imgSrc.startsWith('data:')) {
+            // Convert relative path to absolute
+            const absolutePath = new URL(imgSrc, window.location.origin).href;
+            newImg.src = absolutePath;
+        } else {
+            newImg.src = imgSrc;
+        }
 
         imagePromises.push(promise);
     }
@@ -1223,7 +1235,7 @@ function downloadDreamTeamImage() {
                 allowTaint: true,
                 backgroundColor: '#ffffff',
                 logging: false,
-                onclone: function (clonedDoc) {
+                onclone: function(clonedDoc) {
                     const clonedImages = clonedDoc.getElementsByTagName('img');
                     for (let img of clonedImages) {
                         img.crossOrigin = "anonymous";
@@ -1234,7 +1246,7 @@ function downloadDreamTeamImage() {
             });
         })
         .then(canvas => {
-            // Remove loading indicator from body
+            // Remove loading indicator
             document.body.removeChild(loadingIndicator);
 
             // Show download button again
@@ -1242,34 +1254,20 @@ function downloadDreamTeamImage() {
                 downloadButton.style.display = 'flex';
             }
 
-            // Generate filename using match details
-            let filename = 'dream-team';
-
-            filename = `${filename}.png`;
-
-            // Create download link
+            // Generate and trigger download
             const link = document.createElement('a');
-            link.download = filename;
+            link.download = 'dream-team.png';
             link.href = canvas.toDataURL('image/png', 1.0);
-
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         })
         .catch(error => {
             console.error('Error generating image:', error);
-
-            // Remove loading indicator from body
-            if (document.body.contains(loadingIndicator)) {
-                document.body.removeChild(loadingIndicator);
-            }
-
-            // Show download button again
+            document.body.removeChild(loadingIndicator);
             if (downloadButton) {
                 downloadButton.style.display = 'flex';
             }
-
-            alert('Failed to generate image. Please try again.');
         });
 }
 
@@ -1336,8 +1334,7 @@ function displayPlayerSelection(playerSelectionData) {
         return `
             <div class="selection-player-card">
                 <div class="selection-player-image">
-                    <img src="${player.playerImgUrl}" alt="${player.playerNickName}" 
-                         onerror="this.src='../images/default-player.png'">
+                    <img src="${player.playerImgUrl}" alt="${player.playerNickName}">
                 </div>
                 <div class="selection-player-name">${player.playerNickName}</div>
             </div>

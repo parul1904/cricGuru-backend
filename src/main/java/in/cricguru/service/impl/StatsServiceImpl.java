@@ -124,9 +124,9 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<DreamTeamResponse> lastMatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+    public List<DreamTeamResponse> lastMatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer matchNo) {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
-                        Long.valueOf(statsBy)).stream()
+                        Long.valueOf(matchNo)).stream()
                 .collect(Collectors.toUnmodifiableList());
         return statsMapper.mapToNewPointDreamTeamResponse(performanceData);
     }
@@ -140,9 +140,9 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<DreamTeamResponse> last3MatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+    public List<DreamTeamResponse> last3MatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer matchNo) {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
-                        Long.valueOf(statsBy)).stream()
+                        Long.valueOf(matchNo)).stream()
                 .collect(Collectors.toUnmodifiableList());
         List<DreamTeamResponse> dreamTeamResponses = statsMapper.mapToDream11AverageDreamTeamResponse(performanceData);
         System.out.println(dreamTeamResponses.size());
@@ -150,9 +150,9 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<DreamTeamResponse> last5MatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+    public List<DreamTeamResponse> last5MatchDreamTeam(Integer seasonId, Integer team1Id, Integer team2Id, Integer matchNo) {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
-                        Long.valueOf(statsBy)).stream()
+                        Long.valueOf(matchNo)).stream()
                 .collect(Collectors.toUnmodifiableList());
         return statsMapper.mapToDream11AverageDreamTeamLast5MatchesResponse(performanceData);
     }

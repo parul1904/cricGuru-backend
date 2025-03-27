@@ -110,15 +110,23 @@ public class DreamTeamMapper {
     private DreamTeamResponse createDreamTeamResponse(PlayerPerformanceResponse player) {
         DreamTeamResponse response = new DreamTeamResponse();
         response.setPlayerId(player.getPlayerId());
-        response.setPlayerImgUrl(player.getPlayerImageUrl());
+        
+        // Ensure image URL is properly formatted
+        String imageUrl = player.getPlayerImageUrl();
+        if (imageUrl != null && !imageUrl.startsWith("http")) {
+            // If it's a relative path, ensure it starts with /
+            imageUrl = imageUrl.startsWith("/") ? imageUrl : "/" + imageUrl;
+        }
+        response.setPlayerImgUrl(imageUrl);
+        
         response.setPlayerNickName(player.getPlayerName());
         response.setPlayerRole(player.getRole());
         
         // Get team logos from the last match
         if (!player.getRecentMatches().isEmpty()) {
             MatchPerformance lastMatch = player.getRecentMatches().get(0);
-            response.setTeam1(lastMatch.getTeam1Logo());
-            response.setTeam2(lastMatch.getTeam2Logo());
+            response.setTeam1(ensureAbsolutePath(lastMatch.getTeam1Logo()));
+            response.setTeam2(ensureAbsolutePath(lastMatch.getTeam2Logo()));
         }
         
         // Set points
@@ -134,32 +142,33 @@ public class DreamTeamMapper {
         List<PlayerSelectionResponse> viceCaptains = new ArrayList<>();
         List<PlayerSelectionResponse> otherPlayers = new ArrayList<>();
         
-        // Get the first element which contains all players
         if (dbResults == null || dbResults.isEmpty()) {
             return new ArrayList<>();
         }
         
         Object[] playersList = dbResults.get(0);
         
-        // Iterate over each player in the list
         for (Object playerData : playersList) {
             try {
-                Object[] result;
-                if (playerData instanceof Object[]) {
-                    result = (Object[]) playerData;
-                } else {
-                    continue;
-                }
+                Object[] result = (Object[]) playerData;
+                if (result == null) continue;
                 
                 PlayerSelectionResponse response = new PlayerSelectionResponse();
                 
                 // Basic player info
                 response.setPlayerId(safelyConvertToInteger(result[0]));
                 response.setPlayerNickName(safelyConvertToString(result[1]));
-                response.setPlayerImgUrl(safelyConvertToString(result[2]));
+                
+                // Handle image URL
+                String imageUrl = safelyConvertToString(result[2]);
+                if (imageUrl != null && !imageUrl.startsWith("http")) {
+                    imageUrl = imageUrl.startsWith("/") ? imageUrl : "/" + imageUrl;
+                }
+                response.setPlayerImgUrl(imageUrl);
+                
                 response.setPlayerRole(safelyConvertToString(result[3]));
                 
-                // Captain/Vice-Captain status
+                // Status flags
                 Boolean isCaptain = safelyConvertToBoolean(result[4]);
                 Boolean isViceCaptain = safelyConvertToBoolean(result[5]);
                 Boolean isPlaying15 = safelyConvertToBoolean(result[6]);
@@ -180,12 +189,10 @@ public class DreamTeamMapper {
                 }
                 
             } catch (Exception e) {
-                System.err.println("Error mapping player: " + e.getMessage() + 
-                                 ". Data: " + java.util.Arrays.toString((Object[]) playerData));
+                System.err.println("Error mapping player: " + e.getMessage());
             }
         }
         
-        // Combine all lists, with captains first, then vice-captains, then others
         List<PlayerSelectionResponse> allPlayers = new ArrayList<>();
         allPlayers.addAll(captains);
         allPlayers.addAll(viceCaptains);
@@ -230,5 +237,10 @@ public class DreamTeamMapper {
             dreamTeamResponses.add(response);
         }
         return dreamTeamResponses;
+    }
+
+    private String ensureAbsolutePath(String path) {
+        if (path == null) return null;
+        return path.startsWith("/") ? path : "/" + path;
     }
 }

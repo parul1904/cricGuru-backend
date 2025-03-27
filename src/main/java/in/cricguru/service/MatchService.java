@@ -20,4 +20,6 @@ public interface MatchService {
     List<MatchResponse> getUpcomingMatches(int limit);
 
     MatchResponse nextMatch();
+
+    MatchDto getMatchBySeasonAndMatchNo(Integer seasonId, Integer matchNo);
 }

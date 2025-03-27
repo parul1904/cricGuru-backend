@@ -51,8 +51,8 @@ public class DreamTeamController {
 
 
 
-    @GetMapping("{matchNo}")
-    public ModelAndView getDreamTeamByMatchNo(@PathVariable Integer matchNo) throws JsonProcessingException {
+    @GetMapping("{seasonId}/{matchNo}")
+    public ModelAndView getDreamTeamByMatchNo(@PathVariable Integer seasonId, @PathVariable Integer matchNo) throws JsonProcessingException {
         ModelAndView modelAndView = new ModelAndView("user/matchStats");
         List<PlayerPerformanceResponse> performanceData = new ArrayList<>();
         String performanceDataJson = "";
@@ -71,10 +71,10 @@ public class DreamTeamController {
         List<PlayerSelectionResponse> playerSelectionResponses = new ArrayList<>();
         String playerSelectionResponsesJson = "";
 
-        MatchDto matchDetails = matchService.getMatchById(matchNo);
+        MatchDto matchDetails = matchService.getMatchBySeasonAndMatchNo(seasonId, matchNo);
         Integer team1Id = matchDetails.getTeam1Id();
         Integer team2Id = matchDetails.getTeam2Id();
-        if (matchNo <= 74) {
+        if (seasonId==1) {
             oldDreamTeam = dreamTeamService.getOldDreamTeamByMatchNo(matchNo);
             oldDreamTeamJson = objectMapper.writeValueAsString(oldDreamTeam);
             lastMatchDreamTeam = dreamTeamService.getNewDreamTeamByMatchNo(matchNo);
@@ -84,15 +84,15 @@ public class DreamTeamController {
             modelAndView.addObject("oldDreamTeamJson", oldDreamTeamJson);
             modelAndView.addObject("seasonYear", "2024");
         } else {
-            lastMatchDreamTeam = statsService.lastMatchDreamTeam(2, team1Id, team2Id, 75);
+            lastMatchDreamTeam = statsService.lastMatchDreamTeam(seasonId, team1Id, team2Id, matchNo);
             lastMatchDreamTeamJson = objectMapper.writeValueAsString(lastMatchDreamTeam);
 
-            last3MatchDreamTeam = statsService.last3MatchDreamTeam(2, team1Id, team2Id, 75);
+            last3MatchDreamTeam = statsService.last3MatchDreamTeam(seasonId, team1Id, team2Id, matchNo);
             last3MatchDreamTeamJson = objectMapper.writeValueAsString(last3MatchDreamTeam);
-            last5MatchDreamTeam = statsService.last5MatchDreamTeam(2, team1Id, team2Id, 75);
+            last5MatchDreamTeam = statsService.last5MatchDreamTeam(seasonId, team1Id, team2Id, matchNo);
             last5MatchDreamTeamJson = objectMapper.writeValueAsString(last5MatchDreamTeam);
 
-            performanceData = statsService.getPlayerPerformanceData(2, team1Id, team2Id, 5);
+            performanceData = statsService.getPlayerPerformanceData(seasonId, team1Id, team2Id, 5);
             performanceDataJson = objectMapper.writeValueAsString(performanceData);
 
             playerSelectionResponses = dreamTeamService.getPlayerSelectionResponses(Long.valueOf(matchNo));

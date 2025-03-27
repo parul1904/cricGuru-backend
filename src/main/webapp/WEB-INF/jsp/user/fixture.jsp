@@ -86,7 +86,7 @@
                     </div>
 
                     <c:if test="${not empty match.winnerTeam}">
-                        <div class="stats-analysis-btn" data-match-id="${match.matchId}">
+                        <div class="stats-analysis-btn" data-match-id="${match.matchNo}">
                             Stats Analysis
                         </div>
                     </c:if>
@@ -105,7 +105,7 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <div class="match-centre-btn" data-match-id="${match.matchId}">
+                                <div class="match-centre-btn" data-match-id="${match.matchNo}">
                                     Match Centre
                                 </div>
                             </c:otherwise>
@@ -130,14 +130,14 @@
                         <div class="team">
                             <img src="${match.team1}"/>
                         </div>
-                        <span class="vs-text"><img src="${pageContext.request.contextPath}/images/vs.png" alt="VS Badge"/></span>
+                        <span class="vs-text"><img src="../images/vs.png" alt="VS Badge"/></span>
                         <div class="team">
                             <img src="${match.team2}"/>
                         </div>
                     </div>
 
                     <c:if test="${not empty match.winnerTeam}">
-                        <div class="stats-analysis-btn" data-match-id="${match.matchId}">
+                        <div class="stats-analysis-btn" data-match-id="${match.matchNo}">
                             Stats Analysis
                         </div>
                     </c:if>
@@ -156,7 +156,7 @@
                                 </div>
                             </c:when>
                             <c:otherwise>
-                                <div class="match-centre-btn" data-match-id="${match.matchId}">
+                                <div class="match-centre-btn" data-match-id="${match.matchNo}">
                                     Match Centre
                                 </div>
                             </c:otherwise>

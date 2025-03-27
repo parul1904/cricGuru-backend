@@ -4,6 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const slider = document.querySelector('.slider');
     const defaultSeason = document.getElementById('defaultSeason')?.value || '2025';
 
+    let seasonId = document.getElementById('seasonId')?.value || '2025';
+    if(seasonId==2025){
+        seasonId = 2
+    } else {
+        seasonId = 1
+    }
+    console.log(seasonId)
+
     // Function to activate a season option and show its matches
     function activateSeasonOption(seasonYear) {
         // Update active option and slider
@@ -33,11 +41,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+
     // Initialize Match Centre buttons
     document.querySelectorAll('.match-centre-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const matchId = this.getAttribute('data-match-id');
-            window.location.href = `/dreamTeam/${matchId}`;
+            window.location.href = `/dreamTeam/${seasonId}/${matchId}`;
         });
     });
 
@@ -45,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.stats-analysis-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             const matchId = this.getAttribute('data-match-id');
-            window.location.href = `/dreamTeam/${matchId}`;
+            window.location.href = `/dreamTeam/${seasonId}/${matchId}`;
         });
     });
 });
