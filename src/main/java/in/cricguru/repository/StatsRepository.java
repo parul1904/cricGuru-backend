@@ -115,9 +115,10 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
             WITH CurrentSquadPlayers AS (
                                        SELECT DISTINCT p.player_id, p.nick_name, p.player_img_url, p.role, p.batting_style, p.bowling_style
                                        FROM players p
-                                       JOIN squads sq ON p.player_id = sq.player_id AND sq.playing_11 = 1
-                                       WHERE sq.season_id = 2
-                                         AND sq.team_id IN (:team1Id, :team2Id)
+                                       JOIN dream_player_team dpt ON p.player_id = dpt.player_id
+                                       JOIN matches m ON dpt.match_no = m.match_id
+                                       WHERE dpt.season_id = 2
+                                       AND (m.team1_id = :team1Id OR m.team2_id = :team2Id)
                                    ),
                                    DreamTeamRanks AS (
                                        SELECT match_no, player_id,
@@ -173,24 +174,50 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                                               pas.lowest_points,
                                               lms.last_match_no,
                                               pas.avg_last_5_d11,
-                                              MAX(CASE WHEN sq.is_captain = 1 THEN 1 ELSE 0 END) AS is_captain,
-                                              MAX(CASE WHEN sq.is_vice_captain = 1 THEN 1 ELSE 0 END) AS is_vice_captain,
-                                              MAX(CASE WHEN sq.playing_15 = 1 THEN 1 ELSE 0 END) AS playing_15,
-                                              JSON_ARRAYAGG(JSON_OBJECT(
-                                                  'matchNo', pms.match_no, 'matchDate', pms.match_date, 'team1Name', pms.team1_name, 'team1Logo', pms.team1_logo, 'team2Name', pms.team2_name,
-                                                  'team2Logo', pms.team2_logo, 'points', pms.points, 'runsScored', pms.runs_scored, 'ballFaced', pms.ball_faced, 'fours', pms.fours,
-                                                  'sixes', pms.sixes, 'catches', pms.catch_taken, 'stumpings', pms.stumping, 'runOutDirect', pms.direct_runout, 'runOutInDirect', pms.in_direct_runout,
-                                                  'wickets', pms.total_wickets, 'overs', pms.overs, 'runsConceded', pms.runs_conceded, 'isPartOfDreamTeam', pms.is_in_dream_team,
-                                                  'dream11OldPoints', pms.total_point_dream11_old_system, 'my11CirclePoints', pms.total_point_my11_circle_system, 'dream11NewPoints', pms.total_point_dream11_new_system
-                                              )) as match_details,
+                                              COALESCE(MAX(CASE WHEN dpt.is_captain = 1 THEN 1 ELSE 0 END), 0) AS is_captain,
+                                              COALESCE(MAX(CASE WHEN dpt.is_vice_captain = 1 THEN 1 ELSE 0 END), 0) AS is_vice_captain,
+                                              COALESCE(MAX(CASE WHEN dpt.playing_11 = 1 THEN 1 ELSE 0 END), 0) AS playing_11,
+                                              COALESCE(MAX(CASE WHEN dpt.playing_15 = 1 THEN 1 ELSE 0 END), 0) AS playing_15,
+                                              JSON_ARRAYAGG(
+                                                  JSON_OBJECT(
+                                                      'matchNo', pms.match_no,
+                                                      'matchDate', pms.match_date,
+                                                      'team1Name', pms.team1_name,
+                                                      'team1Logo', pms.team1_logo,
+                                                      'team2Name', pms.team2_name,
+                                                      'team2Logo', pms.team2_logo,
+                                                      'points', pms.points,
+                                                      'runsScored', pms.runs_scored,
+                                                      'ballFaced', pms.ball_faced,
+                                                      'fours', pms.fours,
+                                                      'sixes', pms.sixes,
+                                                      'catches', pms.catch_taken,
+                                                      'stumpings', pms.stumping,
+                                                      'runOutDirect', pms.direct_runout,
+                                                      'runOutInDirect', pms.in_direct_runout,
+                                                      'wickets', pms.total_wickets,
+                                                      'overs', pms.overs,
+                                                      'runsConceded', pms.runs_conceded,
+                                                      'isPartOfDreamTeam', pms.is_in_dream_team,
+                                                      'dream11OldPoints', pms.total_point_dream11_old_system,
+                                                      'my11CirclePoints', pms.total_point_my11_circle_system,
+                                                      'dream11NewPoints', pms.total_point_dream11_new_system
+                                                  )
+                                              ) as match_details,
                                               ROW_NUMBER() OVER (PARTITION BY csp.role ORDER BY lms.last_d11 DESC) as rn
                                        FROM CurrentSquadPlayers csp
                                        LEFT JOIN PlayerMatchStats pms ON csp.player_id = pms.player_id AND pms.match_rank <= 5
                                        LEFT JOIN LastMatchStats lms ON csp.player_id = lms.player_id
                                        LEFT JOIN PlayerAvgStats pas ON csp.player_id = pas.player_id
-                                       LEFT JOIN squads sq ON csp.player_id = sq.player_id and sq.season_id = 2 and sq.team_id IN (1,6)
-                                       GROUP BY csp.player_id, csp.nick_name, csp.player_img_url, csp.role, csp.batting_style, csp.bowling_style, lms.last_d11,
-                                                lms.last_match_no, pas.highest_points, pas.lowest_points, pas.avg_last_3_d11, pas.avg_last_3_my11, pas.avg_last_5_d11
+                                       LEFT JOIN dream_player_team dpt ON csp.player_id = dpt.player_id 
+                                       LEFT JOIN matches m ON dpt.match_no = m.match_id
+                                       WHERE dpt.season_id = 2 
+                                       AND (dpt.match_no = :matchNo)
+                                       GROUP BY 
+                                           csp.player_id, csp.nick_name, csp.player_img_url, csp.role, 
+                                           csp.batting_style, csp.bowling_style, lms.last_d11,
+                                           lms.last_match_no, pas.highest_points, pas.lowest_points, 
+                                           pas.avg_last_3_d11, pas.avg_last_3_my11, pas.avg_last_5_d11
                                    ),
                                    FinalResult AS (
                                        SELECT *
@@ -212,7 +239,7 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                                    FROM FinalResult
                                    ORDER BY last_d11 DESC;
             """, nativeQuery = true)
-    List<Object[]> getPlayerPerformanceStats(@Param("seasonId") Long seasonId, @Param("team1Id") Long team1Id, @Param("team2Id") Long team2Id, @Param("statsBy") Long statsBy);
+    List<Object[]> getPlayerPerformanceStats(@Param("seasonId") Long seasonId, @Param("team1Id") Long team1Id, @Param("team2Id") Long team2Id, @Param("matchNo") Long matchNo);
 
     @Query(value = """
             WITH MatchPlayers AS (
@@ -296,11 +323,11 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
     List<Object[]> getPlayerPerformanceStats(@Param("matchNo") Long matchNo);
 
     @Query(value = """
-            SELECT p.player_id, p.nick_name, p.player_img_url,  p.role, s.is_captain, s.is_vice_captain, s.playing_15
-            FROM squads s
-            LEFT JOIN players p
-            ON p.player_id = s.player_id
-            WHERE s.team_id In (:team1Id,:team2Id) AND s.season_id=2;
+            SELECT p.player_id, p.nick_name, p.player_img_url,  p.role, dt.is_captain, dt.is_vice_captain, dt.playing_15, dt.playing_11
+            FROM dream_player_team dt
+            LEFT JOIN players p ON p.player_id = dt.player_id
+            LEFT JOIN matches m ON m.match_id = dt.match_no
+            WHERE m.match_id =:matchId AND dt.season_id=2;
             """, nativeQuery = true)
-    Optional<Object[]> getPlayerSelectionResponses(@Param("team1Id") Long team1Id, @Param("team2Id") Long team2Id);
+    Optional<Object[]> getPlayerSelectionResponses(@Param("matchId") Long matchId);
 }

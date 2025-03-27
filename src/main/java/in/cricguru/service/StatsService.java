@@ -23,7 +23,7 @@ public interface StatsService {
 
     List<StatsPerMatchResponse> getOldDreamTeamByMatchNo(Integer matchNo);
 
-    List<PlayerPerformanceResponse> getPlayerPerformanceData(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy);
+    List<PlayerPerformanceResponse> getPlayerPerformanceData(Integer seasonId, Integer team1Id, Integer team2Id, Integer matchNo);
 
     List<PlayerPerformanceResponse> getPlayerPerformanceStats(Integer matchNo);
 

@@ -2,6 +2,7 @@ package in.cricguru.service;
 
 import in.cricguru.response.DreamTeamResponse;
 import in.cricguru.response.PlayerSelectionResponse;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface DreamTeamService {
 
     List<DreamTeamResponse> getMy11CircleDreamTeamByMatchNo(Integer matchNo);
 
-    List<PlayerSelectionResponse> getPlayerSelectionResponses(Integer team1Id, Integer team2Id);
+    List<PlayerSelectionResponse> getPlayerSelectionResponses(@Param("matchId") Long matchId);
 
     List<Integer> getMatchesWithDreamTeam();
 

@@ -163,10 +163,12 @@ public class DreamTeamMapper {
                 Boolean isCaptain = safelyConvertToBoolean(result[4]);
                 Boolean isViceCaptain = safelyConvertToBoolean(result[5]);
                 Boolean isPlaying15 = safelyConvertToBoolean(result[6]);
+                Boolean isPlaying11 = safelyConvertToBoolean(result[7]);
                 
                 response.setIsCaptain(isCaptain);
                 response.setIsViceCaptain(isViceCaptain);
                 response.setPlaying15(isPlaying15);
+                response.setPlaying11(isPlaying11);
                 
                 // Add to appropriate list
                 if (Boolean.TRUE.equals(isCaptain)) {

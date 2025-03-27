@@ -22,5 +22,6 @@ public class DreamTeamResponse {
     private Double averageDream11Last5MatchPoints;
     private Boolean isCaptain;
     private Boolean isViceCaptain;
+    private Boolean playing11;
     private Boolean playing15;
 }

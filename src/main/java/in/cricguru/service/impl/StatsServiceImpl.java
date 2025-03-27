@@ -101,9 +101,9 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<PlayerPerformanceResponse> getPlayerPerformanceData(Integer seasonId, Integer team1Id, Integer team2Id, Integer statsBy) {
+    public List<PlayerPerformanceResponse> getPlayerPerformanceData(Integer seasonId, Integer team1Id, Integer team2Id, Integer matchNo) {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
-                        Long.valueOf(statsBy)).stream()
+                        Long.valueOf(matchNo)).stream()
                 .collect(Collectors.toUnmodifiableList());
         return statsMapper.mapToPlayerPerformanceResponse(performanceData, seasonId);
     }
@@ -144,7 +144,9 @@ public class StatsServiceImpl implements StatsService {
         List<Object[]> performanceData = statsRepository.getPlayerPerformanceStats(Long.valueOf(seasonId), Long.valueOf(team1Id), Long.valueOf(team2Id),
                         Long.valueOf(statsBy)).stream()
                 .collect(Collectors.toUnmodifiableList());
-        return statsMapper.mapToDream11AverageDreamTeamResponse(performanceData);
+        List<DreamTeamResponse> dreamTeamResponses = statsMapper.mapToDream11AverageDreamTeamResponse(performanceData);
+        System.out.println(dreamTeamResponses.size());
+        return dreamTeamResponses;
     }
 
     @Override

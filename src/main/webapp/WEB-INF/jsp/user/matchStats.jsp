@@ -43,13 +43,13 @@
 <div class="container">
     <div class="navigation-container my-2">
         <input type="hidden" id="season" value="${season}">
-        
+
         <!-- View toggle buttons -->
         <div class="view-toggle-container no-select">
             <button id="dreamTeamBtn" class="active" type="button">Dream Team</button>
             <button id="playerStatsBtn" type="button">Player Stats</button>
         </div>
-        
+
         <div id="dreamTeamDropdown" class="mt-2">
             <select id="pointSystemSelect" class="form-select">
                 <option value="old">Dream11 Old Point System</option>
@@ -76,16 +76,16 @@
             }
         </style>
     </div>
-    
+
     <input type="hidden" id="performanceDataJson" value='${performanceDataJson}'>
     <input type="hidden" id="seasonYear" value='${seasonYear}'>
-    
+
     <div id="dreamTeamSection">
         <!-- Add the download button at the top -->
         <div class="download-button" onclick="downloadDreamTeamImage()">
             <i class="fas fa-download"></i>
         </div>
-        
+
         <!-- Loading Spinner -->
         <div id="loadingSpinner" class="text-center" style="display: none;">
             <div class="spinner-border text-primary" role="status">

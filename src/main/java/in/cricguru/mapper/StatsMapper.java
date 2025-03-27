@@ -278,7 +278,7 @@ public class StatsMapper {
                     response.setLowestPoints(row[11] != null ? ((Number) row[11]).intValue() : 0);
                     response.setLastMatchNo(row[12] != null ? ((Number) row[12]).intValue() : 0);
                     response.setAverageDream11Last5MatchPoints(row[13] != null ? ((Number) row[13]).doubleValue() : null);
-                    String matchDetailsJson = (String) row[17];
+                    String matchDetailsJson = (String) row[18];
                     if (matchDetailsJson != null) {
                         List<PlayerPerformanceResponse.MatchPerformance> matchPerformances = objectMapper.readValue(
                                 matchDetailsJson,
@@ -685,9 +685,10 @@ public class StatsMapper {
             response.setAverageDream11Last5MatchPoints(row[13] != null ? ((Number) row[13]).doubleValue() : null);
             response.setIsCaptain(row[14] != null ? ((Number) row[14]).intValue() == 1 : null);
             response.setIsViceCaptain(row[15] != null ? ((Number) row[15]).intValue() == 1 : null);
-            response.setPlaying15(row[16] != null ? ((Number) row[16]).intValue() == 1 : null);
-            if (row[17] != null) {
-                String matchDetailsJson = (String) row[17];
+            response.setPlaying11(row[16] != null ? ((Number) row[16]).intValue() == 1 : null);
+            response.setPlaying15(row[17] != null ? ((Number) row[17]).intValue() == 1 : null);
+            if (row[18] != null) {
+                String matchDetailsJson = (String) row[18];
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.registerModule(new JavaTimeModule());
                 try {
@@ -710,8 +711,9 @@ public class StatsMapper {
                 response.setMy11CirclePoints(null);
                 response.setDream11NewPoints(null);
             }
-
-            allPlayers.add(response);
+            if(response.getPlaying11() || response.getPlaying15()) {
+                allPlayers.add(response);
+            }
         }
     }
 }

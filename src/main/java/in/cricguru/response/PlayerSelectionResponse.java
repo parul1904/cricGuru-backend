@@ -13,6 +13,7 @@ public class PlayerSelectionResponse {
     private Boolean isCaptain;
     private Boolean isViceCaptain;
     private Boolean playing15;
+    private Boolean playing11;
 
     @JsonIgnore
     public boolean isStaff() {

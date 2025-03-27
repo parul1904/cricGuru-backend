@@ -8,6 +8,7 @@ import in.cricguru.response.PlayerPerformanceResponse;
 import in.cricguru.response.PlayerSelectionResponse;
 import in.cricguru.service.DreamTeamService;
 import in.cricguru.service.StatsService;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,8 +50,8 @@ public class DreamTeamServiceImpl implements DreamTeamService {
     }
 
     @Override
-    public List<PlayerSelectionResponse> getPlayerSelectionResponses(Integer team1Id, Integer team2Id) {
-        List<Object[]> dbResults = statsRepository.getPlayerSelectionResponses(Long.valueOf(team1Id), Long.valueOf(team2Id)).stream()
+    public List<PlayerSelectionResponse> getPlayerSelectionResponses(@Param("matchId") Long matchId) {
+        List<Object[]> dbResults = statsRepository.getPlayerSelectionResponses(Long.valueOf(matchId)).stream()
                 .collect(Collectors.toList());
         return dreamTeamMapper.mapToPlayerSelectionResponse(dbResults);
     }
