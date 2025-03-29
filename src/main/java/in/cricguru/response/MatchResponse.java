@@ -24,5 +24,5 @@ public class MatchResponse {
     private String winningMargin;
     private String playerOfTheMatch;
     private String mvp;
-    private String matchStatus;
+    private String matchStatus; // "UPCOMING", "TODAY", or "COMPLETED"
 }

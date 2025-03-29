@@ -55,9 +55,9 @@ public interface DreamPlayerTeamRepository extends JpaRepository<DreamPlayerTeam
 
     @Modifying
     @Query(value = """
-          INSERT INTO dream_player_team (match_no, player_id, playing_11, playing_15, is_captain,\s
+          INSERT INTO dream_player_team (season_id,match_no, player_id, playing_11, playing_15, is_captain,\s
                        is_vice_captain, dream_team, selection_percentage)
-                   VALUES (:matchNo, :playerId, :isPlaying11, :isPlaying15, :isCaptain, :isViceCaptain,\s
+                   VALUES (2, :matchNo, :playerId, :isPlaying11, :isPlaying15, :isCaptain, :isViceCaptain,\s
                        :isDreamTeam, :selectionPercentage)
                    ON DUPLICATE KEY UPDATE
                        playing_11 = CASE\s

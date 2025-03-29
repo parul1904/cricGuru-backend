@@ -123,7 +123,11 @@
                             <div class="col-md-4 mb-4">
                                 <a href="${pageContext.request.contextPath}/dreamTeam/${match.matchId}"
                                    class="match-card-link">
-                                    <div class="match-card card shadow-sm">
+                                    <div class="match-card card shadow-sm"
+                                         data-season="${match.seasonYear}"
+                                         data-status="${match.matchStatus}"
+                                         data-match-no="${match.matchNo}"
+                                         data-match-time="${match.matchTime}">
                                         <div class="card-body">
                                             <div class="match-header mb-3">
                                                 <span class="match-number">Match ${match.matchNo}</span>

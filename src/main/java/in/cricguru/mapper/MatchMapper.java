@@ -94,6 +94,8 @@ public class MatchMapper {
 
     public List<MatchResponse> mapToMatchResponse(List<Object[]> matchDtos) {
         List<MatchResponse> matchResponses = new ArrayList<>();
+        LocalDate today = LocalDate.now();
+        
         for (Object[] row : matchDtos) {
             MatchResponse response = new MatchResponse();
             response.setMatchId((Integer) row[0]);
@@ -103,11 +105,23 @@ public class MatchMapper {
             response.setTeam2((String) row[4]);
             response.setVenueName((String) row[5]);
 
-            // Handle date conversion properly
+            LocalDate matchDate = null;
             if (row[6] instanceof java.sql.Date) {
-                response.setMatchDate(((java.sql.Date) row[6]).toLocalDate());
+                matchDate = ((java.sql.Date) row[6]).toLocalDate();
             } else if (row[6] instanceof LocalDate) {
-                response.setMatchDate((LocalDate) row[6]);
+                matchDate = (LocalDate) row[6];
+            }
+            response.setMatchDate(matchDate);
+            
+            // Set match status
+            if (matchDate != null) {
+                if (matchDate.isBefore(today)) {
+                    response.setMatchStatus("COMPLETED");
+                } else if (matchDate.isEqual(today)) {
+                    response.setMatchStatus("TODAY");
+                } else {
+                    response.setMatchStatus("UPCOMING");
+                }
             }
 
             response.setMatchTime((String) row[7]);

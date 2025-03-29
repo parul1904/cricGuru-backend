@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DreamPlayerTeamDto {
+    private Integer seasonId;
     private Integer matchNo;
     private Long playerId;
     private String playerName;

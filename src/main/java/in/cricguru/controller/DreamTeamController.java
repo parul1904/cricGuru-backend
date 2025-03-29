@@ -101,7 +101,7 @@ public class DreamTeamController {
             modelAndView.addObject("seasonYear", "2025");
         }
 
-         actualDreamTeam = dreamTeamService.getActualDreamTeamByMatchNo(matchId);
+        actualDreamTeam = dreamTeamService.getActualDreamTeamByMatchNo(matchId);
         actualDreamTeamJson = objectMapper.writeValueAsString(actualDreamTeam);
 
         List<Integer> matchesWithDreamTeam = dreamTeamService.getMatchesWithDreamTeam();

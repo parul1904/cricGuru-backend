@@ -56,12 +56,11 @@ public class MatchController {
     @GetMapping("/fixture")
     public ModelAndView getMatches() {
         ModelAndView modelAndView = new ModelAndView("user/fixture");
-        // Get matches for 2024 by default
         List<MatchResponse> matches2024 = matchService.getAllMatchDetailsBySeasonId(2024);
         List<MatchResponse> matches2025 = matchService.getAllMatchDetailsBySeasonId(2025);
         modelAndView.addObject("matches2024", matches2024);
         modelAndView.addObject("matches2025", matches2025);
-        modelAndView.addObject("defaultSeason", "2024"); // Add this to help JavaScript know the default season
+        modelAndView.addObject("defaultSeason", "2025");  // Changed to 2025
         return modelAndView;
     }
 

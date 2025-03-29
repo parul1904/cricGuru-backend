@@ -17,6 +17,9 @@ public class DreamPlayerTeam {
     @EmbeddedId
     private DreamPlayerTeamId id;
 
+    @Column(name="season_id")
+    private Integer seasonId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("matchNo")
     @JoinColumn(name = "match_no")

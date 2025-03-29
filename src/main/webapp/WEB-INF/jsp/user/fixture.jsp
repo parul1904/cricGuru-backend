@@ -63,107 +63,109 @@
     <!-- Matches Section -->
     <section class="matches-section">
         <div class="container">
-            <c:forEach items="${matches2024}" var="match">
-                <div class="match-card" data-season="2024">
-                    <div class="match-header">
-                        <div>
-                            <span class="match-number">MATCH ${match.matchNo}</span>
-                            <span class="match-date">${match.matchDate}</span>
+            <div class="match-container">  <!-- Added this wrapper div -->
+                <c:forEach items="${matches2024}" var="match">
+                    <div class="match-card" data-season="2024">
+                        <div class="match-header">
+                            <div>
+                                <span class="match-number">MATCH ${match.matchNo}</span>
+                                <span class="match-date">${match.matchDate}</span>
+                            </div>
+                            <div class="match-info">
+                                <span>🕒 ${match.matchTime} | 📍 ${match.venueName}</span>
+                            </div>
                         </div>
-                        <div class="match-info">
-                            <span>🕒 ${match.matchTime} | 📍 ${match.venueName}</span>
+
+                        <div class="teams-container">
+                            <div class="team">
+                                <img src="${match.team1}" />
+                            </div>
+                            <span class="vs-text"><img src="${pageContext.request.contextPath}/images/vs.png" width="75px;" height="75px;" alt="VS Badge"/></span>
+                            <div class="team">
+                                <img src="${match.team2}"/>
+                            </div>
+                        </div>
+
+                        <c:if test="${not empty match.winnerTeam}">
+                            <div class="stats-analysis-btn" data-match-id="${match.matchId}">
+                                Stats Analysis
+                            </div>
+                        </c:if>
+
+                        <div class="matches-footer">
+                            <c:choose>
+                                <c:when test="${not empty match.winnerTeam}">
+                                    <div class="match-result">
+                                        <p>${match.winningMargin}</p>
+                                        <c:if test="${not empty match.playerOfTheMatch}">
+                                            <div class="match-player">
+                                                <p>Player of the Match</p>
+                                                <p>${match.playerOfTheMatch}</p>
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="match-centre-btn" data-match-id="${match.matchId}">
+                                        Match Centre
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
+                </c:forEach>
 
-                    <div class="teams-container">
-                        <div class="team">
-                            <img src="${match.team1}" />
+                <c:forEach items="${matches2025}" var="match">
+                    <div class="match-card" data-season="2025">
+                        <div class="match-header">
+                            <div>
+                                <span class="match-number">MATCH ${match.matchNo}</span>
+                                <span class="match-date">${match.matchDate}</span>
+                            </div>
+                            <div class="match-info">
+                                <span>🕒 ${match.matchTime} | 📍 ${match.venueName}</span>
+                            </div>
                         </div>
-                        <span class="vs-text"><img src="${pageContext.request.contextPath}/images/vs.png" width="75px;" height="75px;" alt="VS Badge"/></span>
-                        <div class="team">
-                            <img src="${match.team2}"/>
+
+                        <div class="teams-container">
+                            <div class="team">
+                                <img src="${match.team1}"/>
+                            </div>
+                            <span class="vs-text"><img src="${pageContext.request.contextPath}/images/vs.png" alt="VS Badge"/></span>
+                            <div class="team">
+                                <img src="${match.team2}"/>
+                            </div>
+                        </div>
+
+                        <c:if test="${not empty match.winnerTeam}">
+                            <div class="stats-analysis-btn" data-match-id="${match.matchId}">
+                                Stats Analysis
+                            </div>
+                        </c:if>
+
+                        <div class="matches-footer">
+                            <c:choose>
+                                <c:when test="${not empty match.winnerTeam}">
+                                    <div class="match-result">
+                                        <p>${match.winningMargin}</p>
+                                        <c:if test="${not empty match.playerOfTheMatch}">
+                                            <div class="match-player">
+                                                <p>Player of the Match</p>
+                                                <p>${match.playerOfTheMatch}</p>
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="match-centre-btn" data-match-id="${match.matchId}">
+                                        Match Centre
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
-
-                    <c:if test="${not empty match.winnerTeam}">
-                        <div class="stats-analysis-btn" data-match-id="${match.matchId}">
-                            Stats Analysis
-                        </div>
-                    </c:if>
-
-                    <div class="matches-footer">
-                        <c:choose>
-                            <c:when test="${not empty match.winnerTeam}">
-                                <div class="match-result">
-                                    <p>${match.winningMargin}</p>
-                                    <c:if test="${not empty match.playerOfTheMatch}">
-                                        <div class="match-player">
-                                            <p>Player of the Match</p>
-                                            <p>${match.playerOfTheMatch}</p>
-                                        </div>
-                                    </c:if>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="match-centre-btn" data-match-id="${match.matchId}">
-                                    Match Centre
-                                </div>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-                </div>
-            </c:forEach>
-
-            <c:forEach items="${matches2025}" var="match">
-                <div class="match-card" data-season="2025">
-                    <div class="match-header">
-                        <div>
-                            <span class="match-number">MATCH ${match.matchNo}</span>
-                            <span class="match-date">${match.matchDate}</span>
-                        </div>
-                        <div class="match-info">
-                            <span>🕒 ${match.matchTime} | 📍 ${match.venueName}</span>
-                        </div>
-                    </div>
-
-                    <div class="teams-container">
-                        <div class="team">
-                            <img src="${match.team1}"/>
-                        </div>
-                        <span class="vs-text"><img src="${pageContext.request.contextPath}/images/vs.png" alt="VS Badge"/></span>
-                        <div class="team">
-                            <img src="${match.team2}"/>
-                        </div>
-                    </div>
-
-                    <c:if test="${not empty match.winnerTeam}">
-                        <div class="stats-analysis-btn" data-match-id="${match.matchId}">
-                            Stats Analysis
-                        </div>
-                    </c:if>
-
-                    <div class="matches-footer">
-                        <c:choose>
-                            <c:when test="${not empty match.winnerTeam}">
-                                <div class="match-result">
-                                    <p>${match.winningMargin}</p>
-                                    <c:if test="${not empty match.playerOfTheMatch}">
-                                        <div class="match-player">
-                                            <p>Player of the Match</p>
-                                            <p>${match.playerOfTheMatch}</p>
-                                        </div>
-                                    </c:if>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="match-centre-btn" data-match-id="${match.matchId}">
-                                    Match Centre
-                                </div>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-                </div>
-            </c:forEach>
+                </c:forEach>
+            </div>
         </div>
     </section>
 

@@ -60,7 +60,6 @@ public class DreamPlayerTeamServiceImpl implements DreamPlayerTeamService {
         if (dreamPlayerTeamDtos == null || dreamPlayerTeamDtos.isEmpty()) {
             throw new IllegalArgumentException("Dream player team list cannot be null or empty");
         }
-
         // Validate all DTOs before processing
         dreamPlayerTeamDtos.forEach(dto -> {
             try {
@@ -79,7 +78,7 @@ public class DreamPlayerTeamServiceImpl implements DreamPlayerTeamService {
                     .orElseThrow(() -> new RuntimeException("Match not found with ID: " + entity.getMatch().getMatchId()));
                 Player player = playerRepository.findById(Long.valueOf(entity.getPlayer().getPlayerId()))
                     .orElseThrow(() -> new RuntimeException("Player not found with ID: " + entity.getPlayer().getPlayerId()));
-                
+                entity.setSeasonId(2);
                 entity.setMatch(match);
                 entity.setPlayer(player);
             } catch (Exception e) {

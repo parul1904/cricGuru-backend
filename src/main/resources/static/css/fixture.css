@@ -1,8 +1,6 @@
 .match-container {
-    width: 65rem;
+    width: 100%;
     margin: auto;
-    height: 90vh;
-    overflow-y: auto;
     padding: 1.5rem;
 }
 
@@ -15,8 +13,8 @@
     display: none; /* Hidden by default */
 }
 
-.match-card[data-season="2024"] {
-    display: block; /* Show 2024 matches by default */
+.match-card[data-season="2025"] {
+    display: block; /* Show 2025 matches by default */
 }
 
 .match-header {
