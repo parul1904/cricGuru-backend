@@ -128,9 +128,11 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                                     ELSE false
                                 END as is_in_dream_team
                             FROM match_stats
+                            WHERE match_no < :matchId  -- Add this condition to exclude current match
                         ),
                         LastMatchStats AS (
-                            SELECT player_id, total_point_dream11_new_system as last_d11, total_point_my11_circle_system as last_my11, match_no as last_match_no
+                            SELECT player_id, total_point_dream11_new_system as last_d11, 
+                                   total_point_my11_circle_system as last_my11, match_no as last_match_no
                             FROM (
                                 SELECT
                                     ms.player_id,
@@ -144,20 +146,27 @@ public interface StatsRepository extends JpaRepository<Stats, Long> {
                                 FROM match_stats ms
                                 JOIN matches m ON ms.match_no = m.match_id
                                 JOIN seasons s ON ms.season_id = s.season_id
+                                WHERE ms.match_no < :matchId  -- Add this condition to exclude current match
                             ) ranked
                             WHERE rn = 1
                         ),
                         PlayerMatchStats AS (
-                            SELECT ms.player_id, ms.match_no, m.match_date, t1.team_short_name as team1_name, t1.team_logo_url as team1_logo,
-                                   t2.team_short_name as team2_name, t2.team_logo_url as team2_logo, ms.total_point_dream11_new_system as points, ms.runs_scored, ms.ball_faced,
-                                   ms.fours, ms.sixes, ms.catch_taken, ms.stumping, ms.direct_runout, ms.in_direct_runout, ms.total_wickets, ms.overs, ms.runs_conceded, dt.is_in_dream_team,
-                                   ms.total_point_dream11_old_system, ms.total_point_my11_circle_system, ms.total_point_dream11_new_system
+                            SELECT ms.player_id, ms.match_no, m.match_date, 
+                                   t1.team_short_name as team1_name, t1.team_logo_url as team1_logo,
+                                   t2.team_short_name as team2_name, t2.team_logo_url as team2_logo, 
+                                   ms.total_point_dream11_new_system as points, ms.runs_scored, ms.ball_faced,
+                                   ms.fours, ms.sixes, ms.catch_taken, ms.stumping, ms.direct_runout, 
+                                   ms.in_direct_runout, ms.total_wickets, ms.overs, ms.runs_conceded, 
+                                   dt.is_in_dream_team,
+                                   ms.total_point_dream11_old_system, ms.total_point_my11_circle_system, 
+                                   ms.total_point_dream11_new_system
                             FROM match_stats ms
                             JOIN matches m ON ms.match_no = m.match_id
-                            JOIN seasons s ON ms.season_id=s.season_id
+                            JOIN seasons s ON ms.season_id = s.season_id
                             JOIN teams t1 ON m.team1_id = t1.team_id
                             JOIN teams t2 ON m.team2_id = t2.team_id
                             LEFT JOIN DreamTeamRanks dt ON ms.match_no = dt.match_no AND ms.player_id = dt.player_id
+                            WHERE ms.match_no < :matchId  -- Add this condition to exclude current match
                         ),
                         PlayerAvgStats AS (
                             SELECT
